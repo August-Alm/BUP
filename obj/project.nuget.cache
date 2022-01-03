@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "UDuZIpNOkT60JMBPuHXhOf8PqBBuoDjEFAzNOq9M7WtSA+wPyEx7nplJNJ1z7mTVNwbn55mxAHnDouaITFRN0w==",
+  "success": true,
+  "projectFilePath": "/home/bashka/Programming/FSharp/BUP/BUP.fsproj",
+  "expectedPackageFiles": [
+    "/home/bashka/.nuget/packages/fsharp.core/6.0.1/fsharp.core.6.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
