@@ -40,7 +40,20 @@ module Upcopy =
     addToParents (getRChildUplink topcopy) (getRChild topcopy)
     lambdaScan redlam
   
-  let private delPar (nd : Node) (lk : Uplink) =
+  let rec private freeNode (nd : Node) =
+    match getNodeKind nd with
+    | NodeKind.LEAF -> ()
+    | NodeKind.SINGLE ->
+      let s = mkSingle nd
+      delPar (getChild s) (getChildUplink s)
+      heap.DeallocSingle s
+    | NodeKind.BRANCH ->
+      let b = mkBranch nd
+      delPar (getLChild b) (getLChildUplink b)
+      delPar (getRChild b) (getRChildUplink b)
+      heap.DeallocBranch b
+
+  and private delPar (nd : Node) (lk : Uplink) =
     let lks = getParents nd
     if getHead lks = lk then
       let nxt = getNext lk
@@ -49,17 +62,8 @@ module Upcopy =
       setHead lks nxt
     else
       unlink lk
+    if isEmpty lks then freeNode nd
 
-  let private freeNode (nd : Node) =
-    match getNodeKind nd with
-    | NodeKind.LEAF -> ()
-    | NodeKind.SINGLE ->
-      let s = mkSingle nd
-      delPar (getChild s) (getChildUplink s)
-    | NodeKind.BRANCH ->
-      let b = mkBranch nd
-      delPar (getLChild b) (getLChildUplink b)
-      delPar (getRChild b) (getRChildUplink b)
 
   let private installChild (nd : Node) (lk : Uplink) =
     match getRelation lk with
