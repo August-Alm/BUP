@@ -45,3 +45,9 @@ module Heaps =
     
     member _.DeallocBranch (b : Branch) =
       freedBranches.Push b
+    
+    member _.Clear () =
+      memory.Clear ()
+      memory.Capacity <- cap
+      freedSingles.Clear ()
+      freedBranches.Clear ()
