@@ -23,9 +23,11 @@ module Print =
   
   and appendBranch (b : Branch) sb =
     sb
+    |> append "("
     |> appendNode (getLChild b)
     |> append " "
     |> appendNode (getRChild b)
+    |> append ")"
   
   let stringOfNode (nd : Node) =
     (appendNode nd (StringBuilder 64)).ToString ()
