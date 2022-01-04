@@ -2,11 +2,8 @@ namespace BUP
 
 module Upcopy =
 
-  open Heaps
-
-  let mutable private heap : MemoryHeap = null
-
-  let initializeMemory (hp : MemoryHeap) = heap <- hp
+  open Memory
+  open Library
 
   let rec private cleanUp (lk : Uplink) =
     let nd = getNode lk
@@ -46,12 +43,12 @@ module Upcopy =
     | NodeKind.SINGLE ->
       let s = mkSingle nd
       delPar (getChild s) (getChildUplink s)
-      heap.DeallocSingle s
+      deallocSingle s
     | NodeKind.BRANCH ->
       let b = mkBranch nd
       delPar (getLChild b) (getLChildUplink b)
       delPar (getRChild b) (getRChildUplink b)
-      heap.DeallocBranch b
+      deallocBranch b
 
   and private delPar (nd : Node) (lk : Uplink) =
     let lks = getParents nd
@@ -87,7 +84,8 @@ module Upcopy =
     
   let rec private newSingle oldvar body =
     let varpars = getLeafParents oldvar
-    let s = heap.AllocSingle ()
+    let s = allocSingle ()
+    initializeSingle s (getLeafNameId oldvar)
     setChild s body
     addToParents (getChildUplink s) body
     let var = mkNode (getLeaf s)
@@ -95,7 +93,8 @@ module Upcopy =
     mkNode s
   
   and private newBranch func argm =
-    let b = heap.AllocBranch ()
+    let b = allocBranch ()
+    initializeBranch b
     setLChild b func
     setRChild b argm
     mkNode b
