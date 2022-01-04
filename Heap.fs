@@ -41,39 +41,29 @@ module Memory =
   
   let deallocBranch b = freedBranches.Push b
 
+
   (* ***** ***** *)
 
-  [<Struct>]
-  type NameData = { Id : int; RefCnt : int }
+  let internal names = ResizeArray<string> (capacity / 16)
 
-  let private names = ResizeArray<string> (capacity / 16)
+  let internal nameIds = Dictionary<string, int> (capacity / 16)
 
-  let private namesData = Dictionary<string, NameData> (capacity / 16)
+  let inline getNameId x = nameIds[x]
 
-  let getNameId x = namesData[x].Id
-
-  let getName id = names[id]
+  let inline getName id = names[id]
 
   let addName x =
-    match namesData.TryGetValue x with
+    match nameIds.TryGetValue x with
     | false, _ ->
       let id = names.Count
       names.Add x
-      namesData.Add (x, {Id = id; RefCnt = 1})
+      nameIds.Add (x, id)
       id
-    | true, {Id = id; RefCnt = refCnt} ->
-      namesData[x] <- {Id = id; RefCnt = refCnt + 1}
+    | true, id ->
+      nameIds[x] <- id
       id
   
-  let decrefName x =
-    let {Id = id; RefCnt = refCnt} = namesData[x]
-    if refCnt = 0 then
-      namesData.Remove x |> ignore
-      names[id] <- null
-    else
-      namesData[x] <- {Id = id; RefCnt = refCnt - 1} 
-
   let clearNames () =
     names.Clear ()
     names.Capacity <- capacity / 16
-    namesData.Clear ()
+    nameIds.Clear ()

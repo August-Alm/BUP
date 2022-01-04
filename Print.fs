@@ -2,21 +2,32 @@ namespace BUP
 
 module Print =
 
-  let rec nodeToString (nd : Node) =
+  open System.Text
+
+  let inline append (x : string) (sb : StringBuilder) = sb.Append x
+
+  let rec appendNode (nd : Node) (sb : StringBuilder) =
     match getNodeKind nd with
-    | NodeKind.LEAF -> leafToString (mkLeaf nd)
-    | NodeKind.SINGLE -> singleToString (mkSingle nd)
-    | NodeKind.BRANCH -> branchToString (mkBranch nd)
-
-  and leafToString (l : Leaf) =
-    $"x_{getLeafId l}"
-
-  and singleToString (s : Single) =
-    let var = getLeaf s
-    let body = getChild s
-    $"lam {leafToString var}.{nodeToString body}"
+    | NodeKind.LEAF -> appendLeaf (mkLeaf nd) sb
+    | NodeKind.SINGLE -> appendSingle (mkSingle nd) sb
+    | NodeKind.BRANCH -> appendBranch (mkBranch nd) sb
   
-  and branchToString (b : Branch) =
-    let func = getLChild b
-    let argm = getRChild b
-    $"({nodeToString func} {nodeToString argm}"
+  and appendLeaf (l : Leaf) sb = append (getLeafName l) sb
+
+  and appendSingle (s : Single) sb =
+    sb
+    |> append "λ"
+    |> appendLeaf (getLeaf s)
+    |> append "."
+    |> appendNode (getChild s)
+  
+  and appendBranch (b : Branch) sb =
+    sb
+    |> appendNode (getLChild b)
+    |> append " "
+    |> appendNode (getRChild b)
+  
+  let stringOfNode (nd : Node) =
+    (appendNode nd (StringBuilder 64)).ToString ()
+  
+  let printNode (nd : Node) = printfn "%s" (stringOfNode nd)

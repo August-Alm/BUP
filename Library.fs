@@ -61,7 +61,7 @@ module internal Library =
     if not (isEmpty lks) then link lk (getHead lks)
     setHead lks lk
   
-  let inline iterDLL (a : Uplink -> unit) (lks : UplinkDLL) =
+  let inline iterDLL ([<InlineIfLambda>] a : Uplink -> unit) (lks : UplinkDLL) =
     let rec loop (u : Uplink) =
       let nxt = getNext u
       if isNil nxt then a u else a u; loop nxt

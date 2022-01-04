@@ -21,7 +21,7 @@ module Upcopy =
         clearCache b
         addToParents (getLChildUplink cc) (getLChild cc)
         addToParents (getRChildUplink cc) (getRChild cc)
-        iterDLL cleanUp (getBranchParents b)
+        iterDLL (fun lk -> cleanUp lk) (getBranchParents b)
 
   let rec private lambdaScan (s : Single) =
     iterDLL cleanUp (getLeafParents (getLeaf s))
@@ -89,7 +89,7 @@ module Upcopy =
     setChild s body
     addToParents (getChildUplink s) body
     let var = mkNode (getLeaf s)
-    iterDLL (upcopy var) varpars
+    iterDLL (fun lk -> upcopy var lk) varpars
     mkNode s
   
   and private newBranch func argm =
@@ -112,7 +112,7 @@ module Upcopy =
       if isNil cc then
         let nd = newBranch newChild (getRChild b)
         setCache b (mkBranch nd)
-        iterDLL (upcopy nd) (getBranchParents b)
+        iterDLL (fun lk -> upcopy nd lk) (getBranchParents b)
       else
         setLChild cc newChild
     | UplinkRel.RCHILD ->
@@ -121,7 +121,7 @@ module Upcopy =
       if isNil cc then
         let nd = newBranch (getLChild b) newChild
         setCache b (mkBranch nd)
-        iterDLL (upcopy nd) (getBranchParents b)
+        iterDLL (fun lk -> upcopy nd lk) (getBranchParents b)
       else
         setRChild cc newChild
 
@@ -160,7 +160,7 @@ module Upcopy =
               let b = mkBranch nd
               let b' = newBranch (getLChild b) (getRChild b) 
               setCache b (mkBranch b')
-              iterDLL (upcopy argm) varpars
+              iterDLL (fun lk -> upcopy argm lk) varpars
               struct (b', ValueSome b)
           
           let struct (ans, topappOpt) = scandown body
