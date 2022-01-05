@@ -136,41 +136,41 @@ module Upcopy =
     let lampars = getSingleParents func
     let varpars = getLeafParents var
 
-(*
-      if isLengthOne lampars then
-        replaceChild argm varpars
-        body
+    if false then //isLengthOne lampars then
+      replaceChild argm varpars
+      let answer = getChild func
+      replaceChild answer (getBranchParents redex)
+      freeNode (mkNode redex)
+      answer
       
-      elif isNil varpars then
-        body
+    (* elif isNil varpars then body *)
 
-      else
-*)
-    let rec scandown (nd : Node) =
-      match getNodeKind nd with
-      | NodeKind.LEAF -> struct (argm, ValueNone)
-      | NodeKind.SINGLE ->
-        let s = mkSingle nd
-        let struct (body', topapp) = scandown (getChild s)
-        let func' = newSingle (getLeaf s) body'
-        struct (func', topapp)
-      | NodeKind.BRANCH ->
-        let b = mkBranch nd
-        let b' = newBranch (getLChild b) (getRChild b) 
-        setCache b (mkBranch b')
-        iterDLL (fun lk -> upcopy argm lk) varpars
-        struct (b', ValueSome b)
-    
-    let struct (ans, topappOpt) = scandown body
+    else
+      let rec scandown (nd : Node) =
+        match getNodeKind nd with
+        | NodeKind.LEAF -> struct (argm, ValueNone)
+        | NodeKind.SINGLE ->
+          let s = mkSingle nd
+          let struct (body', topapp) = scandown (getChild s)
+          let func' = newSingle (getLeaf s) body'
+          struct (func', topapp)
+        | NodeKind.BRANCH ->
+          let b = mkBranch nd
+          let b' = newBranch (getLChild b) (getRChild b) 
+          setCache b (mkBranch b')
+          iterDLL (fun lk -> upcopy argm lk) varpars
+          struct (b', ValueSome b)
 
-    let answer =
-       match topappOpt with
-      | ValueNone -> ans
-      | ValueSome app -> clearCaches func app; ans
-      
-    replaceChild answer (getBranchParents redex)
-    freeNode (mkNode redex)
-    answer
+      let struct (ans, topappOpt) = scandown body
+
+      let answer =
+        match topappOpt with
+        | ValueNone -> ans
+        | ValueSome app -> clearCaches func app; ans
+
+      replaceChild answer (getBranchParents redex)
+      freeNode (mkNode redex)
+      answer
   
   let inline private isRedex (nd : Node) : Branch =
     if isNil nd || getNodeKind nd <> NodeKind.BRANCH then

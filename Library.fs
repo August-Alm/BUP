@@ -37,10 +37,11 @@ module internal Library =
     reinitializeUplink lk
   
   let inline getNode (lk : Uplink) =
-      match getRelation lk with
-      | UplinkRel.CHILD -> mkNode (int lk - 3)
-      | UplinkRel.LCHILD -> mkNode (int lk - 3)
-      | UplinkRel.RCHILD -> mkNode (int lk - 6)
+    match getRelation lk with
+    | UplinkRel.CHILD -> mkNode (int lk - 3)
+    | UplinkRel.LCHILD -> mkNode (int lk - 3)
+    | UplinkRel.RCHILD -> mkNode (int lk - 6)
+    | r -> failwith $"Unknown relation {r} of uplink heap[{int lk}] = {heap[int lk]}."
     
 
   (* ***** ***** *)
