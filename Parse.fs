@@ -18,9 +18,9 @@ module Parse =
       let len = s.Length
       let mutable i = -1
       override _.Pop () =
-        i <- i + 1; if i >= len then -1 else int s.[i]
+        i <- i + 1; if i >= len then -1 else int s[i]
       override _.Peek () =
-        let j = i + 1 in if j >= len then -1 else int s.[j]
+        let j = i + 1 in if j >= len then -1 else int s[j]
 
     type InputOfStream (strm : System.IO.Stream) =
       inherit Input ()
@@ -47,7 +47,7 @@ module Parse =
       | T_Eof
     
     let inline isAlpha c = (c > 64 && c < 91) || (c > 96 && c < 123)
-    let inline isName c = isAlpha c || (c > 46 || c < 58) || c = int '_'
+    let inline isName c = isAlpha c || (c > 46 && c < 58) || c = int '_'
     let inline isCR c = (c = int '\r')
     let inline isLF c = (c = int '\n')
     let inline isSpace c = (c = int ' ' || c = int '\t' || isCR c || isLF c)
@@ -65,7 +65,7 @@ module Parse =
     
     type Tokenizer (inp : Input) =
       let sb = StringBuilder 16
-      let mutable line = 0
+      let mutable line = 1
       let mutable column = 0
 
       let rec readChar () =
@@ -94,20 +94,20 @@ module Parse =
       let readName (c : int) =
         let mutable c = c
         let mutable cnxt = inp.Peek ()
-        while isName cnxt && cnxt <> -1 do
+        while isName cnxt do
           append c sb
           c <- readChar ()
           cnxt <- inp.Peek ()
         append c sb
-        sb.ToString ()
+        let name = sb.ToString ()
+        sb.Clear () |> ignore
+        name
       
       member _.ReadToken () =
         let c = readNonSpace ()
         let pos = {Line = line; Column = column}
         if c = -1 then
           pos, T_Eof
-        elif isName c then
-          pos, T_Name (readName c)
         else
           match char c with
           | 'λ' -> pos, T_Lam
@@ -117,7 +117,9 @@ module Parse =
           | '@' -> pos, T_Let (readName (readNonSpace ()))
           | ';' -> pos, T_Seq
           | '=' -> pos, T_Eq
-          | _ -> error pos "Invalid token."
+          | _ ->
+            if isName c then pos, T_Name (readName c)
+            else error pos "Invalid token."
 
 
   (* ***** ***** *)
@@ -166,7 +168,9 @@ module Parse =
     let consumeToken tok =
       match parser.ReadToken () with
       | _, t when t = tok -> ()
-      | pos, _ -> error pos "Unexpected token."
+      | pos, t ->
+        let msg = sprintf "Expected %A but got %A." tok t
+        error pos msg
 
     let rec parseEnv (env : Environment) =
       match parser.ReadToken () with
@@ -176,13 +180,13 @@ module Parse =
           let xId = addName x
           let s = allocSingle ()
           initializeSingle s xId
-          let l = mkNode (getLeaf s)
-          let bnd = {NameId = xId; Bound = l}
+          let xVar = mkNode (getLeaf s)
+          let bnd = {NameId = xId; Bound = xVar}
           addBound env bnd
           consumeToken T_Dot
-          let ch = parseEnv env
+          let body = parseEnv env
           remBound env bnd
-          connectChild ch s
+          connectChild body s
           mkNode s
         | pos, _ -> error pos "Expected name."
       | _, T_LPar ->
@@ -190,6 +194,7 @@ module Parse =
         let argm = parseEnv env
         consumeToken T_RPar
         let b = allocBranch ()
+        initializeBranch b
         connectLChild func b
         connectRChild argm b
         mkNode b

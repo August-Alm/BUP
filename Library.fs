@@ -22,7 +22,8 @@ module internal Library =
   let inline initializeUplink (lk : Uplink) (rel) =
     heap[int lk] <- -1; heap[int lk + 1] <- -1; heap[int lk + 2] <- int rel
 
-  let inline reinitializeUplink (lk : Uplink) = initializeUplink lk (getRelation lk)
+  let inline reinitializeUplink (lk : Uplink) =
+    heap[int lk] <- -1; heap[int lk + 1] <- -1
 
   let inline mkFirst (lk : Uplink) = heap[int lk + 1] <- -1
 
@@ -89,6 +90,21 @@ module internal Library =
 
   (* ***** ***** *)
   
+  (*
+    NodeKind.SINGLE; // int s, address of single.
+    
+    (nameId <<< 2) ||| NodeKind.LEAF; // int s + 1, address of leaf.
+    leafParents; int s + 2
+
+    child; int s + 3, address of child
+
+    childUplink.Next; int s + 4, address of childUplink
+    childUplink.Previous; int s + 5
+    UplinkRel.CHILD; int s + 6
+
+    singleParents; int s + 7
+  *)
+
   let inline getSingleId (s : Single) = heap[int s]
   let inline setSingleId (s : Single) id = heap[int s] <- id
     

@@ -33,3 +33,6 @@ module Print =
     (appendNode nd (StringBuilder 64)).ToString ()
   
   let printNode (nd : Node) = printfn "%s" (stringOfNode nd)
+
+  let printDLL (lks : UplinkDLL) =
+    iterDLL (fun lk -> printNode (getNode lk)) lks
