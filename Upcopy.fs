@@ -70,6 +70,21 @@ module Upcopy =
     | UplinkRel.LCHILD -> setLChild (mkBranch (getNode lk)) nd
     | UplinkRel.RCHILD -> setRChild (mkBranch (getNode lk)) nd
   
+  let private replaceChild (newch : Node) (oldch : Node) =
+    let oldpars = getParents oldch
+    if not (isEmpty oldpars) then
+      let mutable lk = getHead oldpars
+      let mutable nxt = getNext lk
+      while not (isNil nxt) do
+        installChild newch lk
+        lk <- nxt
+        nxt <- getNext lk
+      let newpars = getParents newch
+      if not (isEmpty newpars) then
+        link lk (getHead newpars)
+        setParents newch oldpars
+    setParents oldch (mkUplinkDLL -1)
+(*
   let private replaceChild (nd : Node) (lks : UplinkDLL) =
     let mutable lk = getHead lks
     if int lk = -1 then ()
@@ -83,7 +98,7 @@ module Upcopy =
       let h = getHead (getParents nd)
       link lk h
       setParents nd lks
-    
+*)   
   let rec private newSingle oldvar body =
     let varpars = getLeafParents oldvar
     let s = allocSingle ()
@@ -137,9 +152,9 @@ module Upcopy =
     let varpars = getLeafParents var
 
     if false then //isLengthOne lampars then
-      replaceChild argm varpars
+      replaceChild argm (mkNode var)
       let answer = getChild func
-      replaceChild answer (getBranchParents redex)
+      replaceChild answer (mkNode redex)
       freeNode (mkNode redex)
       answer
       
@@ -168,7 +183,7 @@ module Upcopy =
         | ValueNone -> ans
         | ValueSome app -> clearCaches func app; ans
 
-      replaceChild answer (getBranchParents redex)
+      replaceChild answer (mkNode redex)
       freeNode (mkNode redex)
       answer
   
