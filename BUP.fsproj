@@ -7,10 +7,12 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
-    <Compile Include="Heap.fs" />
+    <Compile Include="Memory.fs" />
     <Compile Include="Library.fs" />
     <Compile Include="Upcopy.fs" />
+    <Compile Include="Parse.fs" />
     <Compile Include="Print.fs" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
 
 </Project>

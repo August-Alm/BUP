@@ -128,74 +128,78 @@ module Upcopy =
   let rec reduce (redex : Branch) =
     let func = getLChild redex
     let argm = getRChild redex
-    if getNodeKind func <> NodeKind.SINGLE then
-      failwith "Not a redex!"
-    else
-      let func = mkSingle func
-      let var = getLeaf func
-      let body = getChild func
-      let lampars = getSingleParents func
-      let varpars = getLeafParents var
+    let func = mkSingle func
+    let var = getLeaf func
+    let body = getChild func
+    let lampars = getSingleParents func
+    let varpars = getLeafParents var
 
-      let answer =
+    let answer =
 
-        if isLengthOne lampars then
-          replaceChild argm varpars
-          body
-        
-        elif isNil varpars then
-          body
-
-        else
-
-          let rec scandown (nd : Node) =
-            match getNodeKind nd with
-            | NodeKind.LEAF -> struct (argm, ValueNone)
-            | NodeKind.SINGLE ->
-              let s = mkSingle nd
-              let struct (body', topapp) = scandown (getChild s)
-              let func' = newSingle (getLeaf s) body'
-              struct (func', topapp)
-            | NodeKind.BRANCH ->
-              let b = mkBranch nd
-              let b' = newBranch (getLChild b) (getRChild b) 
-              setCache b (mkBranch b')
-              iterDLL (fun lk -> upcopy argm lk) varpars
-              struct (b', ValueSome b)
-          
-          let struct (ans, topappOpt) = scandown body
-
-          match topappOpt with
-          | ValueNone -> ans
-          | ValueSome app -> clearCaches func app; ans
+      if isLengthOne lampars then
+        replaceChild argm varpars
+        body
       
-      replaceChild answer (getBranchParents redex)
-      freeNode (mkNode redex)
-      answer
+      elif isNil varpars then
+        body
 
-  let rec normaliseWeakHead (nd : Node) =
-    match getNodeKind nd with
-    | NodeKind.BRANCH ->
-      let b = mkBranch nd
-      let func = getLChild b
-      normaliseWeakHead func
-      match getNodeKind func with
-      | NodeKind.SINGLE -> normaliseWeakHead (reduce b)
-      | _ -> ()
-    | _ -> ()
+      else
+
+        let rec scandown (nd : Node) =
+          match getNodeKind nd with
+          | NodeKind.LEAF -> struct (argm, ValueNone)
+          | NodeKind.SINGLE ->
+            let s = mkSingle nd
+            let struct (body', topapp) = scandown (getChild s)
+            let func' = newSingle (getLeaf s) body'
+            struct (func', topapp)
+          | NodeKind.BRANCH ->
+            let b = mkBranch nd
+            let b' = newBranch (getLChild b) (getRChild b) 
+            setCache b (mkBranch b')
+            iterDLL (fun lk -> upcopy argm lk) varpars
+            struct (b', ValueSome b)
+        
+        let struct (ans, topappOpt) = scandown body
+
+        match topappOpt with
+        | ValueNone -> ans
+        | ValueSome app -> clearCaches func app; ans
+      
+    replaceChild answer (getBranchParents redex)
+    freeNode (mkNode redex)
+    answer
   
-  let rec normalise (nd : Node) =
-    match getNodeKind nd with
-    | NodeKind.BRANCH ->
+  let inline private isRedex (nd : Node) : Branch =
+    if isNil nd || getNodeKind nd <> NodeKind.BRANCH then
+      mkBranch -1
+    else
       let b = mkBranch nd
-      let func = getLChild b
-      normaliseWeakHead func
-      match getNodeKind func with
-      | NodeKind.SINGLE -> normalise (reduce b)
-      | NodeKind.LEAF -> normalise (getRChild b)
+      if getNodeKind (getLChild b) = NodeKind.SINGLE then b
+      else mkBranch -1
+
+  let rec normaliseWeakHead (nd : Node) : Node =
+    let mutable ans = nd
+    let mutable b = isRedex ans
+    while not (isNil b) do
+      ans <- reduce b
+      b <- isRedex ans
+    ans
+  
+  let rec normalise (nd : Node) : Node =
+    let ans = normaliseWeakHead nd
+
+    let rec loop x =
+      match getNodeKind x with
+      | NodeKind.LEAF -> ()
+      | NodeKind.SINGLE -> loop (getChild (mkSingle nd))
       | NodeKind.BRANCH ->
-        normalise func; normalise (getRChild b)
-    | NodeKind.SINGLE ->
-      let s = mkSingle nd
-      normalise (getChild s)
-    | _ -> ()
+        let b = mkBranch nd
+        let func = getLChild b
+        match getNodeKind func with
+        | NodeKind.LEAF -> loop (getRChild b)
+        | NodeKind.SINGLE -> loop (reduce b)
+        | NodeKind.BRANCH -> loop func; loop (getRChild b)
+
+    loop ans
+    ans

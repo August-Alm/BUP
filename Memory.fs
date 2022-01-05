@@ -1,6 +1,6 @@
 namespace BUP
 
-module Memory =
+module internal Memory =
 
   open System.Collections.Generic
   
