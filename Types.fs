@@ -40,9 +40,7 @@ module Types =
   
   type Uplink = int<uplinkPtr>
 
-  let mkUplink x =
-    if isNil x then failwith "Uplinks can never be nil."
-    else withMeasure<uplinkPtr> (int x)
+  let mkUplink x = withMeasure<uplinkPtr> (int x)
 
 
   (* ***** ***** *)

@@ -17,21 +17,31 @@ module internal Library =
   let inline setPrevious (lk : Uplink) (prv : Uplink) = heap[int lk + 2] <- int prv
   
   let inline initializeUplink (lk : Uplink) (rel) = 
-    setNext lk lk; setPrevious lk lk; setRelation lk rel
+    setNext lk (mkUplink -1); setPrevious lk (mkUplink -1); setRelation lk rel
 
   let inline reinitializeUplink (lk : Uplink) =
-    setNext lk lk; setPrevious lk lk
+    setNext lk (mkUplink -1); setPrevious lk (mkUplink -1)
 
   let link (lk1 : Uplink) (lk2 : Uplink) =
     setNext lk1 lk2; setPrevious lk2 lk1
 
   let unlink (lk : Uplink) =
     let prv = getPrevious lk
-    if prv <> lk then
-      let nxt = getNext lk
-      link prv nxt
-      reinitializeUplink lk
-  
+    let nxt = getNext lk
+    if isNil prv then
+      if isNil nxt then ()
+      else
+        setPrevious nxt (mkUplink -1)
+        setNext lk (mkUplink -1)
+    else
+      if isNil nxt then
+        setNext prv (mkUplink -1)
+        setPrevious lk (mkUplink -1)
+      else
+        setPrevious nxt prv
+        setNext prv nxt
+        reinitializeUplink lk
+
   let inline getNode (lk : Uplink) =
     match getRelation lk with
     | UplinkRel.CHILD -> mkNode (int lk - 3)
@@ -45,30 +55,28 @@ module internal Library =
   let inline getHead (lks : UplinkDLL) = mkUplink heap[int lks]
   let inline setHead (lks : UplinkDLL) (h : Uplink) = heap[int lks] <- int h
   
-  // Not the same as setHead lks (mkUplink -1) because mkUplink throws. 
-  let inline initializeDLL (lks : UplinkDLL) = heap[int lks] <- -1
+  let inline initializeDLL (lks : UplinkDLL) = setHead lks (mkUplink -1)
 
-  // Not the same as isNil (getHead lks) because mkUplink casts exception.
-  let inline isEmpty (lks : UplinkDLL) = (heap[int lks] = -1)
+  let inline isEmpty (lks : UplinkDLL) = isNil (getHead lks)
   
   let inline isLengthOne (lks : UplinkDLL) : bool =
-    if isEmpty lks then false
-    else 
-      let h = getHead lks
-      if h = getNext h then true else false
+    let h = getHead lks
+    if isNil h then false
+    elif isNil (getNext h) then true
+    else false 
 
-  let inline prepend (lk : Uplink) (lks : UplinkDLL) =
-    if not (isEmpty lks) then link lk (getHead lks)
-    setHead lks lk
+  let inline append (lks : UplinkDLL) (lk : Uplink) =
+    let h = getHead lks
+    if not (isNil h) then link h lk
+    else setHead lks lk
   
   let iterDLL (a : Uplink -> unit) (lks : UplinkDLL) =
-    if isEmpty lks then ()
-    else
-      let rec loop (lk : Uplink) =
-        a lk
-        let nxt = getNext lk
-        if nxt <> getHead lks then loop nxt
-      loop (getHead lks)
+    let rec loop (lk : Uplink) =
+      a lk
+      let nxt = getNext lk
+      if not (isNil nxt) then loop nxt
+    let h = getHead lks
+    if isNil h then () else loop h
 
 
   (* ***** ***** *)
@@ -148,10 +156,10 @@ module internal Library =
   let inline getBranchParents (b : Branch) = mkUplinkDLL (int b + 9)
   let inline setBranchParents (b : Branch) (lks : UplinkDLL) = heap[int b + 9] <- int (getHead lks)
   
-  let inline getCache (b : Branch) = mkBranch (int b + 10)
+  let inline getCache (b : Branch) = mkBranch (heap[int b + 10])
   let inline setCache (b : Branch) (cc : Branch) = heap[int b + 10] <- int cc
 
-  let inline clearCache (b : Branch) = setCache (mkBranch -1)
+  let inline clearCache (b : Branch) = setCache b (mkBranch -1)
   
   let initializeBranch (b : Branch) =
     setBranchId b (int NodeKind.BRANCH)
@@ -182,4 +190,4 @@ module internal Library =
   let initializeParents (nd : Node) = initializeDLL (getParents nd)
 
   let inline addToParents (lk : Uplink) (nd : Node) =
-    prepend lk (getParents nd)
+    append (getParents nd) lk

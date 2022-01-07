@@ -11,9 +11,9 @@ module Upcopy =
     | UplinkRel.CHILD ->
       let s = mkSingle nd
       let l = getLeaf s
-      iterDLL cleanUp (getLeafParents l)
-      iterDLL cleanUp (getSingleParents s)
-    | _ ->
+      iterDLL (fun lk -> cleanUp lk) (getLeafParents l)
+      iterDLL (fun lk -> cleanUp lk) (getSingleParents s)
+    | UplinkRel.LCHILD | UplinkRel.RCHILD ->
       let b = mkBranch nd
       let cc = getCache b
       if isNil cc then ()
@@ -74,11 +74,10 @@ module Upcopy =
   let private replaceChild (newch : Node) (oldch : Node) =
     let oldpars = getParents oldch
     if not (isEmpty oldpars) then
-      let h = getHead oldpars
-      let mutable lk = h
+      let mutable lk = getHead oldpars 
       let mutable nxt = getNext lk
       installChild newch lk
-      while nxt <> h do
+      while not (isNil nxt) do
         lk <- nxt
         nxt <- getNext lk
         installChild newch lk
@@ -86,22 +85,8 @@ module Upcopy =
       if not (isEmpty newpars) then
         link lk (getHead newpars)
         setParents newch oldpars
-    initializeDLL oldpars
-(*
-  let private replaceChild (nd : Node) (lks : UplinkDLL) =
-    let mutable lk = getHead lks
-    if int lk = -1 then ()
-    else
-      let mutable lkN = getNext lk
-      while int lkN <> -1 do
-        installChild nd lk
-        lk <- lkN
-        lkN <- getNext lk
-      installChild nd lk
-      let h = getHead (getParents nd)
-      link lk h
-      setParents nd lks
-*)   
+      initializeParents oldch
+  
   let rec private newSingle oldvar body =
     let varpars = getLeafParents oldvar
     let s = allocSingle ()
