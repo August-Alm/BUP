@@ -25,9 +25,9 @@ module Parse =
     type InputOfStream (strm : System.IO.StreamReader) =
       inherit Input ()
       override _.Pop () = strm.Read ()
-      override _.Peek () = strm.Peek ()
-  
+      override _.Peek () = strm.Peek () 
 
+  
   module Tokenizer =
 
     open Input
@@ -174,6 +174,7 @@ module Parse =
         match parser.ReadToken () with
         | _, T_Name x ->
           let xId = addName x
+          if getName xId <> x then failwith "No round trip"
           let s = allocSingle ()
           initializeSingle s xId
           let xVar = mkNode (getLeaf s)

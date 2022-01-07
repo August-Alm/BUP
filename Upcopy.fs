@@ -16,8 +16,7 @@ module Upcopy =
     | UplinkRel.LCHILD | UplinkRel.RCHILD ->
       let b = mkBranch nd
       let cc = getCache b
-      if isNil cc then ()
-      else
+      if not (isNil cc) then
         clearCache b
         addToParents (getLChildUplink cc) (getLChild cc)
         addToParents (getRChildUplink cc) (getRChild cc)
@@ -82,10 +81,9 @@ module Upcopy =
         nxt <- getNext lk
         installChild newch lk
       let newpars = getParents newch
-      if not (isEmpty newpars) then
-        link lk (getHead newpars)
-        setParents newch oldpars
-      initializeParents oldch
+      if not (isEmpty newpars) then link lk (getHead newpars)
+      setHead newpars (getHead oldpars)
+      initializeDLL oldpars
   
   let rec private newSingle oldvar body =
     let varpars = getLeafParents oldvar
@@ -109,8 +107,9 @@ module Upcopy =
     | UplinkRel.CHILD ->
       let s = mkSingle (getNode parUplk)
       let var = getLeaf s
-      let nd = newSingle var newChild
-      iterDLL (upcopy nd) (getSingleParents s)
+      if not (isNil var) then
+        let nd = newSingle var newChild
+        iterDLL (fun lk -> upcopy nd lk) (getSingleParents s)
     | UplinkRel.LCHILD ->
       let b = mkBranch (getNode parUplk)
       let cc = getCache b

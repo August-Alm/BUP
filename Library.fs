@@ -10,11 +10,11 @@ module internal Library =
   let inline getRelation (lk : Uplink) = toEnum<UplinkRel> heap[int lk]
   let inline setRelation (lk : Uplink) (rel : UplinkRel) = heap[int lk] <- int rel
     
-  let getNext (lk : Uplink) = mkUplink (heap[int lk + 1])
-  let inline setNext (lk : Uplink) (nxt : Uplink) = heap[int lk + 1] <- int nxt
+  let getNext (lk : Uplink) = if isNil lk then failwith "getnext nil uplink" else mkUplink (heap[int lk + 1])
+  let setNext (lk : Uplink) (nxt : Uplink) = if isNil lk then failwith "setnext nil uplink" else heap[int lk + 1] <- int nxt
   
-  let getPrevious (lk : Uplink) = mkUplink (heap[int lk + 2])
-  let inline setPrevious (lk : Uplink) (prv : Uplink) = heap[int lk + 2] <- int prv
+  let getPrevious (lk : Uplink) = if isNil lk then failwith "getprev nil uplink" else mkUplink (heap[int lk + 2])
+  let setPrevious (lk : Uplink) (prv : Uplink) = if isNil lk then failwith "setnext nil uplink" else heap[int lk + 2] <- int prv
   
   let inline initializeUplink (lk : Uplink) (rel) = 
     setNext lk (mkUplink -1); setPrevious lk (mkUplink -1); setRelation lk rel
@@ -70,13 +70,12 @@ module internal Library =
     if not (isNil h) then link lk h
     setHead lks lk
   
-  let iterDLL (a : Uplink -> unit) (lks : UplinkDLL) =
+  let inline iterDLL ([<InlineIfLambda>] a : Uplink -> unit) (lks : UplinkDLL) =
     let rec loop (lk : Uplink) =
       a lk
       let nxt = getNext lk
       if not (isNil nxt) then loop nxt
-    let h = getHead lks
-    if isNil h then () else loop h
+    let h = getHead lks in if isNil h then () else loop h
 
 
   (* ***** ***** *)
@@ -144,10 +143,10 @@ module internal Library =
   let inline setBranchId (b : Branch) id = heap[int b] <- id
     
   let inline getLChild (b : Branch) = mkNode heap[int b + 1]
-  let inline setLChild (b : Branch) (lch : Node) = heap[int b + 1] <- int lch
+  let setLChild (b : Branch) (lch : Node) = heap[int b + 1] <- int lch
   
   let inline getRChild (b : Branch) = mkNode heap[int b + 2]
-  let inline setRChild (b : Branch) (rch : Node) = heap[int b + 2] <- int rch
+  let setRChild (b : Branch) (rch : Node) = heap[int b + 2] <- int rch
   
   let inline getLChildUplink (b : Branch) = mkUplink (int b + 3)
   

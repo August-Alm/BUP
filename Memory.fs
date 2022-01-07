@@ -50,7 +50,7 @@ module internal Memory =
 
   let inline getNameId x = nameIds[x]
 
-  let inline getName id = names[id]
+  let inline getName id = if id >= 0 then names[id] else failwith "How??"
 
   let addName x =
     match nameIds.TryGetValue x with

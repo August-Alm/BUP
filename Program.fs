@@ -11,7 +11,8 @@ module Program =
 
   type Tests =
     
-    static member ClearEq (b : bool) : bool = Memory.clearNames (); Memory.clearHeap (); b
+    static member ClearEq (b : bool) : bool =
+      Memory.clearNames (); Memory.clearHeap (); b
 
     [<Property>]
     static member ``1. Parsing of λf.λx.(f x)`` () =
