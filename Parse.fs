@@ -22,14 +22,12 @@ module Parse =
       override _.Peek () =
         let j = i + 1 in if j >= len then -1 else int s[j]
 
-    type InputOfStream (strm : System.IO.Stream) =
+    type InputOfStream (strm : System.IO.StreamReader) =
       inherit Input ()
-      let pop = strm.ReadByte
-      let mutable top = pop ()
-      override _.Pop () = let c = top in top <- pop (); c
-      override _.Peek () = top 
-
+      override _.Pop () = strm.Read ()
+      override _.Peek () = strm.Peek ()
   
+
   module Tokenizer =
 
     open Input
@@ -205,8 +203,11 @@ module Parse =
         consumeToken T_Eq
         let bnd = parseEnv env
         consumeToken T_Seq
-        addBound env {NameId = xId; Bound = bnd}
-        parseEnv env
+        let binding = {NameId = xId; Bound = bnd}
+        addBound env binding 
+        let res = parseEnv env
+        remBound env binding
+        res
       | pos, _ -> error pos "Syntax error."
 
     member _.ReadNode () = parseEnv Environment.Empty

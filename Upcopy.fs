@@ -161,7 +161,7 @@ module Upcopy =
           let b = mkBranch nd
           let b' = newBranch (getLChild b) (getRChild b) 
           setCache b (mkBranch b')
-          iterDLL (upcopy argm) (getLeafParents var)
+          iterDLL (upcopy argm) varpars
           struct (b', ValueSome b)
 
       let struct (ans, topappOpt) = scandown body
@@ -183,34 +183,22 @@ module Upcopy =
       if getNodeKind (getLChild b) = NodeKind.SINGLE then b
       else mkBranch -1
 
-  let rec normaliseWeakHead (nd : Node) : Node =
+  let rec normaliseWeakHead (nd : Node) =
     let mutable ans = nd
     let mutable b = isRedex ans
     while not (isNil b) do
       ans <- reduce b
       b <- isRedex ans
     ans
-  
-  let rec normalise (nd : Node) : Node =
-    let ans = normaliseWeakHead nd
 
-//    let rec loop x =
-//      match getNodeKind x with
-//      | NodeKind.LEAF -> ()
-//      | NodeKind.SINGLE ->
-//        let ch = getChild (mkSingle x)
-//        loop (normaliseWeakHead ch)
-//      | NodeKind.BRANCH ->
-//        let lch = getLChild (mkBranch x)
-//        let rch = getRChild (mkBranch x)
-//        loop (normaliseWeakHead lch)
-//        loop (normaliseWeakHead rch)
+  
+  let normalise (nd : Node) =
+    let ans = normaliseWeakHead nd
 
     let rec loop x =
       match getNodeKind x with
       | NodeKind.LEAF -> ()
-      | NodeKind.SINGLE ->
-        loop (getChild (mkSingle x))
+      | NodeKind.SINGLE -> loop (getChild (mkSingle x))
       | NodeKind.BRANCH ->
         let b = mkBranch x
         let func = getLChild b
@@ -220,4 +208,5 @@ module Upcopy =
         | NodeKind.BRANCH -> loop func; loop (getRChild b)
 
     loop ans
+    Print.printNode ans
     ans

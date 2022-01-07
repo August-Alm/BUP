@@ -67,8 +67,8 @@ module internal Library =
 
   let inline append (lks : UplinkDLL) (lk : Uplink) =
     let h = getHead lks
-    if not (isNil h) then link h lk
-    else setHead lks lk
+    if not (isNil h) then link lk h
+    setHead lks lk
   
   let iterDLL (a : Uplink -> unit) (lks : UplinkDLL) =
     let rec loop (lk : Uplink) =
