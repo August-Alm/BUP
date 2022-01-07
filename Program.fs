@@ -10,42 +10,44 @@ module Program =
   open FsCheck.Xunit
 
   type Tests =
+    
+    static member ClearEq (b : bool) : bool = Memory.clearNames (); Memory.clearHeap (); b
 
     [<Property>]
-    static member ``1. Test that λf.λx.(f x) parses correctly`` () =
+    static member ``1. Parsing of λf.λx.(f x)`` () =
       let str = "λf.λx.(f x)"
       let node = Parser(InputOfString str).ReadNode ()
-      str = stringOfNode node 
+      Tests.ClearEq ("λf.λx.(f x)" = stringOfNode node)
 
     [<Property>]
-    static member ``2. Test that @f = λx.x; (f f) parses correctly`` () =
+    static member ``2. Parsing of @f = λx.x; (f f)`` () =
       let str = "@f = λx.x; (f f))"
       let node = Parser(InputOfString str).ReadNode ()
-      "(λx.x λx.x)" = stringOfNode node
+      Tests.ClearEq ("(λx.x λx.x)" = stringOfNode node)
 
     [<Property>]
-    static member ``3. Test that (λx.x λy.y) weak-normalises correctly`` () =
+    static member ``3. Weak normalisation of (λx.x λy.y)`` () =
       let str = "(λx.x λy.y)"
       let node = Parser(InputOfString str).ReadNode ()
-      "λy.y" = stringOfNode (normaliseWeakHead node)
+      Tests.ClearEq ("λy.y" = stringOfNode (normaliseWeakHead node))
 
     [<Property>]
-    static member ``4. Test that @f = λx.x; (f f) weak-normalises correctly`` () =
+    static member ``4. Weak normalisation of @f = λx.x; (f f)`` () =
       let str = "@f = λx.x; (f f))"
       let node = Parser(InputOfString str).ReadNode ()
-      "λx.x" = stringOfNode (normaliseWeakHead node)
+      Tests.ClearEq ("λx.x" = stringOfNode (normaliseWeakHead node))
 
     [<Property>]
-    static member ``5. Test that @two = λs.λz.(s (s z)); (two two) normalises correctly`` () =
+    static member ``5. Normalisation of @two = λs.λz.(s (s z)); (two two)`` () =
       let str = "@two = λs.λz.(s (s z)); (two two)"
       let node = Parser(InputOfString str).ReadNode ()
-      "λs.λz.(s (s (s (s z))))" = stringOfNode (normalise node)
+      Tests.ClearEq ("λs.λz.(s (s (s (s z))))" = stringOfNode (normalise node))
 
     [<Property>]
-    static member ``6. Test that λu.λt.(λx.@f = λy.(x (u y));((x f) f) t) normalises correctly`` () =
+    static member ``6. Normalisation of λu.λt.(λx.@f = λy.(x (u y));((x f) f) t)`` () =
       let str = "λu.λt.(λx.@f = λy.(x (u y));((x f) f) t)"
       let node = Parser(InputOfString str).ReadNode ()
-      "λu.λt.((t λy.(t (u y))) λy.(t (u y)))" = stringOfNode (normalise node)
+      Tests.ClearEq ("λu.λt.((t λy.(t (u y))) λy.(t (u y)))" = stringOfNode (normalise node))
 
   [<EntryPoint>]
   let main _ =

@@ -7,34 +7,30 @@ module internal Library =
 
   (* ***** ***** *)
 
-  let inline getNext (lk : Uplink) = mkUplink (heap[int lk])
-  let inline setNext (lk : Uplink) (nxt : Uplink) = heap[int lk] <- int nxt
-  
-  let inline getPrevious (lk : Uplink) = mkUplink (heap[int lk + 1])
-  let inline setPrevious (lk : Uplink) (prv : Uplink) = heap[int lk + 1] <- int prv
-  
-  let inline getRelation (lk : Uplink) = toEnum<UplinkRel> heap[int lk + 2]
-  let inline setRelation (lk : Uplink) (rel : UplinkRel) = heap[int lk + 2] <- int rel
+  let inline getRelation (lk : Uplink) = toEnum<UplinkRel> heap[int lk]
+  let inline setRelation (lk : Uplink) (rel : UplinkRel) = heap[int lk] <- int rel
     
-  let inline setUplink (lk : Uplink) (nxt, prv, rel) =
-    setNext lk nxt; setPrevious lk prv; setRelation lk rel
-    
-  let inline initializeUplink (lk : Uplink) (rel) =
-    heap[int lk] <- -1; heap[int lk + 1] <- -1; heap[int lk + 2] <- int rel
+  let getNext (lk : Uplink) = mkUplink (heap[int lk + 1])
+  let inline setNext (lk : Uplink) (nxt : Uplink) = heap[int lk + 1] <- int nxt
+  
+  let getPrevious (lk : Uplink) = mkUplink (heap[int lk + 2])
+  let inline setPrevious (lk : Uplink) (prv : Uplink) = heap[int lk + 2] <- int prv
+  
+  let inline initializeUplink (lk : Uplink) (rel) = 
+    setNext lk lk; setPrevious lk lk; setRelation lk rel
 
   let inline reinitializeUplink (lk : Uplink) =
-    heap[int lk] <- -1; heap[int lk + 1] <- -1
+    setNext lk lk; setPrevious lk lk
 
-  let inline mkFirst (lk : Uplink) = heap[int lk + 1] <- -1
-
-  let inline link (lk1 : Uplink) (lk2 : Uplink) =
+  let link (lk1 : Uplink) (lk2 : Uplink) =
     setNext lk1 lk2; setPrevious lk2 lk1
 
-  let inline unlink (lk : Uplink) =
+  let unlink (lk : Uplink) =
     let prv = getPrevious lk
-    let nxt = getNext lk
-    link prv nxt
-    reinitializeUplink lk
+    if prv <> lk then
+      let nxt = getNext lk
+      link prv nxt
+      reinitializeUplink lk
   
   let inline getNode (lk : Uplink) =
     match getRelation lk with
@@ -49,15 +45,17 @@ module internal Library =
   let inline getHead (lks : UplinkDLL) = mkUplink heap[int lks]
   let inline setHead (lks : UplinkDLL) (h : Uplink) = heap[int lks] <- int h
   
+  // Not the same as setHead lks (mkUplink -1) because mkUplink throws. 
   let inline initializeDLL (lks : UplinkDLL) = heap[int lks] <- -1
 
+  // Not the same as isNil (getHead lks) because mkUplink casts exception.
   let inline isEmpty (lks : UplinkDLL) = (heap[int lks] = -1)
   
   let inline isLengthOne (lks : UplinkDLL) : bool =
-    let h = getHead lks
-    if isNil h then false
-    elif isNil (getNext h) then true
-    else false
+    if isEmpty lks then false
+    else 
+      let h = getHead lks
+      if h = getNext h then true else false
 
   let inline prepend (lk : Uplink) (lks : UplinkDLL) =
     if not (isEmpty lks) then link lk (getHead lks)
@@ -99,9 +97,9 @@ module internal Library =
 
     child; int s + 3, address of child
 
-    childUplink.Next; int s + 4, address of childUplink
-    childUplink.Previous; int s + 5
-    UplinkRel.CHILD; int s + 6
+    UplinkRel.CHILD; int s + 4, address of childUplink
+    childUplink.Next; int s + 5 
+    childUplink.Previous; int s + 6
 
     singleParents; int s + 7
   *)
@@ -144,13 +142,13 @@ module internal Library =
   
   let inline getRChildUplink (b : Branch) = mkUplink (int b + 6)
   
-  let inline getBranchParents (b : Branch) = mkUplinkDLL (int b + 7)
-  let inline setBranchParents (b : Branch) (lks : UplinkDLL) = heap[int b + 7] <- int (getHead lks)
+  let inline getBranchParents (b : Branch) = mkUplinkDLL (int b + 9)
+  let inline setBranchParents (b : Branch) (lks : UplinkDLL) = heap[int b + 9] <- int (getHead lks)
   
   let inline getCache (b : Branch) = mkBranch (int b + 10)
   let inline setCache (b : Branch) (cc : Branch) = heap[int b + 10] <- int cc
 
-  let inline clearCache (b : Branch) = heap[int b + 10] <- -1
+  let inline clearCache (b : Branch) = setCache (mkBranch -1)
   
   let initializeBranch (b : Branch) =
     setBranchId b (int NodeKind.BRANCH)
@@ -177,6 +175,8 @@ module internal Library =
     | NodeKind.LEAF -> setLeafParents (mkLeaf nd) lks
     | NodeKind.SINGLE -> setSingleParents (mkSingle nd) lks
     | NodeKind.BRANCH -> setBranchParents (mkBranch nd) lks
+
+  let initializeParents (nd : Node) = initializeDLL (getParents nd)
 
   let inline addToParents (lk : Uplink) (nd : Node) =
     prepend lk (getParents nd)

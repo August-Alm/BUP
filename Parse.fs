@@ -134,9 +134,7 @@ module Parse =
     env.Bindings <- bnd :: env.Bindings
 
   let private getBound (env : Environment) nameId =
-    match List.tryFind (fun bnd -> bnd.NameId = nameId) env.Bindings with
-    | None -> mkNode -1
-    | Some bnd -> bnd.Bound
+    List.tryFind (fun bnd -> bnd.NameId = nameId) env.Bindings
 
   let private remBound (env : Environment) (bnd : Binding) =
     let rec remFirst bs =
@@ -199,8 +197,9 @@ module Parse =
         connectRChild argm b
         mkNode b
       | pos, T_Name x ->
-        try getBound env (addName x) 
-        with _ -> error pos "Free variable."
+        match getBound env (addName x) with
+        | None -> error pos "Free variable."
+        | Some bnd -> bnd.Bound
       | _, T_Let x ->
         let xId = addName x
         consumeToken T_Eq

@@ -37,32 +37,33 @@ module Upcopy =
     addToParents (getRChildUplink topcopy) (getRChild topcopy)
     lambdaScan redlam
   
+  let private delPar (nd : Node) (lk : Uplink) =
+    let lks = getParents nd
+    if isLengthOne lks then
+      initializeParents nd
+    else
+      let h = getHead lks
+      if h = lk then setHead lks (getNext h)
+      unlink lk
+
   let rec private freeNode (nd : Node) =
     match getNodeKind nd with
     | NodeKind.LEAF -> ()
     | NodeKind.SINGLE ->
       let s = mkSingle nd
-      delPar (getChild s) (getChildUplink s)
+      let ch = getChild s
+      delPar ch (getChildUplink s)
+      if isEmpty (getParents ch) then freeNode ch
       deallocSingle s
     | NodeKind.BRANCH ->
       let b = mkBranch nd
-      delPar (getLChild b) (getLChildUplink b)
-      delPar (getRChild b) (getRChildUplink b)
+      let lch = getLChild b
+      let rch = getRChild b
+      delPar lch (getLChildUplink b)
+      delPar rch (getRChildUplink b)
+      if isEmpty (getParents lch) then freeNode lch
+      if isEmpty (getParents rch) then freeNode rch
       deallocBranch b
-    | k -> printfn $"What? {k} (from heap[{int nd}] = {heap[int nd]}) is not a node kind."
-
-  and private delPar (nd : Node) (lk : Uplink) =
-    let lks = getParents nd
-    if getHead lks = lk then
-      let nxt = getNext lk
-      if isNil nxt then
-        freeNode nd
-      else
-        reinitializeUplink lk
-        mkFirst nxt
-        setHead lks nxt
-    else
-      unlink lk
 
   let private installChild (nd : Node) (lk : Uplink) =
     match getRelation lk with
@@ -73,17 +74,19 @@ module Upcopy =
   let private replaceChild (newch : Node) (oldch : Node) =
     let oldpars = getParents oldch
     if not (isEmpty oldpars) then
-      let mutable lk = getHead oldpars
+      let h = getHead oldpars
+      let mutable lk = h
       let mutable nxt = getNext lk
-      while not (isNil nxt) do
-        installChild newch lk
+      installChild newch lk
+      while nxt <> h do
         lk <- nxt
         nxt <- getNext lk
+        installChild newch lk
       let newpars = getParents newch
       if not (isEmpty newpars) then
         link lk (getHead newpars)
         setParents newch oldpars
-    setParents oldch (mkUplinkDLL -1)
+    initializeDLL oldpars
 (*
   let private replaceChild (nd : Node) (lks : UplinkDLL) =
     let mutable lk = getHead lks
@@ -205,7 +208,6 @@ module Upcopy =
   
   let rec normalise (nd : Node) : Node =
     let ans = normaliseWeakHead nd
-    Print.printNode ans
 
     let rec loop x =
       match getNodeKind x with
