@@ -103,6 +103,7 @@ module Upcopy =
     mkNode b
   
   and private upcopy newChild parUplk =
+    if isNil parUplk then failwith "nil uplink in upcopy"
     match getRelation parUplk with
     | UplinkRel.CHILD ->
       let s = mkSingle (getNode parUplk)
