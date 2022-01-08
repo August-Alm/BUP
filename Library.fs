@@ -10,11 +10,11 @@ module internal Library =
   let inline getRelation (lk : Uplink) = toEnum<UplinkRel> heap[int lk]
   let inline setRelation (lk : Uplink) (rel : UplinkRel) = heap[int lk] <- int rel
     
-  let getNext (lk : Uplink) = if isNil lk then failwith "getnext nil uplink" else mkUplink (heap[int lk + 1])
-  let setNext (lk : Uplink) (nxt : Uplink) = if isNil lk then failwith "setnext nil uplink" else heap[int lk + 1] <- int nxt
+  let inline getNext (lk : Uplink) = mkUplink (heap[int lk + 1])
+  let inline setNext (lk : Uplink) (nxt : Uplink) = heap[int lk + 1] <- int nxt
   
-  let getPrevious (lk : Uplink) = if isNil lk then failwith "getprev nil uplink" else mkUplink (heap[int lk + 2])
-  let setPrevious (lk : Uplink) (prv : Uplink) = if isNil lk then failwith "setnext nil uplink" else heap[int lk + 2] <- int prv
+  let inline getPrevious (lk : Uplink) = mkUplink (heap[int lk + 2])
+  let inline setPrevious (lk : Uplink) (prv : Uplink) = heap[int lk + 2] <- int prv
   
   let inline initializeUplink (lk : Uplink) (rel) = 
     setNext lk (mkUplink -1); setPrevious lk (mkUplink -1); setRelation lk rel
@@ -22,7 +22,7 @@ module internal Library =
   let inline reinitializeUplink (lk : Uplink) =
     setNext lk (mkUplink -1); setPrevious lk (mkUplink -1)
 
-  let link (lk1 : Uplink) (lk2 : Uplink) =
+  let inline link (lk1 : Uplink) (lk2 : Uplink) =
     setNext lk1 lk2; setPrevious lk2 lk1
 
   let unlink (lk : Uplink) =
@@ -47,7 +47,6 @@ module internal Library =
     | UplinkRel.CHILD -> mkNode (int lk - 4)
     | UplinkRel.LCHILD -> mkNode (int lk - 3)
     | UplinkRel.RCHILD -> mkNode (int lk - 6)
-    | r -> failwith $"Unknown relation {r} of uplink heap[{int lk}] = {heap[int lk]}."
     
 
   (* ***** ***** *)
@@ -186,7 +185,7 @@ module internal Library =
     | NodeKind.SINGLE -> setSingleParents (mkSingle nd) lks
     | NodeKind.BRANCH -> setBranchParents (mkBranch nd) lks
 
-  let initializeParents (nd : Node) = initializeDLL (getParents nd)
+  let inline initializeParents (nd : Node) = initializeDLL (getParents nd)
 
   let inline addToParents (lk : Uplink) (nd : Node) =
     append (getParents nd) lk

@@ -13,7 +13,7 @@ module Upcopy =
       let l = getLeaf s
       iterDLL (fun lk -> cleanUp lk) (getLeafParents l)
       iterDLL (fun lk -> cleanUp lk) (getSingleParents s)
-    | UplinkRel.LCHILD | UplinkRel.RCHILD ->
+    | _ ->
       let b = mkBranch nd
       let cc = getCache b
       if not (isNil cc) then
@@ -70,8 +70,7 @@ module Upcopy =
     | UplinkRel.LCHILD -> setLChild (mkBranch (getNode lk)) nd
     | UplinkRel.RCHILD -> setRChild (mkBranch (getNode lk)) nd
   
-  let private replaceChild (newch : Node) (oldch : Node) =
-    let oldpars = getParents oldch
+  let private replaceChild (newch : Node) (oldpars : UplinkDLL) =
     if not (isEmpty oldpars) then
       let mutable lk = getHead oldpars 
       let mutable nxt = getNext lk
@@ -103,7 +102,6 @@ module Upcopy =
     mkNode b
   
   and private upcopy newChild parUplk =
-    if isNil parUplk then failwith "nil uplink in upcopy"
     match getRelation parUplk with
     | UplinkRel.CHILD ->
       let s = mkSingle (getNode parUplk)
@@ -130,7 +128,7 @@ module Upcopy =
       else
         setRChild cc newChild
 
-  let rec reduce (redex : Branch) =
+  let rec private reduce (redex : Branch) =
     let func = getLChild redex
     let argm = getRChild redex
     let func = mkSingle func
@@ -140,13 +138,13 @@ module Upcopy =
     let varpars = getLeafParents var
 
     if false then //isLengthOne lampars then
-      replaceChild argm (mkNode var)
+      replaceChild argm varpars
       let answer = getChild func
-      replaceChild answer (mkNode redex)
+      replaceChild answer (getBranchParents redex)
       freeNode (mkNode redex)
       answer
       
-    (* elif isNil varpars then body *)
+    elif isNil varpars then body
 
     else
       let rec scandown (nd : Node) =
@@ -171,7 +169,7 @@ module Upcopy =
         | ValueNone -> ans
         | ValueSome app -> clearCaches func app; ans
 
-      replaceChild answer (mkNode redex)
+      replaceChild answer (getBranchParents redex)
       freeNode (mkNode redex)
       answer
   
@@ -183,19 +181,16 @@ module Upcopy =
       if getNodeKind (getLChild b) = NodeKind.SINGLE then b
       else mkBranch -1
 
-  let rec normaliseWeakHead (nd : Node) =
-    let mutable ans = nd
-    let mutable b = isRedex ans
-    while not (isNil b) do
-      ans <- reduce b
-      b <- isRedex ans
-    ans
-
-  let rec normaliseWeakHeadMut (nd : Node byref) =
+  let normaliseWeakHeadMut (nd : Node byref) =
     let mutable b = isRedex nd
     while not (isNil b) do
       nd <- reduce b
       b <- isRedex nd
+
+  let rec normaliseWeakHead (nd : Node) =
+    let mutable ans = nd
+    normaliseWeakHeadMut &ans
+    ans
   
   let rec normaliseMut (nd : Node byref) =
     match getNodeKind nd with
