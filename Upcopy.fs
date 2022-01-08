@@ -191,22 +191,30 @@ module Upcopy =
       b <- isRedex ans
     ans
 
+  let rec normaliseWeakHeadMut (nd : Node byref) =
+    let mutable b = isRedex nd
+    while not (isNil b) do
+      nd <- reduce b
+      b <- isRedex nd
   
+  let rec normaliseMut (nd : Node byref) =
+    match getNodeKind nd with
+    | NodeKind.LEAF -> ()
+    | NodeKind.SINGLE ->
+      let s = mkSingle nd
+      let mutable ch = getChild s
+      normaliseMut &ch
+    | NodeKind.BRANCH ->
+      let b = mkBranch nd
+      let mutable lch = getLChild b
+      let mutable rch = getRChild b
+      normaliseMut &lch
+      match getNodeKind lch with
+      | NodeKind.LEAF -> normaliseMut &rch
+      | NodeKind.SINGLE -> nd <- reduce b; normaliseMut &nd
+      | NodeKind.BRANCH -> normaliseMut &rch
+
   let normalise (nd : Node) =
-    let ans = normaliseWeakHead nd
-
-    let rec loop x =
-      match getNodeKind x with
-      | NodeKind.LEAF -> ()
-      | NodeKind.SINGLE -> loop (getChild (mkSingle x))
-      | NodeKind.BRANCH ->
-        let b = mkBranch x
-        let func = getLChild b
-        match getNodeKind func with
-        | NodeKind.LEAF -> loop (getRChild b)
-        | NodeKind.SINGLE -> loop (reduce b)
-        | NodeKind.BRANCH -> loop func; loop (getRChild b)
-
-    loop ans
-    Print.printNode ans
+    let mutable ans = nd
+    normaliseMut &ans
     ans
