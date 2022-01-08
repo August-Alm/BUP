@@ -42,9 +42,7 @@ module Program =
     static member ``5. Normalisation of @mul = λm.λn.λs.(m (n s)); @two = λs.λz.(s (s z)); ((mul two) two)`` () =
       let str = "@mul = λm.λn.λs.(m (n s)); @two = λs.λz.(s (s z)); ((mul two) two)"
       let node = Parser(InputOfString str).ReadNode ()
-      let actual = stringOfNode (normalise node)
-      printfn "%s" actual
-      Tests.ClearEq ("λs.λz.(s (s (s (s z))))" = actual) //stringOfNode (normalise node))
+      Tests.ClearEq ("λs.λz.(s (s (s (s z))))" = stringOfNode (normalise node))
 
     [<Property>]
     static member ``6. Normalisation of λu.λt.(λx.@f = λy.(x (u y));((x f) f) t)`` () =
