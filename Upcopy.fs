@@ -70,6 +70,12 @@ module Upcopy =
     | UplinkRel.LCHILD -> setLChild (mkBranch (getNode lk)) nd
     | UplinkRel.RCHILD -> setRChild (mkBranch (getNode lk)) nd
   
+  let private installAndLinkChild (nd : Node) (lk : Uplink) =
+    match getRelation lk with
+    | UplinkRel.CHILD -> setChild (mkSingle (getNode lk)) nd
+    | UplinkRel.LCHILD -> setLChild (mkBranch (getNode lk)) nd
+    | UplinkRel.RCHILD -> setRChild (mkBranch (getNode lk)) nd
+
   let private replaceChild (newch : Node) (oldpars : UplinkDLL) =
     if not (isEmpty oldpars) then
       let mutable lk = getHead oldpars 
@@ -106,9 +112,8 @@ module Upcopy =
     | UplinkRel.CHILD ->
       let s = mkSingle (getNode parUplk)
       let var = getLeaf s
-      if not (isNil var) then
-        let nd = newSingle var newChild
-        iterDLL (fun lk -> upcopy nd lk) (getSingleParents s)
+      let nd = newSingle var newChild
+      iterDLL (fun lk -> upcopy nd lk) (getSingleParents s)
     | UplinkRel.LCHILD ->
       let b = mkBranch (getNode parUplk)
       let cc = getCache b
@@ -128,23 +133,29 @@ module Upcopy =
       else
         setRChild cc newChild
 
-  let rec private reduce (redex : Branch) =
-    let func = getLChild redex
+  let private reduce (redex : Branch) =
+    let func = mkSingle (getLChild redex)
     let argm = getRChild redex
-    let func = mkSingle func
     let var = getLeaf func
     let body = getChild func
     let lampars = getSingleParents func
     let varpars = getLeafParents var
 
-    if false then //isLengthOne lampars then
+    if isNil varpars then
+      replaceChild body (getBranchParents redex)
+      freeNode (mkNode redex)
+      body
+
+    elif isLengthOne lampars then
       replaceChild argm varpars
       let answer = getChild func
       replaceChild answer (getBranchParents redex)
-      freeNode (mkNode redex)
+      delPar argm (getRChildUplink redex)
+      delPar (mkNode func) (getLChildUplink redex)
+      deallocBranch redex
+      delPar (getChild func) (getChildUplink func)
+      deallocSingle func
       answer
-      
-    elif isNil varpars then body
 
     else
       let rec scandown (nd : Node) =

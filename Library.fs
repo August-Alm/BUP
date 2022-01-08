@@ -142,10 +142,10 @@ module internal Library =
   let inline setBranchId (b : Branch) id = heap[int b] <- id
     
   let inline getLChild (b : Branch) = mkNode heap[int b + 1]
-  let setLChild (b : Branch) (lch : Node) = heap[int b + 1] <- int lch
+  let inline setLChild (b : Branch) (lch : Node) = heap[int b + 1] <- int lch
   
   let inline getRChild (b : Branch) = mkNode heap[int b + 2]
-  let setRChild (b : Branch) (rch : Node) = heap[int b + 2] <- int rch
+  let inline setRChild (b : Branch) (rch : Node) = heap[int b + 2] <- int rch
   
   let inline getLChildUplink (b : Branch) = mkUplink (int b + 3)
   

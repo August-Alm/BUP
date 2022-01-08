@@ -40,7 +40,7 @@ module Types =
   
   type Uplink = int<uplinkPtr>
 
-  let mkUplink x = withMeasure<uplinkPtr> (int x)
+  let inline mkUplink x = withMeasure<uplinkPtr> (int x)
 
 
   (* ***** ***** *)
