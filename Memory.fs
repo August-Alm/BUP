@@ -4,8 +4,40 @@ module internal Memory =
 
   open System.Collections.Generic
   
-  let private singleBlock = Array.zeroCreate<int> 8
-  let private branchBlock = Array.zeroCreate<int> 11
+  let private singleBlock =
+    [|
+      int NodeKind.SINGLE;
+        
+      int NodeKind.LEAF; // leaf
+      -1; // leaf parents
+        
+      -1; // child node
+      
+      int UplinkRel.CHILD;
+      -1; // uplink next
+      -1; // uplink previous
+      
+      -1; // single parents
+    |]
+  
+  let private branchBlock = 
+    [|
+      int NodeKind.BRANCH;
+
+      -1; // left child
+      -1; // right child
+
+      int UplinkRel.LCHILD;
+      -1; // next
+      -1; // previous
+
+      int UplinkRel.RCHILD;
+      -1;
+      -1;
+
+      -1; // parents
+      -1; // cache 
+    |]
 
   let private capacity = 65536
 

@@ -129,11 +129,7 @@ module internal Library =
   let inline setSingleParents (s : Single) (lks : UplinkDLL) = heap[int s + 7] <- int (getHead lks)
     
   let initializeSingle (s : Single) (nameId : int) =
-    setSingleId s (int NodeKind.SINGLE)
     initializeLeaf (getLeaf s) nameId
-    setChild s (mkNode -1)
-    initializeDLL (getSingleParents s)
-    initializeUplink (getChildUplink s) UplinkRel.CHILD
     
 
   (* ***** ***** *)
@@ -159,14 +155,14 @@ module internal Library =
 
   let inline clearCache (b : Branch) = setCache b (mkBranch -1)
   
-  let initializeBranch (b : Branch) =
-    setBranchId b (int NodeKind.BRANCH)
-    setLChild b (mkNode -1)
-    setRChild b (mkNode -1)
-    initializeUplink (getLChildUplink b) UplinkRel.LCHILD
-    initializeUplink (getRChildUplink b) UplinkRel.RCHILD
-    initializeDLL (getBranchParents b)
-    clearCache b
+  let initializeBranch (b : Branch) = ()
+    //setBranchId b (int NodeKind.BRANCH)
+    //setLChild b (mkNode -1)
+    //setRChild b (mkNode -1)
+    //initializeUplink (getLChildUplink b) UplinkRel.LCHILD
+    //initializeUplink (getRChildUplink b) UplinkRel.RCHILD
+    //initializeDLL (getBranchParents b)
+    //clearCache b
 
 
   (* ***** ***** *)
