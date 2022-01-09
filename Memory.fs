@@ -39,14 +39,14 @@ module internal Memory =
       -1; // cache 
     |]
 
-  let private capacity = 65536
+  let private capacity = pown 2 30
 
   let internal heap = Array.zeroCreate<int> capacity
   let mutable address = 0
 
-  let private freedSingles = Stack<Single> (capacity / 16)
+  let private freedSingles = Stack<Single> (pown 2 16)
 
-  let private freedBranches = Stack<Branch> (capacity / 22)
+  let private freedBranches = Stack<Branch> (pown 2 16)
 
   let internal clearHeap () =
     Array.fill heap 0 address 0
@@ -79,13 +79,14 @@ module internal Memory =
 
   (* ***** ***** *)
 
-  let internal names = ResizeArray<string> (capacity / 16)
+  let private namesCap = pown 2 12
 
-  let internal nameIds = Dictionary<string, int> (capacity / 16)
+  let internal names = ResizeArray<string> namesCap
+  let internal nameIds = Dictionary<string, int> namesCap
 
   let inline getNameId x = nameIds[x]
 
-  let inline getName id = if id >= 0 then names[id] else failwith "How??"
+  let inline getName id = names[id]
 
   let addName x =
     match nameIds.TryGetValue x with
@@ -100,5 +101,5 @@ module internal Memory =
   
   let clearNames () =
     names.Clear ()
-    names.Capacity <- capacity / 16
+    names.Capacity <- namesCap
     nameIds.Clear ()

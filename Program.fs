@@ -50,6 +50,51 @@ module Program =
       let node = Parser(InputOfString str).ReadNode ()
       Tests.ClearEq ("λu.λt.((t λy.(t (u y))) λy.(t (u y)))" = stringOfNode (normalise node))
 
+    //[<Property>]
+    //static member ``7. Normalisation of Church ((2*5)^2)^2 * (2*5)^2 * 5 = 5M.`` () =
+    //  let str =
+    //    "@ n2 = λs.λz.(s (s z));
+    //     @ n5 = λs.λz.(s (s (s (s (s z)))));
+    //     @ mul = λm.λn.λs.(m (n s));
+    //     @ n10 = ((mul n2) n5);
+    //     @ n100 = ((mul n10) n10);
+    //     @ n10k = ((mul n100) n100);
+    //     @ n1M = ((mul n10k) n100); 
+    //     @ n5M = ((mul n1M) n5);
+    //     n5M"
+    //  let mutable node = Parser(InputOfString str).ReadNode ()
+    //  let t = System.Diagnostics.Stopwatch ()
+    //  t.Start ()
+    //  normaliseMut &node
+    //  t.Stop ()
+    //  printfn "Normalised in %A ms." t.ElapsedMilliseconds
+    //  Tests.ClearEq true
+
+    [<Property>]
+    static member ``8. Normalisation of chain of 20 pearls.`` () =
+      let sb = System.Text.StringBuilder 400
+      sb.Append "@ p0 = λx.x;\n" |> ignore
+      for i = 0 to 19 do sb.Append $"@ p{i + 1} = (p{i} p{i});\n" |> ignore
+      sb.Append "p20" |> ignore
+
+    [<Property>]
+    static member ``9. Normalisation of factorial of eight.`` () =
+      let str =
+       "@ one = λs.λz.(s z);
+        @ oneone = λg.((g one) one);
+        @ snd = λa.λb.b;
+        @ F = λp.(p λa.λb.λg.((g λs.λz.(s ((a s) z))) λs.(a (b s))));
+        @ fact = λk.(((k F) oneone) snd);
+        @ eight = λs.λz.(s (s (s (s (s (s (s (s z))))))));
+        (fact eight)"
+      let mutable node = Parser(InputOfString str).ReadNode ()
+      let t = System.Diagnostics.Stopwatch ()
+      t.Start ()
+      normaliseMut &node
+      t.Stop ()
+      printfn "Normalised in %A ms." t.ElapsedMilliseconds
+      Tests.ClearEq true
+
   [<EntryPoint>]
   let main _ =
     Check.QuickAll<Tests> ()
