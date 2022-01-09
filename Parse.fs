@@ -6,10 +6,7 @@ module Parse =
 
     [<AbstractClass>]
     type Input () =
-      /// Should return a byte (cast to int) or, if empty, -1,
-      /// and advance stream.
       abstract member Pop : unit -> int32
-      /// Should return a byte (cast to int) or, if empty, -1.
       abstract member Peek : unit -> int32
 
     type InputOfString (str : string) =
@@ -191,7 +188,6 @@ module Parse =
         let argm = parseEnv env
         consumeToken T_RPar
         let b = allocBranch ()
-        initializeBranch b
         connectLChild func b
         connectRChild argm b
         mkNode b

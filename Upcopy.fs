@@ -102,7 +102,6 @@ module Upcopy =
   
   and private newBranch func argm =
     let b = allocBranch ()
-    initializeBranch b
     setLChild b func
     setRChild b argm
     mkNode b
