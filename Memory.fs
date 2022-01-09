@@ -4,20 +4,21 @@ module internal Memory =
 
   open System.Collections.Generic
   
-  let private singleBlock = Array.zeroCreate 8
-  let private branchBlock = Array.zeroCreate 11
+  let private singleBlock = Array.zeroCreate<int> 8
+  let private branchBlock = Array.zeroCreate<int> 11
 
   let private capacity = 65536
 
-  let internal heap = ResizeArray<int> capacity
+  let internal heap = Array.zeroCreate<int> capacity
+  let mutable address = 0
 
   let private freedSingles = Stack<Single> (capacity / 16)
 
   let private freedBranches = Stack<Branch> (capacity / 22)
 
   let internal clearHeap () =
-    heap.Clear ()
-    heap.Capacity <- capacity
+    Array.fill heap 0 address 0
+    address <- 0
     freedSingles.Clear ()
     freedBranches.Clear ()
 
@@ -25,8 +26,9 @@ module internal Memory =
     if freedSingles.Count > 0 then
       freedSingles.Pop ()
     else
-      let addr = heap.Count
-      heap.AddRange singleBlock
+      let addr = address
+      singleBlock.CopyTo (heap, addr)
+      address <- address + singleBlock.Length
       mkSingle addr
   
   let internal deallocSingle s = freedSingles.Push s
@@ -35,9 +37,10 @@ module internal Memory =
     if freedBranches.Count > 0 then
       freedBranches.Pop ()
     else
-      let a = heap.Count
-      heap.AddRange branchBlock
-      mkBranch a
+      let addr = address
+      branchBlock.CopyTo (heap, addr)
+      address <- address + branchBlock.Length
+      mkBranch addr
   
   let deallocBranch b = freedBranches.Push b
 
