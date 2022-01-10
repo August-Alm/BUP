@@ -12,6 +12,7 @@
     <Compile Include="Print.fs" />
     <Compile Include="Upcopy.fs" />
     <Compile Include="Parse.fs" />
+    <Compile Include="Hoas.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

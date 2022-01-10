@@ -97,10 +97,10 @@ module Program =
     static member ``9. Normalisation of factorial of eight.`` () =
       let str =
        "@ one = λs.λz.(s z);
-        @ oneone = λg.((g one) one);
+        @ one_one = λg.((g one) one);
         @ snd = λa.λb.b;
         @ F = λp.(p λa.λb.λg.((g λs.λz.(s ((a s) z))) λs.(a (b s))));
-        @ fact = λk.(((k F) oneone) snd);
+        @ fact = λk.(((k F) one_one) snd);
         @ eight = λs.λz.(s (s (s (s (s (s (s (s z))))))));
         (fact eight)"
       let mutable node = Parser(InputOfString str).ReadNode ()
@@ -114,4 +114,5 @@ module Program =
   [<EntryPoint>]
   let main _ =
     Check.All<Tests> (Config.Quick.WithMaxTest 1)
+    Check.All<Hoas.Tests> (Config.Quick.WithMaxTest 1)
     1
