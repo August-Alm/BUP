@@ -10,8 +10,16 @@ module Program =
   open FsCheck.Xunit
 
   type Tests =
+  
+    static member private ChurchToInt (nd : Node) : int =
+      let rec loop acc (bod : Node) =
+        match getNodeKind bod with
+        | NodeKind.LEAF -> acc
+        | _ (* BRANCH *) -> loop (acc + 1) (getRChild (mkBranch bod))
+      let app = getChild (mkSingle (getChild (mkSingle nd)))
+      loop 0 app
     
-    static member ClearEq (b : bool) : bool =
+    static member private ClearEq (b : bool) : bool =
       Memory.clearNames (); Memory.clearHeap (); b
 
     [<Property>]
@@ -50,32 +58,39 @@ module Program =
       let node = Parser(InputOfString str).ReadNode ()
       Tests.ClearEq ("λu.λt.((t λy.(t (u y))) λy.(t (u y)))" = stringOfNode (normalise node))
 
-    //[<Property>]
-    //static member ``7. Normalisation of Church ((2*5)^2)^2 * (2*5)^2 * 5 = 5M.`` () =
-    //  let str =
-    //    "@ n2 = λs.λz.(s (s z));
-    //     @ n5 = λs.λz.(s (s (s (s (s z)))));
-    //     @ mul = λm.λn.λs.(m (n s));
-    //     @ n10 = ((mul n2) n5);
-    //     @ n100 = ((mul n10) n10);
-    //     @ n10k = ((mul n100) n100);
-    //     @ n1M = ((mul n10k) n100); 
-    //     @ n5M = ((mul n1M) n5);
-    //     n5M"
-    //  let mutable node = Parser(InputOfString str).ReadNode ()
-    //  let t = System.Diagnostics.Stopwatch ()
-    //  t.Start ()
-    //  normaliseMut &node
-    //  t.Stop ()
-    //  printfn "Normalised in %A ms." t.ElapsedMilliseconds
-    //  Tests.ClearEq true
+    [<Property(MaxTest=100)>]
+    static member ``7. Normalisation of Church ((2*5)^2)^2 * (2*5)^2 = 1M.`` () =
+      let str =
+        "@ n2 = λs.λz.(s (s z));
+         @ n5 = λs.λz.(s (s (s (s (s z)))));
+         @ mul = λm.λn.λs.(m (n s));
+         @ n10 = ((mul n2) n5);
+         @ n100 = ((mul n10) n10);
+         @ n10k = ((mul n100) n100);
+         @ n1M = ((mul n10k) n100); 
+         n1M"
+      let mutable node = Parser(InputOfString str).ReadNode ()
+      let t = System.Diagnostics.Stopwatch ()
+      t.Start ()
+      normaliseMut &node
+      t.Stop ()
+      printfn "Normalised in %A ms." t.ElapsedMilliseconds
+      Tests.ClearEq (Tests.ChurchToInt node = 1000000)
 
     [<Property>]
-    static member ``8. Normalisation of chain of 20 pearls.`` () =
-      let sb = System.Text.StringBuilder 400
+    static member ``8. Normalisation of chain of 100 pearls.`` () =
+      let sb = System.Text.StringBuilder 2000
       sb.Append "@ p0 = λx.x;\n" |> ignore
-      for i = 0 to 19 do sb.Append $"@ p{i + 1} = (p{i} p{i});\n" |> ignore
-      sb.Append "p20" |> ignore
+      for i = 0 to 99 do sb.Append $"@ p{i + 1} = (p{i} p{i});\n" |> ignore
+      sb.Append "p100" |> ignore
+      let str = sb.ToString ()
+      let mutable node = Parser(InputOfString str).ReadNode ()
+      let t = System.Diagnostics.Stopwatch ()
+      t.Start ()
+      normaliseMut &node
+      t.Stop ()
+      printfn "Normalised in %A ms." t.ElapsedMilliseconds
+      Tests.ClearEq ("λx.x" = stringOfNode node)
 
     [<Property>]
     static member ``9. Normalisation of factorial of eight.`` () =
@@ -93,9 +108,9 @@ module Program =
       normaliseMut &node
       t.Stop ()
       printfn "Normalised in %A ms." t.ElapsedMilliseconds
-      Tests.ClearEq true
+      Tests.ClearEq (Tests.ChurchToInt node = 40320)
 
   [<EntryPoint>]
   let main _ =
-    Check.QuickAll<Tests> ()
+    Check.All<Tests> (Config.Quick.WithMaxTest 1)
     1
