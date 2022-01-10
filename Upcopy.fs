@@ -215,9 +215,8 @@ module Upcopy =
       let mutable rch = getRChild b
       normaliseMut &lch
       match getNodeKind lch with
-      | NodeKind.LEAF -> normaliseMut &rch
       | NodeKind.SINGLE -> nd <- reduce b; normaliseMut &nd
-      | NodeKind.BRANCH -> normaliseMut &rch
+      | _ -> normaliseMut &rch
 
   let normalise (nd : Node) =
     let mutable ans = nd

@@ -10,27 +10,30 @@ module Hoas =
 
   let inline app t u = match t with L f -> f u | _ -> A (t, u)
   
-  let rec quoteN n tm =
-    match tm with
-    | V x -> Var (n - x - 1)
-    | L t -> Lam (quoteN (n + 1) (t (V n)))
-    | A (t, u) -> App (quoteN n t, quoteN n u)
-  
-  type QState = QVar | QLam | QFunc | QArgm of Term
+  let rec quot n tm =
+    let rec go n tm ko =
+      match tm with
+      | V x -> ko (Var (n - x - 1))
+      | L t -> go (n + 1) (t (V n)) (fun trm -> ko (Lam trm))
+      | A (t, u) ->
+        go n t <| fun func ->
+          go n u <| fun argm -> ko (App (func, argm))
+    go n tm (fun trm -> trm)
 
-  // Need quote that doesn't overflow so easily.
-
-  let quote = quoteN 0
+  let quote = quot 0
 
   let rec private reduce tm = 
     match tm with A (L f, u) -> reduce (f u) | _ -> tm
   
   let rec normalise tm =
-    let red = reduce tm
-    match red with
-    | V _ -> red
+    match tm with
+    | V _ -> tm
     | L f -> L(fun x -> normalise (f x))
-    | A (t, u) -> A (normalise t, normalise u)
+    | A (t, u) ->
+      let t = normalise t
+      match t with
+      | L f -> reduce (f (normalise u))
+      | _ -> A (t, normalise u)
 
   let private toInt(n : Term) : int =
     let rec loop acc (x : Term) =
@@ -44,9 +47,39 @@ module Hoas =
   type Tests =
 
     [<Property>]
-    static member ``1. Hoas normalisation of factorial of six.`` () =
-      let n1 = L(fun s -> L(fun z -> app s z))
-      let n1_n1 = L(fun g -> app (app g n1) n1)
+    static member ``7. Hoas normalisation of (2*5)^2 * (2*5) * 5 = 5k.`` () =
+      let n2 = L(fun s -> L(fun z -> app s (app s z)))
+      let n5 = L(fun s -> L(fun z -> app s (app s (app s (app s (app s z))))))
+      let mul = L(fun m -> L(fun n -> L(fun s -> app m (app n s))))
+      let n10 = app (app mul n2) n5
+      let n100 = app (app mul n10) n10
+      let n1k = app (app mul n100) n10
+      let n5k = app (app mul n1k) n5
+      let t = System.Diagnostics.Stopwatch ()
+      t.Start ()
+      let y = quote (normalise n5k)
+      t.Stop ()
+      printfn "Hoas normalised in %i ms." t.ElapsedMilliseconds
+      toInt y = 5000
+
+    [<Property>]
+    static member ``8. Hoas normalisation of 15 pearls.``() =
+      let ps = Array.zeroCreate<Tm> 16
+      ps[0] <- L(fun x -> x)
+      for i = 1 to 15 do
+        ps[i] <- A(ps[i - 1], ps[i - 1])
+      let p15 = ps[15]
+      let t = System.Diagnostics.Stopwatch ()
+      t.Start ()
+      let y = quote (normalise p15)
+      t.Stop ()
+      printfn "Hoas normalised in %i ms." t.ElapsedMilliseconds
+      y = Lam (Var 0) 
+
+    [<Property>]
+    static member ``9. Hoas normalisation of factorial of seven.`` () =
+      let one = L(fun s -> L(fun z -> app s z))
+      let one_one = L(fun g -> app (app g one) one)
       let snd = L(fun a -> L(fun b -> b))
       let F =
         L(fun p -> app p (
@@ -54,14 +87,14 @@ module Hoas =
             app
               (app g (L(fun s -> L(fun z -> app s (app (app a s) z)))))
               (L(fun s -> app a (app b s))))))))
-      let fact = L(fun k -> app (app (app k F) n1_n1) snd)
-      let seven =
+      let fact = L(fun k -> app (app (app k F) one_one) snd)
+      let eight =
         L(fun s -> L(fun z ->
           app s (app s (app s (app s (app s (app s (app s z))))))))
-      let x = app fact seven
+      let x = app fact eight
       let t = System.Diagnostics.Stopwatch ()
       t.Start ()
-      let y = normalise x
+      let y = quote (normalise x)
       t.Stop ()
-      printfn "Hoas normalised in %A ms." t.ElapsedMilliseconds
-      toInt (quote y) = 5040 //40320
+      printfn "Hoas normalised in %i ms." t.ElapsedMilliseconds
+      toInt y = 5040

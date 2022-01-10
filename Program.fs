@@ -75,7 +75,7 @@ module Program =
       t.Start ()
       normaliseMut &node
       t.Stop ()
-      printfn "Normalised in %A ms." t.ElapsedMilliseconds
+      printfn "Normalised in %i ms." t.ElapsedMilliseconds
       Tests.ClearEq (Tests.ChurchToInt node = 1000000)
 
     [<Property>]
@@ -90,7 +90,7 @@ module Program =
       t.Start ()
       normaliseMut &node
       t.Stop ()
-      printfn "Normalised in %A ms." t.ElapsedMilliseconds
+      printfn "Normalised in %i ms." t.ElapsedMilliseconds
       Tests.ClearEq ("λx.x" = stringOfNode node)
 
     [<Property>]
@@ -101,6 +101,7 @@ module Program =
         @ snd = λa.λb.b;
         @ F = λp.(p λa.λb.λg.((g λs.λz.(s ((a s) z))) λs.(a (b s))));
         @ fact = λk.(((k F) one_one) snd);
+        @ seven = λs.λz.(s (s (s (s (s (s (s z)))))));
         @ eight = λs.λz.(s (s (s (s (s (s (s (s z))))))));
         (fact eight)"
       let mutable node = Parser(InputOfString str).ReadNode ()
@@ -108,7 +109,7 @@ module Program =
       t.Start ()
       normaliseMut &node
       t.Stop ()
-      printfn "Normalised in %A ms." t.ElapsedMilliseconds
+      printfn "Normalised in %i ms." t.ElapsedMilliseconds
       Tests.ClearEq (Tests.ChurchToInt node = 40320)
   
   [<EntryPoint>]
