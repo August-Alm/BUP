@@ -49,8 +49,9 @@ module Program =
     [<Property>]
     static member ``5. Normalisation of @mul = λm.λn.λs.(m (n s)); @two = λs.λz.(s (s z)); ((mul two) two)`` () =
       let str = "@mul = λm.λn.λs.(m (n s)); @two = λs.λz.(s (s z)); ((mul two) two)"
-      let node = Parser(InputOfString str).ReadNode ()
-      Tests.ClearEq ("λs.λz.(s (s (s (s z))))" = stringOfNode (normalise node))
+      let mutable node = Parser(InputOfString str).ReadNode ()
+      normaliseMut &node
+      Tests.ClearEq (Tests.ChurchToInt node = 4)
 
     [<Property>]
     static member ``6. Normalisation of λu.λt.(λx.@f = λy.(x (u y));((x f) f) t)`` () =
@@ -109,7 +110,7 @@ module Program =
       t.Stop ()
       printfn "Normalised in %A ms." t.ElapsedMilliseconds
       Tests.ClearEq (Tests.ChurchToInt node = 40320)
-
+  
   [<EntryPoint>]
   let main _ =
     Check.All<Tests> (Config.Quick.WithMaxTest 1)
