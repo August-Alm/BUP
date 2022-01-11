@@ -66,8 +66,8 @@ module Program =
       Tests.ClearEq ("λx.x" = stringOfNode (normaliseWeakHead node))
 
     [<Property>]
-    static member ``5. Normalisation of @mul = λm.λn.λs.(m (n s)); @two = λs.λz.(s (s z)); ((mul two) two)`` () =
-      let str = "@mul = λm.λn.λs.(m (n s)); @two = λs.λz.(s (s z)); ((mul two) two)"
+    static member ``5. Normalisation of @two = λs.λz.(s (s z)); (two two).`` () =
+      let str = "@two = λs.λz.(s (s z)); (two two)"
       let mutable node = Parser(InputOfString str).ReadNode ()
       normaliseMut &node
       Tests.ClearEq (churchToInt node = 4)
