@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>BUP.Hoas.Benchmarks-20220111-230819</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.1 (21C52) [Darwin 21.2.0]
+Apple M1, 1 CPU, 8 logical and 8 physical cores
+.NET SDK=6.0.100
+  [Host]     : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT DEBUG
+  DefaultJob : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>Method</th><th>Mean</th><th>Error</th><th>StdDev</th>
+</tr>
+</thead><tbody><tr><td>Hoas5k</td><td>1.057 ms</td><td>0.0040 ms</td><td>0.0033 ms</td>
+</tr><tr><td>HoasTree15</td><td>10.086 ms</td><td>0.1925 ms</td><td>0.1977 ms</td>
+</tr><tr><td>HoasFact7</td><td>1.323 ms</td><td>0.0046 ms</td><td>0.0041 ms</td>
+</tr></tbody></table>
+</body>
+</html>

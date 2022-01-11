@@ -43,6 +43,7 @@ module Hoas =
       | L f -> reduce (f (normalise u))
       | _ -> A (t, normalise u)
 
+ (*
   let private toInt(n : Term) : int =
     let rec loop acc (x : Term) =
       match x with
@@ -52,43 +53,31 @@ module Hoas =
     match n with
     | Lam (Lam bod) -> loop 0 bod
     | _ -> failwith "Not a Church nat."
+  *)
 
-  open FsCheck.Xunit
+  open BenchmarkDotNet.Attributes
 
-  type Tests =
+  type Benchmarks () =
 
-    [<Property>]
-    static member ``7. Hoas normalisation of (2*5)^2 * (2*5) * 5 = 5k.`` () =
-      let n2 = L(fun s -> L(fun z -> app s (app s z)))
-      let n5 = L(fun s -> L(fun z -> app s (app s (app s (app s (app s z))))))
+    [<Benchmark>]
+    member _.Hoas5k () =
+      let two = L(fun s -> L(fun z -> app s (app s z)))
+      let five = L(fun s -> L(fun z -> app s (app s (app s (app s (app s z))))))
       let mul = L(fun m -> L(fun n -> L(fun s -> app m (app n s))))
-      let n10 = app (app mul n2) n5
+      let n10 = app (app mul two) five
       let n100 = app (app mul n10) n10
       let n1k = app (app mul n100) n10
-      let n5k = app (app mul n1k) n5
-      let t = System.Diagnostics.Stopwatch ()
-      t.Start ()
-      let y = quote (normalise n5k)
-      t.Stop ()
-      printfn "Hoas normalised in %i ms." t.ElapsedMilliseconds
-      toInt y = 5000
+      let n5k = app (app mul n1k) five
+      quote (normalise n5k)
 
-    [<Property>]
-    static member ``8. Hoas normalisation of full 15 deep binary tree.``() =
-      let ps = Array.zeroCreate<Tm> 16
-      ps[0] <- L(fun x -> x)
-      for i = 1 to 15 do
-        ps[i] <- A(ps[i - 1], ps[i - 1])
-      let p15 = ps[15]
-      let t = System.Diagnostics.Stopwatch ()
-      t.Start ()
-      let y = quote (normalise p15)
-      t.Stop ()
-      printfn "Hoas normalised in %i ms." t.ElapsedMilliseconds
-      y = Lam (Var 0) 
+    [<Benchmark>]
+    member _.HoasTree15 () =
+      let mutable p15 = L(fun x -> x)
+      for i = 1 to 15 do p15 <- A(p15, p15)
+      quote (normalise p15)
 
-    [<Property>]
-    static member ``9. Hoas normalisation of factorial of seven.`` () =
+    [<Benchmark>]
+    member _.HoasFact7 () =
       let one = L(fun s -> L(fun z -> app s z))
       let one_one = L(fun g -> app (app g one) one)
       let snd = L(fun a -> L(fun b -> b))
@@ -102,10 +91,4 @@ module Hoas =
       let seven =
         L(fun s -> L(fun z ->
           app s (app s (app s (app s (app s (app s (app s z))))))))
-      let x = app fact seven
-      let t = System.Diagnostics.Stopwatch ()
-      t.Start ()
-      let y = quote (normalise x)
-      t.Stop ()
-      printfn "Hoas normalised in %i ms." t.ElapsedMilliseconds
-      toInt y = 5040
+      quote (normalise (app fact seven))

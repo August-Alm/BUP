@@ -1,0 +1,7 @@
+// Validating benchmarks:
+Benchmarked method `7. Hoas normalisation of (2*5)^2 * (2*5) * 5 = 5k.` contains illegal character(s) or uses C# keyword. Please use `[<Benchmark(Description = "Custom name")>]` to set custom display name.
+Benchmarked method `8. Hoas normalisation of full 15 deep binary tree.` contains illegal character(s) or uses C# keyword. Please use `[<Benchmark(Description = "Custom name")>]` to set custom display name.
+Benchmarked method `9. Hoas normalisation of factorial of seven.` contains illegal character(s) or uses C# keyword. Please use `[<Benchmark(Description = "Custom name")>]` to set custom display name.
+Benchmarked method `7. Hoas normalisation of (2*5)^2 * (2*5) * 5 = 5k.` is static. Benchmarks MUST be instance methods, static methods are not supported.
+Benchmarked method `8. Hoas normalisation of full 15 deep binary tree.` is static. Benchmarks MUST be instance methods, static methods are not supported.
+Benchmarked method `9. Hoas normalisation of factorial of seven.` is static. Benchmarks MUST be instance methods, static methods are not supported.
