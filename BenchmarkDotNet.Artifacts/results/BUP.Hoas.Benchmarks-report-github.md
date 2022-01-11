@@ -10,6 +10,6 @@ Apple M1, 1 CPU, 8 logical and 8 physical cores
 ```
 |     Method |      Mean |     Error |    StdDev |
 |----------- |----------:|----------:|----------:|
-|     Hoas5k |  1.057 ms | 0.0040 ms | 0.0033 ms |
-| HoasTree15 | 10.086 ms | 0.1925 ms | 0.1977 ms |
-|  HoasFact7 |  1.323 ms | 0.0046 ms | 0.0041 ms |
+|     Hoas5k |  1.055 ms | 0.0015 ms | 0.0013 ms |
+| HoasTree15 | 10.016 ms | 0.1598 ms | 0.1416 ms |
+|  HoasFact7 |  1.316 ms | 0.0042 ms | 0.0038 ms |

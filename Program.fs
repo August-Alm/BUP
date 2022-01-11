@@ -41,7 +41,7 @@ module Program =
   type Tests =
   
     static member private ClearEq (b : bool) : bool =
-      Memory.clearNames (); Memory.clearHeap (); b
+      Memory.clearHeap (); b
 
     [<Property>]
     static member ``1. Parsing of λf.λx.(f x)`` () =
@@ -175,22 +175,22 @@ module Program =
       normaliseMut &nodeTree15
 
     [<Benchmark>]
-    member _.NormaliseFact7 () =
+    member _.ParseAndNormaliseFact7 () =
       let mutable nodeFact7 = Parser(InputOfString strFact7).ReadNode ()
       normaliseMut &nodeFact7
     
     [<Benchmark>]
-    member _.NormaliseAndParse1M () =
+    member _.ParseAndNormalise1M () =
       let mutable node1M = Parser(InputOfString str1M).ReadNode ()
       normaliseMut &node1M
 
     [<Benchmark>]
-    member _.NormaliseAndParsePearls100 () =
+    member _.ParseAndNormalisePearls100 () =
       let mutable nodePearls100 = Parser(InputOfString strPearls100).ReadNode ()
       normaliseMut &nodePearls100
 
     [<IterationCleanup>]
-    member _.Cleanup () = Memory.clearHeap (); Memory.clearNames ()
+    member _.Cleanup () = Memory.clearHeap ()
 
 
   [<EntryPoint>]
