@@ -8,6 +8,8 @@ module Program =
   open Parse.Input
   open FsCheck
   open FsCheck.Xunit
+  open BenchmarkDotNet.Attributes
+  open BenchmarkDotNet.Running
 
   let private churchToInt (nd : Node) : int =
     let rec loop sId zId acc (nd : Node) =
@@ -131,8 +133,39 @@ module Program =
       printfn "Normalised in %i ms." t.ElapsedMilliseconds
       Tests.ClearEq (churchToInt node = 40320)
   
+  type Benchmarks () =
+    let strFact7 =
+     "@ one = λs.λz.(s z);
+      @ one_one = λg.((g one) one);
+      @ snd = λa.λb.b;
+      @ F = λp.(p λa.λb.λg.((g λs.λz.(s ((a s) z))) λs.(a (b s))));
+      @ fact = λk.(((k F) one_one) snd);
+      @ seven = λs.λz.(s (s (s (s (s (s (s z)))))));
+      (fact seven)"
+
+    let strTree15 =
+     let rec loop seed n =
+      if n = 0 then seed
+      else let s = loop seed (n - 1) in $"({s} {s})" 
+     loop "λx.x" 15
+
+    let mutable nodeFact7 = Parser(InputOfString strFact7).ReadNode ()
+
+    let mutable nodeTree15 = Parser(InputOfString strTree15).ReadNode ()
+    
+    
+    [<Benchmark>]
+    member _.NormaliseFact7 () =
+      if isNil nodeFact7 then () else normaliseMut &nodeFact7
+
+    [<Benchmark>]
+    member _.NormaliseTree15 () = normaliseMut &nodeTree15
+
+
   [<EntryPoint>]
   let main _ =
     Check.All<Tests> (Config.Quick.WithMaxTest 1)
     Check.All<Hoas.Tests> (Config.Quick.WithMaxTest 1)
+    let benches = BenchmarkRunner.Run<Benchmarks> ()
+    benches |> ignore
     1
