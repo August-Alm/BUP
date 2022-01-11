@@ -9,16 +9,35 @@ module Program =
   open FsCheck
   open FsCheck.Xunit
 
+  let private churchToInt (nd : Node) : int =
+    let rec loop sId zId acc (nd : Node) =
+      match getNodeKind nd with
+      | NodeKind.LEAF ->
+        if getLeafId (mkLeaf nd) = zId then acc
+        else failwith "Not a Church nat."
+      | NodeKind.BRANCH ->
+        let lch = getLChild (mkBranch nd)
+        match getNodeKind lch with
+        | NodeKind.LEAF ->
+          if getLeafId (mkLeaf lch) = sId then
+            loop sId zId (acc + 1) (getRChild (mkBranch nd))
+          else failwith "Not a Church nat."
+        | _ -> failwith "Not a Church nat."
+      | _ -> failwith "Not a Church nat."
+    match getNodeKind nd with
+    | NodeKind.SINGLE ->
+      let sId = getLeafId (getLeaf (mkSingle nd))
+      let ch = getChild (mkSingle nd)
+      match getNodeKind ch with
+      | NodeKind.SINGLE ->
+        let zId = getLeafId (getLeaf (mkSingle ch))
+        loop sId zId 0 (getChild (mkSingle ch))
+      | _ -> failwith "Not a Church nat."
+    | _ -> failwith "Not a Church nat."
+
+
   type Tests =
   
-    static member private ChurchToInt (nd : Node) : int =
-      let rec loop acc (bod : Node) =
-        match getNodeKind bod with
-        | NodeKind.LEAF -> acc
-        | _ (* BRANCH *) -> loop (acc + 1) (getRChild (mkBranch bod))
-      let app = getChild (mkSingle (getChild (mkSingle nd)))
-      loop 0 app
-    
     static member private ClearEq (b : bool) : bool =
       Memory.clearNames (); Memory.clearHeap (); b
 
@@ -51,7 +70,7 @@ module Program =
       let str = "@mul = λm.λn.λs.(m (n s)); @two = λs.λz.(s (s z)); ((mul two) two)"
       let mutable node = Parser(InputOfString str).ReadNode ()
       normaliseMut &node
-      Tests.ClearEq (Tests.ChurchToInt node = 4)
+      Tests.ClearEq (churchToInt node = 4)
 
     [<Property>]
     static member ``6. Normalisation of λu.λt.(λx.@f = λy.(x (u y));((x f) f) t)`` () =
@@ -59,7 +78,7 @@ module Program =
       let node = Parser(InputOfString str).ReadNode ()
       Tests.ClearEq ("λu.λt.((t λy.(t (u y))) λy.(t (u y)))" = stringOfNode (normalise node))
 
-    [<Property(MaxTest=100)>]
+    [<Property>]
     static member ``7. Normalisation of Church ((2*5)^2)^2 * (2*5)^2 = 1M.`` () =
       let str =
         "@ n2 = λs.λz.(s (s z));
@@ -76,7 +95,7 @@ module Program =
       normaliseMut &node
       t.Stop ()
       printfn "Normalised in %i ms." t.ElapsedMilliseconds
-      Tests.ClearEq (Tests.ChurchToInt node = 1000000)
+      Tests.ClearEq (churchToInt node = 1000000)
 
     [<Property>]
     static member ``8. Normalisation of chain of 100 pearls.`` () =
@@ -110,7 +129,7 @@ module Program =
       normaliseMut &node
       t.Stop ()
       printfn "Normalised in %i ms." t.ElapsedMilliseconds
-      Tests.ClearEq (Tests.ChurchToInt node = 40320)
+      Tests.ClearEq (churchToInt node = 40320)
   
   [<EntryPoint>]
   let main _ =

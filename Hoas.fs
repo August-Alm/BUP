@@ -10,17 +10,25 @@ module Hoas =
 
   let inline app t u = match t with L f -> f u | _ -> A (t, u)
   
-  let rec quot n tm =
-    let rec go n tm ko =
-      match tm with
-      | V x -> ko (Var (n - x - 1))
-      | L t -> go (n + 1) (t (V n)) (fun trm -> ko (Lam trm))
-      | A (t, u) ->
-        go n t <| fun func ->
-          go n u <| fun argm -> ko (App (func, argm))
-    go n tm (fun trm -> trm)
+  type Ko =
+    | KoId
+    | KoLam of Ko
+    | KoArg of Ko * int * Tm
+    | KoApp of Ko * Term
 
-  let quote = quot 0
+  let rec quote tm =
+    let rec go n tm (ko : Ko) =
+      match tm with
+      | V x -> ev ko (Var (n - x - 1))
+      | L t -> go (n + 1) (t (V n)) (KoLam ko) 
+      | A (t, u) -> go n t (KoArg (ko, n, u)) 
+    and ev ko trm =
+      match ko with
+      | KoId -> trm
+      | KoLam ko -> ev ko (Lam trm)
+      | KoArg (ko, n, u) -> go n u (KoApp (ko, trm)) 
+      | KoApp (ko, func) -> ev ko (App (func, trm))
+    go 0 tm KoId
 
   let rec private reduce tm = 
     match tm with A (L f, u) -> reduce (f u) | _ -> tm
@@ -38,9 +46,12 @@ module Hoas =
   let private toInt(n : Term) : int =
     let rec loop acc (x : Term) =
       match x with
-      | App (_, u) -> loop (acc + 1) u
-      | _ (* Var *) -> acc
-    match n with Lam (Lam bod) -> loop 0 bod | _ -> failwith "Not a Church nat."
+      | App (Var 1, u) -> loop (acc + 1) u
+      | Var 0 -> acc
+      | _ -> failwith "Not a Church nat."
+    match n with
+    | Lam (Lam bod) -> loop 0 bod
+    | _ -> failwith "Not a Church nat."
 
   open FsCheck.Xunit
 
@@ -88,10 +99,10 @@ module Hoas =
               (app g (L(fun s -> L(fun z -> app s (app (app a s) z)))))
               (L(fun s -> app a (app b s))))))))
       let fact = L(fun k -> app (app (app k F) one_one) snd)
-      let eight =
+      let seven =
         L(fun s -> L(fun z ->
           app s (app s (app s (app s (app s (app s (app s z))))))))
-      let x = app fact eight
+      let x = app fact seven
       let t = System.Diagnostics.Stopwatch ()
       t.Start ()
       let y = quote (normalise x)
