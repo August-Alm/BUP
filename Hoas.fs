@@ -74,7 +74,7 @@ module Hoas =
       toInt y = 5000
 
     [<Property>]
-    static member ``8. Hoas normalisation of 15 pearls.``() =
+    static member ``8. Hoas normalisation of full 15 deep binary tree.``() =
       let ps = Array.zeroCreate<Tm> 16
       ps[0] <- L(fun x -> x)
       for i = 1 to 15 do

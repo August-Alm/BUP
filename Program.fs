@@ -134,14 +134,14 @@ module Program =
       Tests.ClearEq (churchToInt node = 40320)
   
   type Benchmarks () =
-    let strFact7 =
+    let strFact8 =
      "@ one = λs.λz.(s z);
       @ one_one = λg.((g one) one);
       @ snd = λa.λb.b;
       @ F = λp.(p λa.λb.λg.((g λs.λz.(s ((a s) z))) λs.(a (b s))));
       @ fact = λk.(((k F) one_one) snd);
-      @ seven = λs.λz.(s (s (s (s (s (s (s z)))))));
-      (fact seven)"
+      @ eight = λs.λz.(s (s (s (s (s (s (s (s z))))))));
+      (fact eight)"
 
     let strTree15 =
      let rec loop seed n =
@@ -149,17 +149,15 @@ module Program =
       else let s = loop seed (n - 1) in $"({s} {s})" 
      loop "λx.x" 15
 
-    let mutable nodeFact7 = Parser(InputOfString strFact7).ReadNode ()
-
-    let mutable nodeTree15 = Parser(InputOfString strTree15).ReadNode ()
-    
-    
     [<Benchmark>]
-    member _.NormaliseFact7 () =
-      if isNil nodeFact7 then () else normaliseMut &nodeFact7
+    member _.NormaliseFact8 () =
+      let mutable nodeFact8 = Parser(InputOfString strFact8).ReadNode ()
+      normaliseMut &nodeFact8
 
     [<Benchmark>]
-    member _.NormaliseTree15 () = normaliseMut &nodeTree15
+    member _.NormaliseTree15 () =
+      let mutable nodeTree15 = Parser(InputOfString strTree15).ReadNode ()
+      normaliseMut &nodeTree15
 
 
   [<EntryPoint>]

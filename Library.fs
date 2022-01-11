@@ -68,14 +68,13 @@ module internal Library =
     if not (isNil h) then link lk h
     setHead lks lk
   
-  let inline iterDLL
-    ([<InlineIfLambda>] a : Uplink -> unit) (lks : UplinkDLL) =
-    let rec loop (lk : Uplink) =
-      a lk
-      let nxt = getNext lk
-      if not (isNil nxt) then loop nxt
-    let h = getHead lks in if isNil h then () else loop h
-
+  let inline iterDLL ([<InlineIfLambda>] a : Uplink -> unit) (lks : UplinkDLL) =
+    let mutable lk = getHead lks
+    if isNil lk then ()
+    else
+      let mutable nxt = getNext lk
+      while not (isNil lk) do
+        a lk; lk <- nxt; nxt <- getNext lk
 
   (* ***** ***** *)
   
