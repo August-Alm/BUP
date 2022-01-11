@@ -171,7 +171,6 @@ module Parse =
         match parser.ReadToken () with
         | _, T_Name x ->
           let xId = addName x
-          if getName xId <> x then failwith "No round trip"
           let s = allocSingle ()
           initializeSingle s xId
           let xVar = mkNode (getLeaf s)
