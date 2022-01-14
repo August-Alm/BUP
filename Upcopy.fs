@@ -90,6 +90,18 @@ module Upcopy =
       setHead newpars (getHead oldpars)
       initializeDLL oldpars
   
+  type UpcopyArg = (struct (Node * Uplink))
+
+  let private ucstk = System.Collections.Generic.Stack<UpcopyArg> (pown 2 12)
+
+  let inline private pusharg x = fun lk -> ucstk.Push (struct (x, lk))
+
+  let inline private newBranch func argm =
+    let b = allocBranch ()
+    setLChild b func
+    setRChild b argm
+    mkNode b
+
   let rec private newSingle oldvar body =
     let varpars = getLeafParents oldvar
     let s = allocSingle ()
@@ -97,40 +109,37 @@ module Upcopy =
     setChild s body
     addToParents (getChildUplink s) body
     let var = mkNode (getLeaf s)
-    iterDLL (fun lk -> upcopy var lk) varpars
+    iterDLL (pusharg var) varpars
+    upcopy ()
     mkNode s
   
-  and private newBranch func argm =
-    let b = allocBranch ()
-    setLChild b func
-    setRChild b argm
-    mkNode b
-  
-  and private upcopy newChild parUplk =
-    match getRelation parUplk with
-    | UplinkRel.CHILD ->
-      let s = mkSingle (getNode parUplk)
-      let var = getLeaf s
-      let nd = newSingle var newChild
-      iterDLL (fun lk -> upcopy nd lk) (getSingleParents s)
-    | UplinkRel.LCHILD ->
-      let b = mkBranch (getNode parUplk)
-      let cc = getCache b
-      if isNil cc then
-        let nd = newBranch newChild (getRChild b)
-        setCache b (mkBranch nd)
-        iterDLL (fun lk -> upcopy nd lk) (getBranchParents b)
-      else
-        setLChild cc newChild
-    | UplinkRel.RCHILD ->
-      let b = mkBranch (getNode parUplk)
-      let cc = getCache b
-      if isNil cc then
-        let nd = newBranch (getLChild b) newChild
-        setCache b (mkBranch nd)
-        iterDLL (fun lk -> upcopy nd lk) (getBranchParents b)
-      else
-        setRChild cc newChild
+  and private upcopy () =
+    while ucstk.Count > 0 do
+      let struct (newChild, parUplk) = ucstk.Pop ()
+      match getRelation parUplk with
+      | UplinkRel.CHILD ->
+        let s = mkSingle (getNode parUplk)
+        let var = getLeaf s
+        let nd = newSingle var newChild
+        iterDLL (pusharg nd) (getSingleParents s)
+      | UplinkRel.LCHILD ->
+        let b = mkBranch (getNode parUplk)
+        let cc = getCache b
+        if isNil cc then
+          let nd = newBranch newChild (getRChild b)
+          setCache b (mkBranch nd)
+          iterDLL (pusharg nd) (getBranchParents b)
+        else
+          setLChild cc newChild
+      | UplinkRel.RCHILD ->
+        let b = mkBranch (getNode parUplk)
+        let cc = getCache b
+        if isNil cc then
+          let nd = newBranch (getLChild b) newChild
+          setCache b (mkBranch nd)
+          iterDLL (pusharg nd) (getBranchParents b)
+        else
+          setRChild cc newChild
 
   let private reduce (redex : Branch) =
     let func = mkSingle (getLChild redex)
@@ -169,7 +178,8 @@ module Upcopy =
           let b = mkBranch nd
           let b' = newBranch (getLChild b) (getRChild b) 
           setCache b (mkBranch b')
-          iterDLL (upcopy argm) varpars
+          iterDLL (pusharg argm) varpars
+          upcopy ()
           struct (b', ValueSome b)
 
       let struct (ans, topappOpt) = scandown body
@@ -191,34 +201,24 @@ module Upcopy =
       if getNodeKind (getLChild b) = NodeKind.SINGLE then b
       else mkBranch -1
 
-  let normaliseWeakHeadMut (nd : Node byref) =
+  let normaliseWeakHead (nd : Node byref) =
     let mutable b = isRedex nd
     while not (isNil b) do
       nd <- reduce b
       b <- isRedex nd
 
-  let rec normaliseWeakHead (nd : Node) =
-    let mutable ans = nd
-    normaliseWeakHeadMut &ans
-    ans
-  
-  let rec normaliseMut (nd : Node byref) =
+  let rec normalise (nd : Node byref) =
     match getNodeKind nd with
     | NodeKind.LEAF -> ()
     | NodeKind.SINGLE ->
       let s = mkSingle nd
       let mutable ch = getChild s
-      normaliseMut &ch
+      normalise &ch
     | NodeKind.BRANCH ->
       let b = mkBranch nd
       let mutable lch = getLChild b
       let mutable rch = getRChild b
-      normaliseMut &lch
+      normalise &lch
       match getNodeKind lch with
-      | NodeKind.SINGLE -> nd <- reduce b; normaliseMut &nd
-      | _ -> normaliseMut &rch
-
-  let normalise (nd : Node) =
-    let mutable ans = nd
-    normaliseMut &ans
-    ans
+      | NodeKind.SINGLE -> nd <- reduce b; normalise &nd
+      | _ -> normalise &rch

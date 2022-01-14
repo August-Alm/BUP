@@ -58,29 +58,32 @@ module Program =
     [<Property>]
     static member ``3. Weak normalisation of (λx.x λy.y)`` () =
       let str = "(λx.x λy.y)"
-      let node = Parser(InputOfString str).ReadNode ()
-      Tests.ClearEq ("λy.y" = stringOfNode (normaliseWeakHead node))
+      let mutable node = Parser(InputOfString str).ReadNode ()
+      normaliseWeakHead &node
+      Tests.ClearEq ("λy.y" = stringOfNode node)
 
     [<Property>]
     static member ``4. Weak normalisation of @f = λx.x; (f f)`` () =
       let str = "@f = λx.x; (f f))"
-      let node = Parser(InputOfString str).ReadNode ()
-      Tests.ClearEq ("λx.x" = stringOfNode (normaliseWeakHead node))
+      let mutable node = Parser(InputOfString str).ReadNode ()
+      normaliseWeakHead &node
+      Tests.ClearEq ("λx.x" = stringOfNode node)
 
     [<Property>]
     static member ``5. Normalisation of @two = λs.λz.(s (s z)); (two two).`` () =
       let str = "@two = λs.λz.(s (s z)); (two two)"
       let mutable node = Parser(InputOfString str).ReadNode ()
-      normaliseMut &node
+      normalise &node
       Tests.ClearEq (churchToInt node = 4)
 
     [<Property>]
     static member ``6. Normalisation of λu.λt.(λx.@f = λy.(x (u y));((x f) f) t)`` () =
       let str = "λu.λt.(λx.@f = λy.(x (u y));((x f) f) t)"
-      let node = Parser(InputOfString str).ReadNode ()
-      Tests.ClearEq ("λu.λt.((t λy.(t (u y))) λy.(t (u y)))" = stringOfNode (normalise node))
+      let mutable node = Parser(InputOfString str).ReadNode ()
+      normalise &node
+      Tests.ClearEq ("λu.λt.((t λy.(t (u y))) λy.(t (u y)))" = stringOfNode node)
 
-    [<Property; Benchmark>]
+    [<Property>]
     static member ``7. Normalisation of Church ((2*5)^2)^2 * (2*5)^2 = 1M.`` () =
       let str =
         "@ n2 = λs.λz.(s (s z));
@@ -92,7 +95,7 @@ module Program =
          @ n1M = ((mul n10k) n100); 
          n1M"
       let mutable node = Parser(InputOfString str).ReadNode ()
-      normaliseMut &node
+      normalise &node
       Tests.ClearEq (churchToInt node = 1000000)
 
     [<Property>]
@@ -103,7 +106,7 @@ module Program =
       sb.Append "p100" |> ignore
       let str = sb.ToString ()
       let mutable node = Parser(InputOfString str).ReadNode ()
-      normaliseMut &node
+      normalise &node
       Tests.ClearEq ("λx.x" = stringOfNode node)
 
     [<Property>]
@@ -117,20 +120,21 @@ module Program =
         @ eight = λs.λz.(s (s (s (s (s (s (s (s z))))))));
         (fact eight)"
       let mutable node = Parser(InputOfString str).ReadNode ()
-      normaliseMut &node
+      normalise &node
       Tests.ClearEq (churchToInt node = 40320)
-  
+    
+
   type Benchmarks () =
 
-    let str5k =
+    let str50k =
       "@ n2 = λs.λz.(s (s z));
        @ n5 = λs.λz.(s (s (s (s (s z)))));
        @ mul = λm.λn.λs.(m (n s));
        @ n10 = ((mul n2) n5);
        @ n100 = ((mul n10) n10);
-       @ n1k = ((mul n100) n10);
-       @ n5k = ((mul n1k) n5); 
-       n5k"
+       @ n10k = ((mul n100) n100);
+       @ n50k = ((mul n10k) n5); 
+       n50k"
 
     let strTree15 =
      let rec loop seed n =
@@ -138,13 +142,13 @@ module Program =
       else let s = loop seed (n - 1) in $"({s} {s})" 
      loop "λx.x" 15
 
-    let strFact7 =
+    let strFact8 =
      "@ one = λs.λz.(s z);
       @ one_one = λg.((g one) one);
       @ snd = λa.λb.b;
       @ F = λp.(p λa.λb.λg.((g λs.λz.(s ((a s) z))) λs.(a (b s))));
       @ fact = λk.(((k F) one_one) snd);
-      @ seven = λs.λz.(s (s (s (s (s (s (s z)))))));
+      @ seven = λs.λz.(s (s (s (s (s (s (s (s z))))))));
       (fact seven)"
 
     let str1M =
@@ -165,29 +169,29 @@ module Program =
       sb.ToString ()
 
     [<Benchmark>]
-    member _.ParseAndNormalise5k () =
-      let mutable node = Parser(InputOfString str5k).ReadNode ()
-      normaliseMut &node
+    member _.ParseAndNormalise50k () =
+      let mutable node = Parser(InputOfString str50k).ReadNode ()
+      normalise &node
 
     [<Benchmark>]
     member _.ParseAndNormaliseTree15 () =
       let mutable nodeTree15 = Parser(InputOfString strTree15).ReadNode ()
-      normaliseMut &nodeTree15
+      normalise &nodeTree15
 
     [<Benchmark>]
-    member _.ParseAndNormaliseFact7 () =
-      let mutable nodeFact7 = Parser(InputOfString strFact7).ReadNode ()
-      normaliseMut &nodeFact7
+    member _.ParseAndNormaliseFact8 () =
+      let mutable nodeFact7 = Parser(InputOfString strFact8).ReadNode ()
+      normalise &nodeFact7
     
     [<Benchmark>]
     member _.ParseAndNormalise1M () =
       let mutable node1M = Parser(InputOfString str1M).ReadNode ()
-      normaliseMut &node1M
+      normalise &node1M
 
     [<Benchmark>]
     member _.ParseAndNormalisePearls100 () =
       let mutable nodePearls100 = Parser(InputOfString strPearls100).ReadNode ()
-      normaliseMut &nodePearls100
+      normalise &nodePearls100
 
     [<IterationCleanup>]
     member _.Cleanup () = Memory.clearHeap ()

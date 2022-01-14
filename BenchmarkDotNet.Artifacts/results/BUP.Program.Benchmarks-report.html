@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>BUP.Program.Benchmarks-20220111-234020</title>
+<title>BUP.Program.Benchmarks-20220114-132411</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -17,7 +17,7 @@ BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.1 (21C52) [Darwin 21.2.0]
 Apple M1, 1 CPU, 8 logical and 8 physical cores
 .NET SDK=6.0.100
   [Host]     : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT DEBUG
-  Job-HRVXUR : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+  Job-MXWJFH : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
 </code></pre>
 <pre><code>InvocationCount=1  UnrollFactor=1  
 </code></pre>
@@ -25,11 +25,11 @@ Apple M1, 1 CPU, 8 logical and 8 physical cores
 <table>
 <thead><tr><th>              Method</th><th> Mean</th><th>Error</th><th>StdDev</th>
 </tr>
-</thead><tbody><tr><td>ParseAndNormalise5k</td><td>613.4 &mu;s</td><td>10.86 &mu;s</td><td>10.16 &mu;s</td>
-</tr><tr><td>ParseAndNormaliseTree15</td><td>9,277.3 &mu;s</td><td>121.68 &mu;s</td><td>113.82 &mu;s</td>
-</tr><tr><td>ParseAndNormaliseFact7</td><td>552.5 &mu;s</td><td>6.11 &mu;s</td><td>5.11 &mu;s</td>
-</tr><tr><td>ParseAndNormalise1M</td><td>47,423.9 &mu;s</td><td>129.24 &mu;s</td><td>107.92 &mu;s</td>
-</tr><tr><td>ParseAndNormalisePearls100</td><td>104.1 &mu;s</td><td>1.85 &mu;s</td><td>1.98 &mu;s</td>
+</thead><tbody><tr><td>ParseAndNormalise50k</td><td>6,007.7 &mu;s</td><td>67.82 &mu;s</td><td>60.12 &mu;s</td>
+</tr><tr><td>ParseAndNormaliseTree15</td><td>9,130.9 &mu;s</td><td>138.61 &mu;s</td><td>129.65 &mu;s</td>
+</tr><tr><td>ParseAndNormaliseFact8</td><td>3,855.6 &mu;s</td><td>34.21 &mu;s</td><td>32.00 &mu;s</td>
+</tr><tr><td>ParseAndNormalise1M</td><td>44,217.7 &mu;s</td><td>93.02 &mu;s</td><td>77.67 &mu;s</td>
+</tr><tr><td>ParseAndNormalisePearls100</td><td>105.1 &mu;s</td><td>2.09 &mu;s</td><td>3.13 &mu;s</td>
 </tr></tbody></table>
 </body>
 </html>

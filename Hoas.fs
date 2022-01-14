@@ -60,24 +60,24 @@ module Hoas =
   type Benchmarks () =
 
     [<Benchmark>]
-    member _.Hoas5k () =
+    member _.Hoas50k () =
       let two = L(fun s -> L(fun z -> app s (app s z)))
       let five = L(fun s -> L(fun z -> app s (app s (app s (app s (app s z))))))
       let mul = L(fun m -> L(fun n -> L(fun s -> app m (app n s))))
       let n10 = app (app mul two) five
       let n100 = app (app mul n10) n10
-      let n1k = app (app mul n100) n10
-      let n5k = app (app mul n1k) five
-      quote (normalise n5k)
+      let n10k = app (app mul n100) n100
+      let n50k = app (app mul n10k) five
+      quote (normalise n50k)
 
     [<Benchmark>]
     member _.HoasTree15 () =
       let mutable p15 = L(fun x -> x)
-      for i = 1 to 15 do p15 <- A(p15, p15)
+      for _ = 1 to 15 do p15 <- A(p15, p15)
       quote (normalise p15)
 
     [<Benchmark>]
-    member _.HoasFact7 () =
+    member _.HoasFact8 () =
       let one = L(fun s -> L(fun z -> app s z))
       let one_one = L(fun g -> app (app g one) one)
       let snd = L(fun a -> L(fun b -> b))
@@ -88,7 +88,7 @@ module Hoas =
               (app g (L(fun s -> L(fun z -> app s (app (app a s) z)))))
               (L(fun s -> app a (app b s))))))))
       let fact = L(fun k -> app (app (app k F) one_one) snd)
-      let seven =
+      let eight =
         L(fun s -> L(fun z ->
-          app s (app s (app s (app s (app s (app s (app s z))))))))
-      quote (normalise (app fact seven))
+          app s (app s (app s (app s (app s (app s (app s (app s z)))))))))
+      quote (normalise (app fact eight))
