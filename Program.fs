@@ -150,8 +150,8 @@ module Program =
       @ snd = λa.λb.b;
       @ F = λp.(p λa.λb.λg.((g λs.λz.(s ((a s) z))) λs.(a (b s))));
       @ fact = λk.(((k F) one_one) snd);
-      @ seven = λs.λz.(s (s (s (s (s (s (s (s z))))))));
-      (fact seven)"
+      @ eight = λs.λz.(s (s (s (s (s (s (s (s z))))))));
+      (fact eight)"
 
     let str1M =
       "@ n2 = λs.λz.(s (s z));
@@ -185,8 +185,8 @@ module Program =
 
     [<Benchmark>]
     member _.ParseAndNormaliseFact8 () =
-      let mutable nodeFact7 = Parser(InputOfString strFact8).ReadNode ()
-      normalise &nodeFact7
+      let mutable nodeFact8 = Parser(InputOfString strFact8).ReadNode ()
+      normalise &nodeFact8
     
     [<Benchmark>]
     member _.ParseAndNormalise1M () =

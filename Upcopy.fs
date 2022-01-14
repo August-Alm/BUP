@@ -5,38 +5,45 @@ module Upcopy =
   open Memory
   open Library
 
-  let rec private cleanUp (lk : Uplink) =
-    let nd = getNode lk
-    match getRelation lk with
-    | UplinkRel.CHILD ->
-      let s = mkSingle nd
-      let l = getLeaf s
-      iterDLL (fun lk -> cleanUp lk) (getLeafParents l)
-      iterDLL (fun lk -> cleanUp lk) (getSingleParents s)
-    | _ ->
-      let b = mkBranch nd
-      let cc = getCache b
-      if not (isNil cc) then
-        clearCache b
-        addToParents (getLChildUplink cc) (getLChild cc)
-        addToParents (getRChildUplink cc) (getRChild cc)
-        iterDLL (fun lk -> cleanUp lk) (getBranchParents b)
+  let cleanupStack = System.Collections.Generic.Stack<Uplink> (pown 2 12)
 
-  let rec private lambdaScan (s : Single) =
-    iterDLL cleanUp (getLeafParents (getLeaf s))
-    let ch = getChild s
-    match getNodeKind ch with
-    | NodeKind.SINGLE -> lambdaScan (mkSingle ch)
-    | _ -> ()
+  let private cleanup () =
+    while cleanupStack.Count > 0 do
+      let lk = cleanupStack.Pop ()
+      let nd = getNode lk
+      match getRelation lk with
+      | UplinkRel.CHILD ->
+        let s = mkSingle nd
+        let l = getLeaf s
+        iterDLL cleanupStack.Push (getSingleParents s)
+        iterDLL cleanupStack.Push (getLeafParents l)
+      | _ ->
+        let b = mkBranch nd
+        let cc = getCache b
+        if not (isNil cc) then
+          clearCache b
+          addToParents (getLChildUplink cc) (getLChild cc)
+          addToParents (getRChildUplink cc) (getRChild cc)
+          iterDLL cleanupStack.Push (getBranchParents b)
+
+  let private lambdascan (s : Single) =
+    iterDLL cleanupStack.Push (getLeafParents (getLeaf s))
+    let mutable s = s
+    let mutable ch = getChild s
+    while getNodeKind ch = NodeKind.SINGLE do
+      s <- mkSingle ch
+      ch <- getChild s
+      iterDLL cleanupStack.Push (getLeafParents (getLeaf s))
+    cleanup ()
     
   let private clearCaches (redlam : Single) (topapp : Branch) =
     let topcopy = getCache topapp
     clearCache topapp
     addToParents (getLChildUplink topcopy) (getLChild topcopy)
     addToParents (getRChildUplink topcopy) (getRChild topcopy)
-    lambdaScan redlam
+    lambdascan redlam
   
-  let private delPar (nd : Node) (lk : Uplink) =
+  let private delpar (nd : Node) (lk : Uplink) =
     let lks = getParents nd
     if isLengthOne lks then
       initializeParents nd
@@ -51,15 +58,15 @@ module Upcopy =
     | NodeKind.SINGLE ->
       let s = mkSingle nd
       let ch = getChild s
-      delPar ch (getChildUplink s)
+      delpar ch (getChildUplink s)
       if isEmpty (getParents ch) then freeNode ch
       deallocSingle s
     | NodeKind.BRANCH ->
       let b = mkBranch nd
       let lch = getLChild b
       let rch = getRChild b
-      delPar lch (getLChildUplink b)
-      delPar rch (getRChildUplink b)
+      delpar lch (getLChildUplink b)
+      delpar rch (getRChildUplink b)
       if isEmpty (getParents lch) then freeNode lch
       if isEmpty (getParents rch) then freeNode rch
       deallocBranch b
@@ -158,24 +165,49 @@ module Upcopy =
       replaceChild argm varpars
       let answer = getChild func
       replaceChild answer (getBranchParents redex)
-      delPar argm (getRChildUplink redex)
-      delPar (mkNode func) (getLChildUplink redex)
+      delpar argm (getRChildUplink redex)
+      delpar (mkNode func) (getLChildUplink redex)
       deallocBranch redex
-      delPar (getChild func) (getChildUplink func)
+      delpar (getChild func) (getChildUplink func)
       deallocSingle func
       answer
 
     else
+
+      //let scandownHelper (nd : Node) (knd : NodeKind) =
+      //  if knd = NodeKind.LEAF then
+      //    struct (argm, ValueNone)
+      //  else // BRANCH
+      //    let b = mkBranch nd
+      //    let b' = newBranch (getLChild b) (getRChild b) 
+      //    setCache b (mkBranch b')
+      //    iterDLL (pusharg argm) varpars
+      //    upcopy ()
+      //    struct (b', ValueSome b)
+
+      //let scandown (nd : Node) =
+      //  let mutable ch = nd
+      //  let mutable k = getNodeKind nd
+      //  if k = NodeKind.SINGLE then
+      //    let mutable s = mkSingle ch
+      //    ch <- getChild s
+      //    k <- getNodeKind ch
+      //    while k = NodeKind.SINGLE do
+      //      s <- mkSingle ch
+      //      ch <- getChild s
+      //      k <- getNodeKind ch
+      //    let struct (ch', topapp) = scandownHelper ch k
+      //    let func' = newSingle (getLeaf s) ch'
+      //    struct (func', topapp)
+      //  else
+      //    scandownHelper ch k
+
       let rec scandown (nd : Node) =
         match getNodeKind nd with
         | NodeKind.LEAF -> struct (argm, ValueNone)
         | NodeKind.SINGLE ->
-          let mutable s = mkSingle nd
-          let mutable ch = getChild s
-          while getNodeKind ch = NodeKind.SINGLE do
-            s <- mkSingle ch
-            ch <- getChild s
-          let struct (body', topapp) = scandown ch //(getChild s)
+          let s = mkSingle nd
+          let struct (body', topapp) = scandown (getChild s)
           let func' = newSingle (getLeaf s) body'
           struct (func', topapp)
         | NodeKind.BRANCH ->

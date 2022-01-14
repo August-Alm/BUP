@@ -1,0 +1,835 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 6 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet restore  /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880
+// command took 1.85s and exited with 0
+// start dotnet build -c Release  --no-restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880
+// command took 3.69s and exited with 0
+// ***** Done, took 00:00:05 (5.66 sec)   *****
+// Found 6 benchmarks:
+//   Benchmarks.ParseAndNormalise50k: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+//   Benchmarks.Normalise50k: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+//   Benchmarks.ParseAndNormaliseTree15: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+//   Benchmarks.ParseAndNormaliseFact8: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+//   Benchmarks.ParseAndNormalise1M: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+//   Benchmarks.ParseAndNormalisePearls100: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+
+// **************************
+// Benchmark: Benchmarks.ParseAndNormalise50k: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet "bdb13ed6-9449-4308-a030-80cab7213880.dll" --benchmarkName "BUP.Program+Benchmarks.ParseAndNormalise50k" --job "InvocationCount=1, UnrollFactor=1" --benchmarkId 0 in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bin/Release/net6.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// Runtime=.NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+// GC=Concurrent Workstation
+// Job: Job-RPRLMW(InvocationCount=1, UnrollFactor=1)
+
+OverheadJitting  1: 1 op, 100000.00 ns, 100.0000 us/op
+
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.ArgumentException: Destination array was not long enough. Check the destination index, length, and the array's lower bounds. (Parameter 'destinationArray')
+   at System.Array.Copy(Array sourceArray, Int32 sourceIndex, Array destinationArray, Int32 destinationIndex, Int32 length, Boolean reliable)
+   at BUP.Memory.allocBranch() in /Users/jalm/Documents/Programming/FSharp/BUP/Memory.fs:line 69
+   at BUP.Upcopy.upcopy() in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 154
+   at BUP.Upcopy.scandownHelper@187(Int32 argm, Int32 varpars, Int32 nd, NodeKind knd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 76
+   at BUP.Upcopy.scandown@198(Int32 argm, Int32 varpars, Int32 nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 213
+   at BUP.Upcopy.reduce(Int32 redex) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 215
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 253
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Program.Benchmarks.ParseAndNormalise50k() in /Users/jalm/Documents/Programming/FSharp/BUP/Program.fs:line 176
+   at BenchmarkDotNet.Autogenerated.Runnable_0.WorkloadActionUnroll(Int64 invokeCount) in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bdb13ed6-9449-4308-a030-80cab7213880.notcs:line 688
+   at BenchmarkDotNet.Engines.Engine.RunIteration(IterationData data)
+   at BenchmarkDotNet.Engines.EngineFactory.Jit(Engine engine, Int32 jitIndex, Int32 invokeCount, Int32 unrollFactor)
+   at BenchmarkDotNet.Engines.EngineFactory.CreateReadyToRun(EngineParameters engineParameters)
+   at BenchmarkDotNet.Autogenerated.Runnable_0.Run(IHost host, String benchmarkName) in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bdb13ed6-9449-4308-a030-80cab7213880.notcs:line 173
+   --- End of inner exception stack trace ---
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Span`1& arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at BenchmarkDotNet.Autogenerated.UniqueProgramName.AfterAssemblyLoadingAttached(String[] args) in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bdb13ed6-9449-4308-a030-80cab7213880.notcs:line 56
+// AfterAll
+// Benchmark Process 5680 has exited with code 255.
+
+
+// **************************
+// Benchmark: Benchmarks.Normalise50k: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet "bdb13ed6-9449-4308-a030-80cab7213880.dll" --benchmarkName "BUP.Program+Benchmarks.Normalise50k" --job "InvocationCount=1, UnrollFactor=1" --benchmarkId 1 in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bin/Release/net6.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// Runtime=.NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+// GC=Concurrent Workstation
+// Job: Job-FYRFVB(InvocationCount=1, UnrollFactor=1)
+
+OverheadJitting  1: 1 op, 96875.00 ns, 96.8750 us/op
+
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.ArgumentException: Destination array was not long enough. Check the destination index, length, and the array's lower bounds. (Parameter 'destinationArray')
+   at System.Array.Copy(Array sourceArray, Int32 sourceIndex, Array destinationArray, Int32 destinationIndex, Int32 length, Boolean reliable)
+   at BUP.Memory.allocBranch() in /Users/jalm/Documents/Programming/FSharp/BUP/Memory.fs:line 69
+   at BUP.Upcopy.upcopy() in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 154
+   at BUP.Upcopy.scandownHelper@187(Int32 argm, Int32 varpars, Int32 nd, NodeKind knd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 76
+   at BUP.Upcopy.scandown@198(Int32 argm, Int32 varpars, Int32 nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 213
+   at BUP.Upcopy.reduce(Int32 redex) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 215
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 253
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Program.Benchmarks.Normalise50k() in /Users/jalm/Documents/Programming/FSharp/BUP/Program.fs:line 179
+   at BenchmarkDotNet.Autogenerated.Runnable_1.WorkloadActionUnroll(Int64 invokeCount) in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bdb13ed6-9449-4308-a030-80cab7213880.notcs:line 1271
+   at BenchmarkDotNet.Engines.Engine.RunIteration(IterationData data)
+   at BenchmarkDotNet.Engines.EngineFactory.Jit(Engine engine, Int32 jitIndex, Int32 invokeCount, Int32 unrollFactor)
+   at BenchmarkDotNet.Engines.EngineFactory.CreateReadyToRun(EngineParameters engineParameters)
+   at BenchmarkDotNet.Autogenerated.Runnable_1.Run(IHost host, String benchmarkName) in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bdb13ed6-9449-4308-a030-80cab7213880.notcs:line 756
+   --- End of inner exception stack trace ---
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Span`1& arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at BenchmarkDotNet.Autogenerated.UniqueProgramName.AfterAssemblyLoadingAttached(String[] args) in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bdb13ed6-9449-4308-a030-80cab7213880.notcs:line 56
+// AfterAll
+// Benchmark Process 5693 has exited with code 255.
+
+
+// **************************
+// Benchmark: Benchmarks.ParseAndNormaliseTree15: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet "bdb13ed6-9449-4308-a030-80cab7213880.dll" --benchmarkName "BUP.Program+Benchmarks.ParseAndNormaliseTree15" --job "InvocationCount=1, UnrollFactor=1" --benchmarkId 2 in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bin/Release/net6.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// Runtime=.NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+// GC=Concurrent Workstation
+// Job: Job-XSAQLN(InvocationCount=1, UnrollFactor=1)
+
+OverheadJitting  1: 1 op, 96875.00 ns, 96.8750 us/op
+WorkloadJitting  1: 1 op, 30313000.00 ns, 30.3130 ms/op
+
+OverheadWarmup   1: 1 op, 166.00 ns, 166.0000 ns/op
+OverheadWarmup   2: 1 op, 166.00 ns, 166.0000 ns/op
+OverheadWarmup   3: 1 op, 42.00 ns, 42.0000 ns/op
+OverheadWarmup   4: 1 op, 166.00 ns, 166.0000 ns/op
+OverheadWarmup   5: 1 op, 83.00 ns, 83.0000 ns/op
+
+OverheadActual   1: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual   2: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual   3: 1 op, 208.00 ns, 208.0000 ns/op
+OverheadActual   4: 1 op, 167.00 ns, 167.0000 ns/op
+OverheadActual   5: 1 op, 250.00 ns, 250.0000 ns/op
+OverheadActual   6: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual   7: 1 op, 0.00 ns, 0.0000 ns/op
+OverheadActual   8: 1 op, 292.00 ns, 292.0000 ns/op
+OverheadActual   9: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  10: 1 op, 84.00 ns, 84.0000 ns/op
+OverheadActual  11: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  12: 1 op, 166.00 ns, 166.0000 ns/op
+OverheadActual  13: 1 op, 167.00 ns, 167.0000 ns/op
+OverheadActual  14: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  15: 1 op, 84.00 ns, 84.0000 ns/op
+OverheadActual  16: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual  17: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual  18: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  19: 1 op, 41.00 ns, 41.0000 ns/op
+OverheadActual  20: 1 op, 83.00 ns, 83.0000 ns/op
+
+WorkloadWarmup   1: 1 op, 28579417.00 ns, 28.5794 ms/op
+WorkloadWarmup   2: 1 op, 28200917.00 ns, 28.2009 ms/op
+WorkloadWarmup   3: 1 op, 28059750.00 ns, 28.0598 ms/op
+WorkloadWarmup   4: 1 op, 28357959.00 ns, 28.3580 ms/op
+WorkloadWarmup   5: 1 op, 28362750.00 ns, 28.3627 ms/op
+WorkloadWarmup   6: 1 op, 28175750.00 ns, 28.1758 ms/op
+WorkloadWarmup   7: 1 op, 14747125.00 ns, 14.7471 ms/op
+WorkloadWarmup   8: 1 op, 9116208.00 ns, 9.1162 ms/op
+WorkloadWarmup   9: 1 op, 9375500.00 ns, 9.3755 ms/op
+WorkloadWarmup  10: 1 op, 9098709.00 ns, 9.0987 ms/op
+
+// BeforeActualRun
+WorkloadActual   1: 1 op, 9180542.00 ns, 9.1805 ms/op
+WorkloadActual   2: 1 op, 9174750.00 ns, 9.1747 ms/op
+WorkloadActual   3: 1 op, 8882417.00 ns, 8.8824 ms/op
+WorkloadActual   4: 1 op, 9101125.00 ns, 9.1011 ms/op
+WorkloadActual   5: 1 op, 9096708.00 ns, 9.0967 ms/op
+WorkloadActual   6: 1 op, 9172042.00 ns, 9.1720 ms/op
+WorkloadActual   7: 1 op, 9302750.00 ns, 9.3027 ms/op
+WorkloadActual   8: 1 op, 8896375.00 ns, 8.8964 ms/op
+WorkloadActual   9: 1 op, 9074792.00 ns, 9.0748 ms/op
+WorkloadActual  10: 1 op, 9095084.00 ns, 9.0951 ms/op
+WorkloadActual  11: 1 op, 8886708.00 ns, 8.8867 ms/op
+WorkloadActual  12: 1 op, 9302417.00 ns, 9.3024 ms/op
+WorkloadActual  13: 1 op, 8884375.00 ns, 8.8844 ms/op
+WorkloadActual  14: 1 op, 9321208.00 ns, 9.3212 ms/op
+WorkloadActual  15: 1 op, 9146416.00 ns, 9.1464 ms/op
+
+// AfterActualRun
+WorkloadResult   1: 1 op, 9180437.50 ns, 9.1804 ms/op
+WorkloadResult   2: 1 op, 9174645.50 ns, 9.1746 ms/op
+WorkloadResult   3: 1 op, 8882312.50 ns, 8.8823 ms/op
+WorkloadResult   4: 1 op, 9101020.50 ns, 9.1010 ms/op
+WorkloadResult   5: 1 op, 9096603.50 ns, 9.0966 ms/op
+WorkloadResult   6: 1 op, 9171937.50 ns, 9.1719 ms/op
+WorkloadResult   7: 1 op, 9302645.50 ns, 9.3026 ms/op
+WorkloadResult   8: 1 op, 8896270.50 ns, 8.8963 ms/op
+WorkloadResult   9: 1 op, 9074687.50 ns, 9.0747 ms/op
+WorkloadResult  10: 1 op, 9094979.50 ns, 9.0950 ms/op
+WorkloadResult  11: 1 op, 8886603.50 ns, 8.8866 ms/op
+WorkloadResult  12: 1 op, 9302312.50 ns, 9.3023 ms/op
+WorkloadResult  13: 1 op, 8884270.50 ns, 8.8843 ms/op
+WorkloadResult  14: 1 op, 9321103.50 ns, 9.3211 ms/op
+WorkloadResult  15: 1 op, 9146311.50 ns, 9.1463 ms/op
+
+// AfterAll
+// Benchmark Process 5706 has exited with code 0.
+
+Mean = 9.101 ms, StdErr = 0.040 ms (0.44%), N = 15, StdDev = 0.154 ms
+Min = 8.882 ms, Q1 = 8.985 ms, Median = 9.101 ms, Q3 = 9.178 ms, Max = 9.321 ms
+IQR = 0.192 ms, LowerFence = 8.697 ms, UpperFence = 9.466 ms
+ConfidenceInterval = [8.936 ms; 9.266 ms] (CI 99.9%), Margin = 0.165 ms (1.81% of Mean)
+Skewness = -0.2, Kurtosis = 1.67, MValue = 2
+
+// **************************
+// Benchmark: Benchmarks.ParseAndNormaliseFact8: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet "bdb13ed6-9449-4308-a030-80cab7213880.dll" --benchmarkName "BUP.Program+Benchmarks.ParseAndNormaliseFact8" --job "InvocationCount=1, UnrollFactor=1" --benchmarkId 3 in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bin/Release/net6.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// Runtime=.NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+// GC=Concurrent Workstation
+// Job: Job-BWVSLE(InvocationCount=1, UnrollFactor=1)
+
+OverheadJitting  1: 1 op, 95167.00 ns, 95.1670 us/op
+WorkloadJitting  1: 1 op, 4863583.00 ns, 4.8636 ms/op
+
+OverheadWarmup   1: 1 op, 167.00 ns, 167.0000 ns/op
+OverheadWarmup   2: 1 op, 84.00 ns, 84.0000 ns/op
+OverheadWarmup   3: 1 op, 42.00 ns, 42.0000 ns/op
+OverheadWarmup   4: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadWarmup   5: 1 op, 84.00 ns, 84.0000 ns/op
+OverheadWarmup   6: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadWarmup   7: 1 op, 83.00 ns, 83.0000 ns/op
+
+OverheadActual   1: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual   2: 1 op, 42.00 ns, 42.0000 ns/op
+OverheadActual   3: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual   4: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual   5: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual   6: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual   7: 1 op, 84.00 ns, 84.0000 ns/op
+OverheadActual   8: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual   9: 1 op, 42.00 ns, 42.0000 ns/op
+OverheadActual  10: 1 op, 42.00 ns, 42.0000 ns/op
+OverheadActual  11: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  12: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual  13: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  14: 1 op, 42.00 ns, 42.0000 ns/op
+OverheadActual  15: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual  16: 1 op, 42.00 ns, 42.0000 ns/op
+OverheadActual  17: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  18: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  19: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  20: 1 op, 42.00 ns, 42.0000 ns/op
+
+WorkloadWarmup   1: 1 op, 47708.00 ns, 47.7080 us/op
+WorkloadWarmup   2: 1 op, 37708.00 ns, 37.7080 us/op
+WorkloadWarmup   3: 1 op, 38167.00 ns, 38.1670 us/op
+WorkloadWarmup   4: 1 op, 31291.00 ns, 31.2910 us/op
+WorkloadWarmup   5: 1 op, 38083.00 ns, 38.0830 us/op
+WorkloadWarmup   6: 1 op, 32375.00 ns, 32.3750 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 1 op, 35167.00 ns, 35.1670 us/op
+WorkloadActual   2: 1 op, 31667.00 ns, 31.6670 us/op
+WorkloadActual   3: 1 op, 33750.00 ns, 33.7500 us/op
+WorkloadActual   4: 1 op, 30584.00 ns, 30.5840 us/op
+WorkloadActual   5: 1 op, 29458.00 ns, 29.4580 us/op
+WorkloadActual   6: 1 op, 34584.00 ns, 34.5840 us/op
+WorkloadActual   7: 1 op, 34875.00 ns, 34.8750 us/op
+WorkloadActual   8: 1 op, 31458.00 ns, 31.4580 us/op
+WorkloadActual   9: 1 op, 37084.00 ns, 37.0840 us/op
+WorkloadActual  10: 1 op, 35125.00 ns, 35.1250 us/op
+WorkloadActual  11: 1 op, 36500.00 ns, 36.5000 us/op
+WorkloadActual  12: 1 op, 33000.00 ns, 33.0000 us/op
+WorkloadActual  13: 1 op, 35875.00 ns, 35.8750 us/op
+WorkloadActual  14: 1 op, 30917.00 ns, 30.9170 us/op
+WorkloadActual  15: 1 op, 30875.00 ns, 30.8750 us/op
+WorkloadActual  16: 1 op, 36792.00 ns, 36.7920 us/op
+WorkloadActual  17: 1 op, 30875.00 ns, 30.8750 us/op
+WorkloadActual  18: 1 op, 32667.00 ns, 32.6670 us/op
+WorkloadActual  19: 1 op, 30125.00 ns, 30.1250 us/op
+WorkloadActual  20: 1 op, 31667.00 ns, 31.6670 us/op
+WorkloadActual  21: 1 op, 30750.00 ns, 30.7500 us/op
+WorkloadActual  22: 1 op, 29417.00 ns, 29.4170 us/op
+WorkloadActual  23: 1 op, 29708.00 ns, 29.7080 us/op
+WorkloadActual  24: 1 op, 33875.00 ns, 33.8750 us/op
+WorkloadActual  25: 1 op, 30334.00 ns, 30.3340 us/op
+WorkloadActual  26: 1 op, 29500.00 ns, 29.5000 us/op
+WorkloadActual  27: 1 op, 31667.00 ns, 31.6670 us/op
+WorkloadActual  28: 1 op, 31333.00 ns, 31.3330 us/op
+WorkloadActual  29: 1 op, 31208.00 ns, 31.2080 us/op
+WorkloadActual  30: 1 op, 31250.00 ns, 31.2500 us/op
+WorkloadActual  31: 1 op, 29791.00 ns, 29.7910 us/op
+WorkloadActual  32: 1 op, 29625.00 ns, 29.6250 us/op
+WorkloadActual  33: 1 op, 34667.00 ns, 34.6670 us/op
+WorkloadActual  34: 1 op, 30875.00 ns, 30.8750 us/op
+WorkloadActual  35: 1 op, 30000.00 ns, 30.0000 us/op
+WorkloadActual  36: 1 op, 31291.00 ns, 31.2910 us/op
+WorkloadActual  37: 1 op, 29542.00 ns, 29.5420 us/op
+WorkloadActual  38: 1 op, 30875.00 ns, 30.8750 us/op
+WorkloadActual  39: 1 op, 30209.00 ns, 30.2090 us/op
+WorkloadActual  40: 1 op, 33875.00 ns, 33.8750 us/op
+WorkloadActual  41: 1 op, 32209.00 ns, 32.2090 us/op
+WorkloadActual  42: 1 op, 30791.00 ns, 30.7910 us/op
+WorkloadActual  43: 1 op, 34208.00 ns, 34.2080 us/op
+WorkloadActual  44: 1 op, 41375.00 ns, 41.3750 us/op
+WorkloadActual  45: 1 op, 37834.00 ns, 37.8340 us/op
+WorkloadActual  46: 1 op, 30417.00 ns, 30.4170 us/op
+WorkloadActual  47: 1 op, 34792.00 ns, 34.7920 us/op
+WorkloadActual  48: 1 op, 30333.00 ns, 30.3330 us/op
+WorkloadActual  49: 1 op, 29166.00 ns, 29.1660 us/op
+WorkloadActual  50: 1 op, 30375.00 ns, 30.3750 us/op
+WorkloadActual  51: 1 op, 35042.00 ns, 35.0420 us/op
+WorkloadActual  52: 1 op, 34375.00 ns, 34.3750 us/op
+WorkloadActual  53: 1 op, 31667.00 ns, 31.6670 us/op
+WorkloadActual  54: 1 op, 32333.00 ns, 32.3330 us/op
+WorkloadActual  55: 1 op, 29666.00 ns, 29.6660 us/op
+WorkloadActual  56: 1 op, 31833.00 ns, 31.8330 us/op
+WorkloadActual  57: 1 op, 31958.00 ns, 31.9580 us/op
+WorkloadActual  58: 1 op, 30125.00 ns, 30.1250 us/op
+WorkloadActual  59: 1 op, 30500.00 ns, 30.5000 us/op
+WorkloadActual  60: 1 op, 30084.00 ns, 30.0840 us/op
+WorkloadActual  61: 1 op, 30000.00 ns, 30.0000 us/op
+WorkloadActual  62: 1 op, 30125.00 ns, 30.1250 us/op
+WorkloadActual  63: 1 op, 33416.00 ns, 33.4160 us/op
+WorkloadActual  64: 1 op, 30458.00 ns, 30.4580 us/op
+WorkloadActual  65: 1 op, 28833.00 ns, 28.8330 us/op
+WorkloadActual  66: 1 op, 30458.00 ns, 30.4580 us/op
+WorkloadActual  67: 1 op, 30834.00 ns, 30.8340 us/op
+WorkloadActual  68: 1 op, 30917.00 ns, 30.9170 us/op
+WorkloadActual  69: 1 op, 30083.00 ns, 30.0830 us/op
+WorkloadActual  70: 1 op, 29209.00 ns, 29.2090 us/op
+WorkloadActual  71: 1 op, 31042.00 ns, 31.0420 us/op
+WorkloadActual  72: 1 op, 30125.00 ns, 30.1250 us/op
+WorkloadActual  73: 1 op, 32500.00 ns, 32.5000 us/op
+WorkloadActual  74: 1 op, 31917.00 ns, 31.9170 us/op
+WorkloadActual  75: 1 op, 32500.00 ns, 32.5000 us/op
+WorkloadActual  76: 1 op, 40042.00 ns, 40.0420 us/op
+WorkloadActual  77: 1 op, 34500.00 ns, 34.5000 us/op
+WorkloadActual  78: 1 op, 33542.00 ns, 33.5420 us/op
+WorkloadActual  79: 1 op, 30208.00 ns, 30.2080 us/op
+WorkloadActual  80: 1 op, 30250.00 ns, 30.2500 us/op
+WorkloadActual  81: 1 op, 33583.00 ns, 33.5830 us/op
+WorkloadActual  82: 1 op, 30458.00 ns, 30.4580 us/op
+WorkloadActual  83: 1 op, 33500.00 ns, 33.5000 us/op
+WorkloadActual  84: 1 op, 30916.00 ns, 30.9160 us/op
+WorkloadActual  85: 1 op, 31000.00 ns, 31.0000 us/op
+WorkloadActual  86: 1 op, 30084.00 ns, 30.0840 us/op
+WorkloadActual  87: 1 op, 30959.00 ns, 30.9590 us/op
+WorkloadActual  88: 1 op, 29250.00 ns, 29.2500 us/op
+WorkloadActual  89: 1 op, 31625.00 ns, 31.6250 us/op
+WorkloadActual  90: 1 op, 29709.00 ns, 29.7090 us/op
+WorkloadActual  91: 1 op, 29166.00 ns, 29.1660 us/op
+WorkloadActual  92: 1 op, 31459.00 ns, 31.4590 us/op
+WorkloadActual  93: 1 op, 29083.00 ns, 29.0830 us/op
+WorkloadActual  94: 1 op, 29167.00 ns, 29.1670 us/op
+WorkloadActual  95: 1 op, 30417.00 ns, 30.4170 us/op
+WorkloadActual  96: 1 op, 28541.00 ns, 28.5410 us/op
+WorkloadActual  97: 1 op, 31834.00 ns, 31.8340 us/op
+WorkloadActual  98: 1 op, 32750.00 ns, 32.7500 us/op
+WorkloadActual  99: 1 op, 31250.00 ns, 31.2500 us/op
+WorkloadActual  100: 1 op, 29250.00 ns, 29.2500 us/op
+
+// AfterActualRun
+WorkloadResult   1: 1 op, 35084.00 ns, 35.0840 us/op
+WorkloadResult   2: 1 op, 31584.00 ns, 31.5840 us/op
+WorkloadResult   3: 1 op, 33667.00 ns, 33.6670 us/op
+WorkloadResult   4: 1 op, 30501.00 ns, 30.5010 us/op
+WorkloadResult   5: 1 op, 29375.00 ns, 29.3750 us/op
+WorkloadResult   6: 1 op, 34501.00 ns, 34.5010 us/op
+WorkloadResult   7: 1 op, 34792.00 ns, 34.7920 us/op
+WorkloadResult   8: 1 op, 31375.00 ns, 31.3750 us/op
+WorkloadResult   9: 1 op, 35042.00 ns, 35.0420 us/op
+WorkloadResult  10: 1 op, 36417.00 ns, 36.4170 us/op
+WorkloadResult  11: 1 op, 32917.00 ns, 32.9170 us/op
+WorkloadResult  12: 1 op, 35792.00 ns, 35.7920 us/op
+WorkloadResult  13: 1 op, 30834.00 ns, 30.8340 us/op
+WorkloadResult  14: 1 op, 30792.00 ns, 30.7920 us/op
+WorkloadResult  15: 1 op, 36709.00 ns, 36.7090 us/op
+WorkloadResult  16: 1 op, 30792.00 ns, 30.7920 us/op
+WorkloadResult  17: 1 op, 32584.00 ns, 32.5840 us/op
+WorkloadResult  18: 1 op, 30042.00 ns, 30.0420 us/op
+WorkloadResult  19: 1 op, 31584.00 ns, 31.5840 us/op
+WorkloadResult  20: 1 op, 30667.00 ns, 30.6670 us/op
+WorkloadResult  21: 1 op, 29334.00 ns, 29.3340 us/op
+WorkloadResult  22: 1 op, 29625.00 ns, 29.6250 us/op
+WorkloadResult  23: 1 op, 33792.00 ns, 33.7920 us/op
+WorkloadResult  24: 1 op, 30251.00 ns, 30.2510 us/op
+WorkloadResult  25: 1 op, 29417.00 ns, 29.4170 us/op
+WorkloadResult  26: 1 op, 31584.00 ns, 31.5840 us/op
+WorkloadResult  27: 1 op, 31250.00 ns, 31.2500 us/op
+WorkloadResult  28: 1 op, 31125.00 ns, 31.1250 us/op
+WorkloadResult  29: 1 op, 31167.00 ns, 31.1670 us/op
+WorkloadResult  30: 1 op, 29708.00 ns, 29.7080 us/op
+WorkloadResult  31: 1 op, 29542.00 ns, 29.5420 us/op
+WorkloadResult  32: 1 op, 34584.00 ns, 34.5840 us/op
+WorkloadResult  33: 1 op, 30792.00 ns, 30.7920 us/op
+WorkloadResult  34: 1 op, 29917.00 ns, 29.9170 us/op
+WorkloadResult  35: 1 op, 31208.00 ns, 31.2080 us/op
+WorkloadResult  36: 1 op, 29459.00 ns, 29.4590 us/op
+WorkloadResult  37: 1 op, 30792.00 ns, 30.7920 us/op
+WorkloadResult  38: 1 op, 30126.00 ns, 30.1260 us/op
+WorkloadResult  39: 1 op, 33792.00 ns, 33.7920 us/op
+WorkloadResult  40: 1 op, 32126.00 ns, 32.1260 us/op
+WorkloadResult  41: 1 op, 30708.00 ns, 30.7080 us/op
+WorkloadResult  42: 1 op, 34125.00 ns, 34.1250 us/op
+WorkloadResult  43: 1 op, 30334.00 ns, 30.3340 us/op
+WorkloadResult  44: 1 op, 34709.00 ns, 34.7090 us/op
+WorkloadResult  45: 1 op, 30250.00 ns, 30.2500 us/op
+WorkloadResult  46: 1 op, 29083.00 ns, 29.0830 us/op
+WorkloadResult  47: 1 op, 30292.00 ns, 30.2920 us/op
+WorkloadResult  48: 1 op, 34959.00 ns, 34.9590 us/op
+WorkloadResult  49: 1 op, 34292.00 ns, 34.2920 us/op
+WorkloadResult  50: 1 op, 31584.00 ns, 31.5840 us/op
+WorkloadResult  51: 1 op, 32250.00 ns, 32.2500 us/op
+WorkloadResult  52: 1 op, 29583.00 ns, 29.5830 us/op
+WorkloadResult  53: 1 op, 31750.00 ns, 31.7500 us/op
+WorkloadResult  54: 1 op, 31875.00 ns, 31.8750 us/op
+WorkloadResult  55: 1 op, 30042.00 ns, 30.0420 us/op
+WorkloadResult  56: 1 op, 30417.00 ns, 30.4170 us/op
+WorkloadResult  57: 1 op, 30001.00 ns, 30.0010 us/op
+WorkloadResult  58: 1 op, 29917.00 ns, 29.9170 us/op
+WorkloadResult  59: 1 op, 30042.00 ns, 30.0420 us/op
+WorkloadResult  60: 1 op, 33333.00 ns, 33.3330 us/op
+WorkloadResult  61: 1 op, 30375.00 ns, 30.3750 us/op
+WorkloadResult  62: 1 op, 28750.00 ns, 28.7500 us/op
+WorkloadResult  63: 1 op, 30375.00 ns, 30.3750 us/op
+WorkloadResult  64: 1 op, 30751.00 ns, 30.7510 us/op
+WorkloadResult  65: 1 op, 30834.00 ns, 30.8340 us/op
+WorkloadResult  66: 1 op, 30000.00 ns, 30.0000 us/op
+WorkloadResult  67: 1 op, 29126.00 ns, 29.1260 us/op
+WorkloadResult  68: 1 op, 30959.00 ns, 30.9590 us/op
+WorkloadResult  69: 1 op, 30042.00 ns, 30.0420 us/op
+WorkloadResult  70: 1 op, 32417.00 ns, 32.4170 us/op
+WorkloadResult  71: 1 op, 31834.00 ns, 31.8340 us/op
+WorkloadResult  72: 1 op, 32417.00 ns, 32.4170 us/op
+WorkloadResult  73: 1 op, 34417.00 ns, 34.4170 us/op
+WorkloadResult  74: 1 op, 33459.00 ns, 33.4590 us/op
+WorkloadResult  75: 1 op, 30125.00 ns, 30.1250 us/op
+WorkloadResult  76: 1 op, 30167.00 ns, 30.1670 us/op
+WorkloadResult  77: 1 op, 33500.00 ns, 33.5000 us/op
+WorkloadResult  78: 1 op, 30375.00 ns, 30.3750 us/op
+WorkloadResult  79: 1 op, 33417.00 ns, 33.4170 us/op
+WorkloadResult  80: 1 op, 30833.00 ns, 30.8330 us/op
+WorkloadResult  81: 1 op, 30917.00 ns, 30.9170 us/op
+WorkloadResult  82: 1 op, 30001.00 ns, 30.0010 us/op
+WorkloadResult  83: 1 op, 30876.00 ns, 30.8760 us/op
+WorkloadResult  84: 1 op, 29167.00 ns, 29.1670 us/op
+WorkloadResult  85: 1 op, 31542.00 ns, 31.5420 us/op
+WorkloadResult  86: 1 op, 29626.00 ns, 29.6260 us/op
+WorkloadResult  87: 1 op, 29083.00 ns, 29.0830 us/op
+WorkloadResult  88: 1 op, 31376.00 ns, 31.3760 us/op
+WorkloadResult  89: 1 op, 29000.00 ns, 29.0000 us/op
+WorkloadResult  90: 1 op, 29084.00 ns, 29.0840 us/op
+WorkloadResult  91: 1 op, 30334.00 ns, 30.3340 us/op
+WorkloadResult  92: 1 op, 28458.00 ns, 28.4580 us/op
+WorkloadResult  93: 1 op, 31751.00 ns, 31.7510 us/op
+WorkloadResult  94: 1 op, 32667.00 ns, 32.6670 us/op
+WorkloadResult  95: 1 op, 31167.00 ns, 31.1670 us/op
+WorkloadResult  96: 1 op, 29167.00 ns, 29.1670 us/op
+
+// AfterAll
+// Benchmark Process 5707 has exited with code 0.
+
+Mean = 31.381 μs, StdErr = 0.194 μs (0.62%), N = 96, StdDev = 1.905 μs
+Min = 28.458 μs, Q1 = 30.042 μs, Median = 30.834 μs, Q3 = 32.417 μs, Max = 36.709 μs
+IQR = 2.375 μs, LowerFence = 26.480 μs, UpperFence = 35.980 μs
+ConfidenceInterval = [30.721 μs; 32.041 μs] (CI 99.9%), Margin = 0.660 μs (2.10% of Mean)
+Skewness = 0.88, Kurtosis = 2.92, MValue = 2.39
+
+// **************************
+// Benchmark: Benchmarks.ParseAndNormalise1M: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet "bdb13ed6-9449-4308-a030-80cab7213880.dll" --benchmarkName "BUP.Program+Benchmarks.ParseAndNormalise1M" --job "InvocationCount=1, UnrollFactor=1" --benchmarkId 4 in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bin/Release/net6.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// Runtime=.NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+// GC=Concurrent Workstation
+// Job: Job-ULECLU(InvocationCount=1, UnrollFactor=1)
+
+OverheadJitting  1: 1 op, 99209.00 ns, 99.2090 us/op
+
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.ArgumentException: Destination array was not long enough. Check the destination index, length, and the array's lower bounds. (Parameter 'destinationArray')
+   at System.Array.Copy(Array sourceArray, Int32 sourceIndex, Array destinationArray, Int32 destinationIndex, Int32 length, Boolean reliable)
+   at BUP.Memory.allocBranch() in /Users/jalm/Documents/Programming/FSharp/BUP/Memory.fs:line 69
+   at BUP.Upcopy.upcopy() in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 154
+   at BUP.Upcopy.scandownHelper@187(Int32 argm, Int32 varpars, Int32 nd, NodeKind knd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 76
+   at BUP.Upcopy.scandown@198(Int32 argm, Int32 varpars, Int32 nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 213
+   at BUP.Upcopy.reduce(Int32 redex) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 215
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 253
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Upcopy.normalise(Int32& nd) in /Users/jalm/Documents/Programming/FSharp/BUP/Upcopy.fs:line 251
+   at BUP.Program.Benchmarks.ParseAndNormalise1M() in /Users/jalm/Documents/Programming/FSharp/BUP/Program.fs:line 194
+   at BenchmarkDotNet.Autogenerated.Runnable_4.WorkloadActionUnroll(Int64 invokeCount) in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bdb13ed6-9449-4308-a030-80cab7213880.notcs:line 3020
+   at BenchmarkDotNet.Engines.Engine.RunIteration(IterationData data)
+   at BenchmarkDotNet.Engines.EngineFactory.Jit(Engine engine, Int32 jitIndex, Int32 invokeCount, Int32 unrollFactor)
+   at BenchmarkDotNet.Engines.EngineFactory.CreateReadyToRun(EngineParameters engineParameters)
+   at BenchmarkDotNet.Autogenerated.Runnable_4.Run(IHost host, String benchmarkName) in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bdb13ed6-9449-4308-a030-80cab7213880.notcs:line 2505
+   --- End of inner exception stack trace ---
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Span`1& arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at BenchmarkDotNet.Autogenerated.UniqueProgramName.AfterAssemblyLoadingAttached(String[] args) in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bdb13ed6-9449-4308-a030-80cab7213880.notcs:line 56
+// AfterAll
+// Benchmark Process 5708 has exited with code 255.
+
+
+// **************************
+// Benchmark: Benchmarks.ParseAndNormalisePearls100: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet "bdb13ed6-9449-4308-a030-80cab7213880.dll" --benchmarkName "BUP.Program+Benchmarks.ParseAndNormalisePearls100" --job "InvocationCount=1, UnrollFactor=1" --benchmarkId 5 in /Users/jalm/Documents/Programming/FSharp/BUP/bin/Release/net6.0/bdb13ed6-9449-4308-a030-80cab7213880/bin/Release/net6.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// Runtime=.NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+// GC=Concurrent Workstation
+// Job: Job-RFGZTQ(InvocationCount=1, UnrollFactor=1)
+
+OverheadJitting  1: 1 op, 102166.00 ns, 102.1660 us/op
+WorkloadJitting  1: 1 op, 1907583.00 ns, 1.9076 ms/op
+
+OverheadWarmup   1: 1 op, 84.00 ns, 84.0000 ns/op
+OverheadWarmup   2: 1 op, 41.00 ns, 41.0000 ns/op
+OverheadWarmup   3: 1 op, 167.00 ns, 167.0000 ns/op
+OverheadWarmup   4: 1 op, 42.00 ns, 42.0000 ns/op
+OverheadWarmup   5: 1 op, 167.00 ns, 167.0000 ns/op
+OverheadWarmup   6: 1 op, 125.00 ns, 125.0000 ns/op
+
+OverheadActual   1: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual   2: 1 op, 41.00 ns, 41.0000 ns/op
+OverheadActual   3: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual   4: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual   5: 1 op, 84.00 ns, 84.0000 ns/op
+OverheadActual   6: 1 op, 166.00 ns, 166.0000 ns/op
+OverheadActual   7: 1 op, 0.00 ns, 0.0000 ns/op
+OverheadActual   8: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual   9: 1 op, 166.00 ns, 166.0000 ns/op
+OverheadActual  10: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  11: 1 op, 166.00 ns, 166.0000 ns/op
+OverheadActual  12: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual  13: 1 op, 84.00 ns, 84.0000 ns/op
+OverheadActual  14: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual  15: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual  16: 1 op, 83.00 ns, 83.0000 ns/op
+OverheadActual  17: 1 op, 41.00 ns, 41.0000 ns/op
+OverheadActual  18: 1 op, 125.00 ns, 125.0000 ns/op
+OverheadActual  19: 1 op, 84.00 ns, 84.0000 ns/op
+OverheadActual  20: 1 op, 83.00 ns, 83.0000 ns/op
+
+WorkloadWarmup   1: 1 op, 116250.00 ns, 116.2500 us/op
+WorkloadWarmup   2: 1 op, 106542.00 ns, 106.5420 us/op
+WorkloadWarmup   3: 1 op, 104417.00 ns, 104.4170 us/op
+WorkloadWarmup   4: 1 op, 103750.00 ns, 103.7500 us/op
+WorkloadWarmup   5: 1 op, 106500.00 ns, 106.5000 us/op
+WorkloadWarmup   6: 1 op, 103875.00 ns, 103.8750 us/op
+WorkloadWarmup   7: 1 op, 103625.00 ns, 103.6250 us/op
+WorkloadWarmup   8: 1 op, 103083.00 ns, 103.0830 us/op
+WorkloadWarmup   9: 1 op, 104208.00 ns, 104.2080 us/op
+WorkloadWarmup  10: 1 op, 104042.00 ns, 104.0420 us/op
+
+// BeforeActualRun
+WorkloadActual   1: 1 op, 112583.00 ns, 112.5830 us/op
+WorkloadActual   2: 1 op, 107292.00 ns, 107.2920 us/op
+WorkloadActual   3: 1 op, 111125.00 ns, 111.1250 us/op
+WorkloadActual   4: 1 op, 112500.00 ns, 112.5000 us/op
+WorkloadActual   5: 1 op, 103583.00 ns, 103.5830 us/op
+WorkloadActual   6: 1 op, 106000.00 ns, 106.0000 us/op
+WorkloadActual   7: 1 op, 104084.00 ns, 104.0840 us/op
+WorkloadActual   8: 1 op, 106750.00 ns, 106.7500 us/op
+WorkloadActual   9: 1 op, 103042.00 ns, 103.0420 us/op
+WorkloadActual  10: 1 op, 103791.00 ns, 103.7910 us/op
+WorkloadActual  11: 1 op, 103833.00 ns, 103.8330 us/op
+WorkloadActual  12: 1 op, 102833.00 ns, 102.8330 us/op
+WorkloadActual  13: 1 op, 104583.00 ns, 104.5830 us/op
+WorkloadActual  14: 1 op, 103625.00 ns, 103.6250 us/op
+WorkloadActual  15: 1 op, 103541.00 ns, 103.5410 us/op
+WorkloadActual  16: 1 op, 103042.00 ns, 103.0420 us/op
+WorkloadActual  17: 1 op, 105125.00 ns, 105.1250 us/op
+WorkloadActual  18: 1 op, 103500.00 ns, 103.5000 us/op
+WorkloadActual  19: 1 op, 103458.00 ns, 103.4580 us/op
+
+// AfterActualRun
+WorkloadResult   1: 1 op, 107208.00 ns, 107.2080 us/op
+WorkloadResult   2: 1 op, 103499.00 ns, 103.4990 us/op
+WorkloadResult   3: 1 op, 105916.00 ns, 105.9160 us/op
+WorkloadResult   4: 1 op, 104000.00 ns, 104.0000 us/op
+WorkloadResult   5: 1 op, 106666.00 ns, 106.6660 us/op
+WorkloadResult   6: 1 op, 102958.00 ns, 102.9580 us/op
+WorkloadResult   7: 1 op, 103707.00 ns, 103.7070 us/op
+WorkloadResult   8: 1 op, 103749.00 ns, 103.7490 us/op
+WorkloadResult   9: 1 op, 102749.00 ns, 102.7490 us/op
+WorkloadResult  10: 1 op, 104499.00 ns, 104.4990 us/op
+WorkloadResult  11: 1 op, 103541.00 ns, 103.5410 us/op
+WorkloadResult  12: 1 op, 103457.00 ns, 103.4570 us/op
+WorkloadResult  13: 1 op, 102958.00 ns, 102.9580 us/op
+WorkloadResult  14: 1 op, 105041.00 ns, 105.0410 us/op
+WorkloadResult  15: 1 op, 103416.00 ns, 103.4160 us/op
+WorkloadResult  16: 1 op, 103374.00 ns, 103.3740 us/op
+
+// AfterAll
+// Benchmark Process 5717 has exited with code 0.
+
+Mean = 104.171 μs, StdErr = 0.337 μs (0.32%), N = 16, StdDev = 1.349 μs
+Min = 102.749 μs, Q1 = 103.406 μs, Median = 103.624 μs, Q3 = 104.635 μs, Max = 107.208 μs
+IQR = 1.229 μs, LowerFence = 101.562 μs, UpperFence = 106.478 μs
+ConfidenceInterval = [102.797 μs; 105.545 μs] (CI 99.9%), Margin = 1.374 μs (1.32% of Mean)
+Skewness = 1.04, Kurtosis = 2.71, MValue = 2
+
+// ***** BenchmarkRunner: Finish  *****
+
+// * Export *
+  BenchmarkDotNet.Artifacts/results/BUP.Program.Benchmarks-report.csv
+  BenchmarkDotNet.Artifacts/results/BUP.Program.Benchmarks-report-github.md
+  BenchmarkDotNet.Artifacts/results/BUP.Program.Benchmarks-report.html
+
+// * Detailed results *
+Benchmarks.ParseAndNormalise50k: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+Runtime = .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT; GC = Concurrent Workstation
+There are not any results runs
+
+Benchmarks.Normalise50k: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+Runtime = .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT; GC = Concurrent Workstation
+There are not any results runs
+
+Benchmarks.ParseAndNormaliseTree15: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+Runtime = .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT; GC = Concurrent Workstation
+Mean = 9.101 ms, StdErr = 0.040 ms (0.44%), N = 15, StdDev = 0.154 ms
+Min = 8.882 ms, Q1 = 8.985 ms, Median = 9.101 ms, Q3 = 9.178 ms, Max = 9.321 ms
+IQR = 0.192 ms, LowerFence = 8.697 ms, UpperFence = 9.466 ms
+ConfidenceInterval = [8.936 ms; 9.266 ms] (CI 99.9%), Margin = 0.165 ms (1.81% of Mean)
+Skewness = -0.2, Kurtosis = 1.67, MValue = 2
+-------------------- Histogram --------------------
+[8.800 ms ; 9.036 ms) | @@@@
+[9.036 ms ; 9.403 ms) | @@@@@@@@@@@
+---------------------------------------------------
+
+Benchmarks.ParseAndNormaliseFact8: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+Runtime = .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT; GC = Concurrent Workstation
+Mean = 31.381 μs, StdErr = 0.194 μs (0.62%), N = 96, StdDev = 1.905 μs
+Min = 28.458 μs, Q1 = 30.042 μs, Median = 30.834 μs, Q3 = 32.417 μs, Max = 36.709 μs
+IQR = 2.375 μs, LowerFence = 26.480 μs, UpperFence = 35.980 μs
+ConfidenceInterval = [30.721 μs; 32.041 μs] (CI 99.9%), Margin = 0.660 μs (2.10% of Mean)
+Skewness = 0.88, Kurtosis = 2.92, MValue = 2.39
+-------------------- Histogram --------------------
+[27.912 μs ; 28.683 μs) | @
+[28.683 μs ; 29.892 μs) | @@@@@@@@@@@@@@@@@
+[29.892 μs ; 30.984 μs) | @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+[30.984 μs ; 32.171 μs) | @@@@@@@@@@@@@@@@@
+[32.171 μs ; 33.504 μs) | @@@@@@@@@@
+[33.504 μs ; 35.150 μs) | @@@@@@@@@@@@@
+[35.150 μs ; 36.796 μs) | @@@
+---------------------------------------------------
+
+Benchmarks.ParseAndNormalise1M: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+Runtime = .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT; GC = Concurrent Workstation
+There are not any results runs
+
+Benchmarks.ParseAndNormalisePearls100: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+Runtime = .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT; GC = Concurrent Workstation
+Mean = 104.171 μs, StdErr = 0.337 μs (0.32%), N = 16, StdDev = 1.349 μs
+Min = 102.749 μs, Q1 = 103.406 μs, Median = 103.624 μs, Q3 = 104.635 μs, Max = 107.208 μs
+IQR = 1.229 μs, LowerFence = 101.562 μs, UpperFence = 106.478 μs
+ConfidenceInterval = [102.797 μs; 105.545 μs] (CI 99.9%), Margin = 1.374 μs (1.32% of Mean)
+Skewness = 1.04, Kurtosis = 2.71, MValue = 2
+-------------------- Histogram --------------------
+[102.341 μs ; 107.628 μs) | @@@@@@@@@@@@@@@@
+---------------------------------------------------
+
+// * Summary *
+
+BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.1 (21C52) [Darwin 21.2.0]
+Apple M1, 1 CPU, 8 logical and 8 physical cores
+.NET SDK=6.0.100
+  [Host]     : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT DEBUG
+  Job-BSOHUJ : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+
+InvocationCount=1  UnrollFactor=1  
+
+|                     Method |        Mean |      Error |     StdDev |      Median |
+|--------------------------- |------------:|-----------:|-----------:|------------:|
+|       ParseAndNormalise50k |          NA |         NA |         NA |          NA |
+|               Normalise50k |          NA |         NA |         NA |          NA |
+|    ParseAndNormaliseTree15 | 9,101.08 μs | 164.599 μs | 153.966 μs | 9,101.02 μs |
+|     ParseAndNormaliseFact8 |    31.38 μs |   0.660 μs |   1.905 μs |    30.83 μs |
+|        ParseAndNormalise1M |          NA |         NA |         NA |          NA |
+| ParseAndNormalisePearls100 |   104.17 μs |   1.374 μs |   1.349 μs |   103.62 μs |
+
+Benchmarks with issues:
+  Benchmarks.ParseAndNormalise50k: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+  Benchmarks.Normalise50k: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+  Benchmarks.ParseAndNormalise1M: Job-BSOHUJ(InvocationCount=1, UnrollFactor=1)
+
+// * Warnings *
+MinIterationTime
+  Benchmarks.ParseAndNormaliseTree15: InvocationCount=1, UnrollFactor=1    -> The minimum observed iteration time is 8.8824 ms which is very small. It's recommended to increase it to at least 100.0000 ms using more operations.
+  Benchmarks.ParseAndNormaliseFact8: InvocationCount=1, UnrollFactor=1     -> The minimum observed iteration time is 28.5410 μs which is very small. It's recommended to increase it to at least 100.0000 ms using more operations.
+  Benchmarks.ParseAndNormalisePearls100: InvocationCount=1, UnrollFactor=1 -> The minimum observed iteration time is 102.8330 μs which is very small. It's recommended to increase it to at least 100.0000 ms using more operations.
+
+// * Hints *
+Outliers
+  Benchmarks.ParseAndNormaliseFact8: InvocationCount=1, UnrollFactor=1     -> 4 outliers were removed (37.08 μs..41.38 μs)
+  Benchmarks.ParseAndNormalisePearls100: InvocationCount=1, UnrollFactor=1 -> 3 outliers were removed (111.12 μs..112.58 μs)
+
+// * Legends *
+  Mean   : Arithmetic mean of all measurements
+  Error  : Half of 99.9% confidence interval
+  StdDev : Standard deviation of all measurements
+  Median : Value separating the higher half of all measurements (50th percentile)
+  1 μs   : 1 Microsecond (0.000001 sec)
+
+// ***** BenchmarkRunner: End *****
+// ** Remained 0 benchmark(s) to run **
+Run time: 00:00:14 (14.99 sec), executed benchmarks: 6
+
+Global total time: 00:00:20 (20.65 sec), executed benchmarks: 6
+// * Artifacts cleanup *
