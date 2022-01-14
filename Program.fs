@@ -26,6 +26,7 @@ module Program =
           else failwith "Not a Church nat."
         | _ -> failwith "Not a Church nat."
       | _ -> failwith "Not a Church nat."
+
     match getNodeKind nd with
     | NodeKind.SINGLE ->
       let sId = getLeafId (getLeaf (mkSingle nd))
@@ -206,5 +207,5 @@ module Program =
   let main _ =
     Check.All<Tests> (Config.Quick.WithMaxTest 1)
     BenchmarkRunner.Run<Benchmarks> () |> ignore
-    BenchmarkRunner.Run<Hoas.Benchmarks> () |> ignore
+    //BenchmarkRunner.Run<Hoas.Benchmarks> () |> ignore
     1

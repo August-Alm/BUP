@@ -174,56 +174,32 @@ module Upcopy =
 
     else
 
-      //let scandownHelper (nd : Node) (knd : NodeKind) =
-      //  if knd = NodeKind.LEAF then
-      //    struct (argm, ValueNone)
-      //  else // BRANCH
-      //    let b = mkBranch nd
-      //    let b' = newBranch (getLChild b) (getRChild b) 
-      //    setCache b (mkBranch b')
-      //    iterDLL (pusharg argm) varpars
-      //    upcopy ()
-      //    struct (b', ValueSome b)
 
-      //let scandown (nd : Node) =
-      //  let mutable ch = nd
-      //  let mutable k = getNodeKind nd
-      //  if k = NodeKind.SINGLE then
-      //    let mutable s = mkSingle ch
-      //    ch <- getChild s
-      //    k <- getNodeKind ch
-      //    while k = NodeKind.SINGLE do
-      //      s <- mkSingle ch
-      //      ch <- getChild s
-      //      k <- getNodeKind ch
-      //    let struct (ch', topapp) = scandownHelper ch k
-      //    let func' = newSingle (getLeaf s) ch'
-      //    struct (func', topapp)
-      //  else
-      //    scandownHelper ch k
+      let scandown (nd : Node) =
+        let rec go (nd : Node) (g : Single) =
+          match getNodeKind nd with
+          | NodeKind.LEAF ->
+            ev g (argm, mkBranch -1)
+          | NodeKind.SINGLE ->
+            let s = mkSingle nd
+            ev g (go (getChild s) s)
+          | NodeKind.BRANCH ->
+            let b = mkBranch nd
+            let b' = newBranch (getLChild b) (getRChild b) 
+            setCache b (mkBranch b')
+            iterDLL (pusharg argm) varpars
+            upcopy ()
+            ev g (b', b)
+        and ev g (u, bopt) =
+          if isNil g then (u, bopt)
+          else (newSingle (getLeaf g) u, bopt)
+        go nd (mkSingle -1)
 
-      let rec scandown (nd : Node) =
-        match getNodeKind nd with
-        | NodeKind.LEAF -> struct (argm, ValueNone)
-        | NodeKind.SINGLE ->
-          let s = mkSingle nd
-          let struct (body', topapp) = scandown (getChild s)
-          let func' = newSingle (getLeaf s) body'
-          struct (func', topapp)
-        | NodeKind.BRANCH ->
-          let b = mkBranch nd
-          let b' = newBranch (getLChild b) (getRChild b) 
-          setCache b (mkBranch b')
-          iterDLL (pusharg argm) varpars
-          upcopy ()
-          struct (b', ValueSome b)
-
-      let struct (ans, topappOpt) = scandown body
+      let (ans, topappOpt) = scandown body
 
       let answer =
-        match topappOpt with
-        | ValueNone -> ans
-        | ValueSome app -> clearCaches func app; ans
+        if isNil topappOpt then ans
+        else clearCaches func topappOpt; ans
 
       replaceChild answer (getBranchParents redex)
       freeNode (mkNode redex)
