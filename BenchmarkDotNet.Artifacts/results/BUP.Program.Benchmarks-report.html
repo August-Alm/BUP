@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>BUP.Program.Benchmarks-20220114-132411</title>
+<title>BUP.Program.Benchmarks-20220114-143614</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -17,19 +17,20 @@ BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.1 (21C52) [Darwin 21.2.0]
 Apple M1, 1 CPU, 8 logical and 8 physical cores
 .NET SDK=6.0.100
   [Host]     : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT DEBUG
-  Job-MXWJFH : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+  Job-BDWQSP : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
 </code></pre>
 <pre><code>InvocationCount=1  UnrollFactor=1  
 </code></pre>
 
 <table>
-<thead><tr><th>              Method</th><th> Mean</th><th>Error</th><th>StdDev</th>
+<thead><tr><th>              Method</th><th>     Mean</th><th>  Error</th><th>StdDev</th><th>    Median</th>
 </tr>
-</thead><tbody><tr><td>ParseAndNormalise50k</td><td>6,007.7 &mu;s</td><td>67.82 &mu;s</td><td>60.12 &mu;s</td>
-</tr><tr><td>ParseAndNormaliseTree15</td><td>9,130.9 &mu;s</td><td>138.61 &mu;s</td><td>129.65 &mu;s</td>
-</tr><tr><td>ParseAndNormaliseFact8</td><td>3,855.6 &mu;s</td><td>34.21 &mu;s</td><td>32.00 &mu;s</td>
-</tr><tr><td>ParseAndNormalise1M</td><td>44,217.7 &mu;s</td><td>93.02 &mu;s</td><td>77.67 &mu;s</td>
-</tr><tr><td>ParseAndNormalisePearls100</td><td>105.1 &mu;s</td><td>2.09 &mu;s</td><td>3.13 &mu;s</td>
+</thead><tbody><tr><td>ParseAndNormalise50k</td><td>5,974,367.7 ns</td><td>62,310.40 ns</td><td>58,285.2 ns</td><td>5,973,770.50 ns</td>
+</tr><tr><td>Normalise50k</td><td>114.3 ns</td><td>42.58 ns</td><td>118.0 ns</td><td>83.00 ns</td>
+</tr><tr><td>ParseAndNormaliseTree15</td><td>9,037,425.6 ns</td><td>132,967.59 ns</td><td>117,872.3 ns</td><td>9,068,521.00 ns</td>
+</tr><tr><td>ParseAndNormaliseFact8</td><td>3,931,658.6 ns</td><td>72,838.75 ns</td><td>71,537.4 ns</td><td>3,920,249.50 ns</td>
+</tr><tr><td>ParseAndNormalise1M</td><td>44,214,567.4 ns</td><td>61,808.40 ns</td><td>51,612.8 ns</td><td>44,206,542.00 ns</td>
+</tr><tr><td>ParseAndNormalisePearls100</td><td>104,028.1 ns</td><td>1,313.92 ns</td><td>1,025.8 ns</td><td>104,292.00 ns</td>
 </tr></tbody></table>
 </body>
 </html>

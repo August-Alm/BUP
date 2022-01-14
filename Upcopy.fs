@@ -90,11 +90,11 @@ module Upcopy =
       setHead newpars (getHead oldpars)
       initializeDLL oldpars
   
-  type UpcopyArg = (struct (Node * Uplink))
+  type private UpcopyArg = (struct (Node * Uplink))
 
-  let private ucstk = System.Collections.Generic.Stack<UpcopyArg> (pown 2 12)
+  let private upcopyArgs = System.Collections.Generic.Stack<UpcopyArg> (pown 2 12)
 
-  let inline private pusharg x = fun lk -> ucstk.Push (struct (x, lk))
+  let inline private pusharg x = fun lk -> upcopyArgs.Push (struct (x, lk))
 
   let inline private newBranch func argm =
     let b = allocBranch ()
@@ -114,8 +114,8 @@ module Upcopy =
     mkNode s
   
   and private upcopy () =
-    while ucstk.Count > 0 do
-      let struct (newChild, parUplk) = ucstk.Pop ()
+    while upcopyArgs.Count > 0 do
+      let struct (newChild, parUplk) = upcopyArgs.Pop ()
       match getRelation parUplk with
       | UplinkRel.CHILD ->
         let s = mkSingle (getNode parUplk)
@@ -170,8 +170,12 @@ module Upcopy =
         match getNodeKind nd with
         | NodeKind.LEAF -> struct (argm, ValueNone)
         | NodeKind.SINGLE ->
-          let s = mkSingle nd
-          let struct (body', topapp) = scandown (getChild s)
+          let mutable s = mkSingle nd
+          let mutable ch = getChild s
+          while getNodeKind ch = NodeKind.SINGLE do
+            s <- mkSingle ch
+            ch <- getChild s
+          let struct (body', topapp) = scandown ch //(getChild s)
           let func' = newSingle (getLeaf s) body'
           struct (func', topapp)
         | NodeKind.BRANCH ->

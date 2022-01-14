@@ -135,6 +135,8 @@ module Program =
        @ n10k = ((mul n100) n100);
        @ n50k = ((mul n10k) n5); 
        n50k"
+    
+    let mutable nod50k = Parser(InputOfString str50k).ReadNode ()
 
     let strTree15 =
      let rec loop seed n =
@@ -172,6 +174,9 @@ module Program =
     member _.ParseAndNormalise50k () =
       let mutable node = Parser(InputOfString str50k).ReadNode ()
       normalise &node
+
+    [<Benchmark>]
+    member _.Normalise50k () =  normalise &nod50k
 
     [<Benchmark>]
     member _.ParseAndNormaliseTree15 () =

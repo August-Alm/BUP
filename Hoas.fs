@@ -71,6 +71,17 @@ module Hoas =
       quote (normalise n50k)
 
     [<Benchmark>]
+    member _.HoasNoQuote50k () =
+      let two = L(fun s -> L(fun z -> app s (app s z)))
+      let five = L(fun s -> L(fun z -> app s (app s (app s (app s (app s z))))))
+      let mul = L(fun m -> L(fun n -> L(fun s -> app m (app n s))))
+      let n10 = app (app mul two) five
+      let n100 = app (app mul n10) n10
+      let n10k = app (app mul n100) n100
+      let n50k = app (app mul n10k) five
+      normalise n50k
+
+    [<Benchmark>]
     member _.HoasTree15 () =
       let mutable p15 = L(fun x -> x)
       for _ = 1 to 15 do p15 <- A(p15, p15)
