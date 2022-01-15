@@ -148,6 +148,8 @@ module Upcopy =
         else
           setRChild cc newChild
 
+  let private singleStack = System.Collections.Generic.Stack<Single> (pown 2 12)
+
   let private reduce (redex : Branch) =
     let func = mkSingle (getLChild redex)
     let argm = getRChild redex
@@ -174,28 +176,37 @@ module Upcopy =
 
     else
 
-
       let scandown (nd : Node) =
-        let rec go (nd : Node) (g : Single) =
-          match getNodeKind nd with
-          | NodeKind.LEAF ->
-            ev g (argm, mkBranch -1)
-          | NodeKind.SINGLE ->
-            let s = mkSingle nd
-            ev g (go (getChild s) s)
-          | NodeKind.BRANCH ->
+        let helper (nd : Node) (knd : NodeKind) =
+          if knd = NodeKind.LEAF then
+            struct (argm, mkBranch -1)
+          else // NodeKind.BRANCH
             let b = mkBranch nd
             let b' = newBranch (getLChild b) (getRChild b) 
             setCache b (mkBranch b')
             iterDLL (pusharg argm) varpars
             upcopy ()
-            ev g (b', b)
-        and ev g (u, bopt) =
-          if isNil g then (u, bopt)
-          else (newSingle (getLeaf g) u, bopt)
-        go nd (mkSingle -1)
-
-      let (ans, topappOpt) = scandown body
+            struct (b', b)
+        let mutable struct (deepChild, topapp) =
+          match getNodeKind nd with
+          | NodeKind.SINGLE ->
+            let mutable s = mkSingle nd
+            let mutable ch = getChild s
+            let mutable k = getNodeKind ch
+            singleStack.Push s
+            while k = NodeKind.SINGLE do
+              s <- mkSingle ch
+              ch <- getChild s
+              k <- getNodeKind ch
+              singleStack.Push s
+            helper ch k
+          | knd -> helper nd knd
+        let mutable g = mkSingle -1
+        while singleStack.TryPop &g do
+          deepChild <- newSingle (getLeaf g) deepChild
+        struct (deepChild, topapp)
+        
+      let struct (ans, topappOpt) = scandown body
 
       let answer =
         if isNil topappOpt then ans

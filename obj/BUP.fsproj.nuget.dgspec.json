@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/jalm/Documents/Programming/FSharp/BUP/BUP.fsproj": {}
+    "/home/bashka/Programming/FSharp/BUP/BUP.fsproj": {}
   },
   "projects": {
-    "/Users/jalm/Documents/Programming/FSharp/BUP/BUP.fsproj": {
+    "/home/bashka/Programming/FSharp/BUP/BUP.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jalm/Documents/Programming/FSharp/BUP/BUP.fsproj",
+        "projectUniqueName": "/home/bashka/Programming/FSharp/BUP/BUP.fsproj",
         "projectName": "BUP",
-        "projectPath": "/Users/jalm/Documents/Programming/FSharp/BUP/BUP.fsproj",
-        "packagesPath": "/Users/jalm/.nuget/packages/",
-        "outputPath": "/Users/jalm/Documents/Programming/FSharp/BUP/obj/",
+        "projectPath": "/home/bashka/Programming/FSharp/BUP/BUP.fsproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/home/bashka/Programming/FSharp/BUP/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/jalm/.nuget/NuGet/NuGet.Config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -65,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.100/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.101/RuntimeIdentifierGraph.json"
         }
       }
     }

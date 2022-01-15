@@ -1,19 +1,19 @@
 ``` ini
 
-BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.1 (21C52) [Darwin 21.2.0]
-Apple M1, 1 CPU, 8 logical and 8 physical cores
-.NET SDK=6.0.100
-  [Host]     : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT DEBUG
-  Job-XMAPTD : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+BenchmarkDotNet=v0.13.1, OS=pop 21.10
+AMD Ryzen 7 PRO 4750G with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK=6.0.101
+  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT DEBUG
+  Job-RGYAHU : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
 
 InvocationCount=1  UnrollFactor=1  
 
 ```
-|                     Method |             Mean |         Error |        StdDev |             Median |
-|--------------------------- |-----------------:|--------------:|--------------:|-------------------:|
-|       ParseAndNormalise50k |  6,309,594.47 ns |  70,876.11 ns |  66,297.56 ns |  6,316,417.0000 ns |
-|               Normalise50k |         36.71 ns |      15.94 ns |      46.50 ns |          0.0000 ns |
-|    ParseAndNormaliseTree15 |  9,110,471.38 ns | 142,450.06 ns | 118,952.26 ns |  9,118,125.0000 ns |
-|     ParseAndNormaliseFact8 |  3,807,845.64 ns |  38,137.31 ns |  33,807.73 ns |  3,793,250.5000 ns |
-|        ParseAndNormalise1M | 40,150,961.27 ns | 188,436.61 ns | 176,263.72 ns | 40,091,417.0000 ns |
-| ParseAndNormalisePearls100 |    106,421.07 ns |   2,126.20 ns |   3,116.56 ns |    105,125.0000 ns |
+|                     Method |            Mean |         Error |        StdDev |          Median |
+|--------------------------- |----------------:|--------------:|--------------:|----------------:|
+|       ParseAndNormalise50k |  3,610,278.3 ns |  53,111.07 ns | 106,068.54 ns |  3,578,963.0 ns |
+|               Normalise50k |        106.6 ns |       9.00 ns |      25.09 ns |        101.0 ns |
+|    ParseAndNormaliseTree15 | 16,130,032.4 ns | 309,742.74 ns | 274,578.87 ns | 16,215,045.5 ns |
+|     ParseAndNormaliseFact8 |  2,775,256.7 ns |  55,349.08 ns |  87,789.50 ns |  2,756,611.0 ns |
+|        ParseAndNormalise1M | 39,882,852.8 ns | 173,694.98 ns | 162,474.39 ns | 39,851,890.5 ns |
+| ParseAndNormalisePearls100 |    143,539.4 ns |   4,154.16 ns |  11,511.15 ns |    139,245.0 ns |

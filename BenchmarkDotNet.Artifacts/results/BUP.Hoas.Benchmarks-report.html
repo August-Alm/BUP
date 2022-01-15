@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>BUP.Hoas.Benchmarks-20220114-220604</title>
+<title>BUP.Hoas.Benchmarks-20220115-011652</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -13,21 +13,21 @@
 </head>
 <body>
 <pre><code>
-BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.1 (21C52) [Darwin 21.2.0]
-Apple M1, 1 CPU, 8 logical and 8 physical cores
-.NET SDK=6.0.100
-  [Host]     : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT DEBUG
-  DefaultJob : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+BenchmarkDotNet=v0.13.1, OS=pop 21.10
+AMD Ryzen 7 PRO 4750G with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK=6.0.101
+  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT DEBUG
+  DefaultJob : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
 </code></pre>
 <pre><code></code></pre>
 
 <table>
-<thead><tr><th>  Method</th><th>     Mean</th><th>  Error</th><th>   StdDev</th>
+<thead><tr><th>  Method</th><th>    Mean</th><th>  Error</th><th> StdDev</th><th>  Median</th>
 </tr>
-</thead><tbody><tr><td>Hoas50k</td><td>25,368,752.9 ns</td><td>504,214.39 ns</td><td>1,430,372.30 ns</td>
-</tr><tr><td>HoasNoQuote50k</td><td>114.9 ns</td><td>0.30 ns</td><td>0.28 ns</td>
-</tr><tr><td>HoasTree15</td><td>10,191,357.7 ns</td><td>201,845.74 ns</td><td>207,280.71 ns</td>
-</tr><tr><td>HoasFact8</td><td>19,093,890.8 ns</td><td>375,968.83 ns</td><td>501,907.59 ns</td>
+</thead><tbody><tr><td>Hoas50k</td><td>8,381,943.9 ns</td><td>167,285.95 ns</td><td>288,560.04 ns</td><td>8,302,295.6 ns</td>
+</tr><tr><td>HoasNoQuote50k</td><td>178.4 ns</td><td>3.54 ns</td><td>5.08 ns</td><td>180.2 ns</td>
+</tr><tr><td>HoasTree15</td><td>6,166,992.2 ns</td><td>70,506.07 ns</td><td>65,951.42 ns</td><td>6,151,650.4 ns</td>
+</tr><tr><td>HoasFact8</td><td>8,331,092.0 ns</td><td>174,990.24 ns</td><td>490,691.40 ns</td><td>8,137,810.6 ns</td>
 </tr></tbody></table>
 </body>
 </html>
