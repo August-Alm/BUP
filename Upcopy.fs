@@ -4,36 +4,39 @@ module Upcopy =
 
   open Memory
   open Library
+  open System.Collections.Generic
 
-  let cleanupStack = System.Collections.Generic.Stack<Uplink> (pown 2 12)
+  let cleanupStack = Stack<UplinkDLL> (pown 2 12)
 
   let private cleanup () =
     while cleanupStack.Count > 0 do
-      let lk = cleanupStack.Pop ()
-      let nd = getNode lk
-      match getRelation lk with
-      | UplinkRel.CHILD ->
-        let s = mkSingle nd
-        let l = getLeaf s
-        iterDLL cleanupStack.Push (getSingleParents s)
-        iterDLL cleanupStack.Push (getLeafParents l)
-      | _ ->
-        let b = mkBranch nd
-        let cc = getCache b
-        if not (isNil cc) then
-          clearCache b
-          addToParents (getLChildUplink cc) (getLChild cc)
-          addToParents (getRChildUplink cc) (getRChild cc)
-          iterDLL cleanupStack.Push (getBranchParents b)
+      iterDLL
+        (fun lk ->
+          let nd = getNode lk
+          match getRelation lk with
+          | UplinkRel.CHILD ->
+            let s = mkSingle nd
+            let l = getLeaf s
+            cleanupStack.Push (getSingleParents s)
+            cleanupStack.Push (getLeafParents l)
+          | _ ->
+            let b = mkBranch nd
+            let cc = getCache b
+            if not (isNil cc) then
+              clearCache b
+              addToParents (getLChildUplink cc) (getLChild cc)
+              addToParents (getRChildUplink cc) (getRChild cc)
+              cleanupStack.Push (getBranchParents b))
+        (cleanupStack.Pop ())
 
-  let private lambdascan (s : Single) =
-    iterDLL cleanupStack.Push (getLeafParents (getLeaf s))
+  let private lambdaScan (s : Single) =
+    cleanupStack.Push (getLeafParents (getLeaf s))
     let mutable s = s
     let mutable ch = getChild s
     while getNodeKind ch = NodeKind.SINGLE do
       s <- mkSingle ch
       ch <- getChild s
-      iterDLL cleanupStack.Push (getLeafParents (getLeaf s))
+      cleanupStack.Push (getLeafParents (getLeaf s))
     cleanup ()
     
   let private clearCaches (redlam : Single) (topapp : Branch) =
@@ -41,9 +44,9 @@ module Upcopy =
     clearCache topapp
     addToParents (getLChildUplink topcopy) (getLChild topcopy)
     addToParents (getRChildUplink topcopy) (getRChild topcopy)
-    lambdascan redlam
+    lambdaScan redlam
   
-  let private delpar (nd : Node) (lk : Uplink) =
+  let private delPar (nd : Node) (lk : Uplink) =
     let lks = getParents nd
     if isLengthOne lks then
       initializeParents nd
@@ -52,24 +55,29 @@ module Upcopy =
       if h = lk then setHead lks (getNext h)
       unlink lk
 
-  let rec private freeNode (nd : Node) =
-    match getNodeKind nd with
-    | NodeKind.LEAF -> ()
-    | NodeKind.SINGLE ->
-      let s = mkSingle nd
-      let ch = getChild s
-      delpar ch (getChildUplink s)
-      if isEmpty (getParents ch) then freeNode ch
-      deallocSingle s
-    | NodeKind.BRANCH ->
-      let b = mkBranch nd
-      let lch = getLChild b
-      let rch = getRChild b
-      delpar lch (getLChildUplink b)
-      delpar rch (getRChildUplink b)
-      if isEmpty (getParents lch) then freeNode lch
-      if isEmpty (getParents rch) then freeNode rch
-      deallocBranch b
+  let freeStack = Stack<Node> (pown 2 12)
+  
+  let private freeNode (nd : Node) =
+    freeStack.Push nd
+    while freeStack.Count > 0 do
+      let nd = freeStack.Pop ()
+      match getNodeKind nd with
+      | NodeKind.LEAF -> ()
+      | NodeKind.SINGLE ->
+        let s = mkSingle nd
+        let ch = getChild s
+        delPar ch (getChildUplink s)
+        if isEmpty (getParents ch) then freeStack.Push ch
+        deallocSingle s
+      | NodeKind.BRANCH ->
+        let b = mkBranch nd
+        let lch = getLChild b
+        let rch = getRChild b
+        delPar lch (getLChildUplink b)
+        delPar rch (getRChildUplink b)
+        if isEmpty (getParents lch) then freeStack.Push lch
+        if isEmpty (getParents rch) then freeStack.Push rch
+        deallocBranch b
 
   let private installChild (nd : Node) (lk : Uplink) =
     match getRelation lk with
@@ -77,12 +85,6 @@ module Upcopy =
     | UplinkRel.LCHILD -> setLChild (mkBranch (getNode lk)) nd
     | UplinkRel.RCHILD -> setRChild (mkBranch (getNode lk)) nd
   
-  let private installAndLinkChild (nd : Node) (lk : Uplink) =
-    match getRelation lk with
-    | UplinkRel.CHILD -> setChild (mkSingle (getNode lk)) nd
-    | UplinkRel.LCHILD -> setLChild (mkBranch (getNode lk)) nd
-    | UplinkRel.RCHILD -> setRChild (mkBranch (getNode lk)) nd
-
   let private replaceChild (newch : Node) (oldpars : UplinkDLL) =
     if not (isEmpty oldpars) then
       let mutable lk = getHead oldpars 
@@ -97,58 +99,58 @@ module Upcopy =
       setHead newpars (getHead oldpars)
       initializeDLL oldpars
   
-  type private UpcopyArg = (struct (Node * Uplink))
+  let private upcopyArgs = Stack<struct (Node * UplinkDLL)> (pown 2 12)
 
-  let private upcopyArgs = System.Collections.Generic.Stack<UpcopyArg> (pown 2 12)
+  let inline private pushArg x = fun lks -> upcopyArgs.Push (struct (x, lks))
 
-  let inline private pusharg x = fun lk -> upcopyArgs.Push (struct (x, lk))
-
-  let inline private newBranch func argm =
-    let b = allocBranch ()
-    setLChild b func
-    setRChild b argm
-    mkNode b
-
-  let rec private newSingle oldvar body =
+  let inline private newSingle oldvar body =
     let varpars = getLeafParents oldvar
     let s = allocSingle ()
     initializeSingle s (getLeafNameId oldvar)
     setChild s body
     addToParents (getChildUplink s) body
     let var = mkNode (getLeaf s)
-    iterDLL (pusharg var) varpars
-    upcopy ()
+    pushArg var varpars
     mkNode s
-  
-  and private upcopy () =
-    while upcopyArgs.Count > 0 do
-      let struct (newChild, parUplk) = upcopyArgs.Pop ()
-      match getRelation parUplk with
-      | UplinkRel.CHILD ->
-        let s = mkSingle (getNode parUplk)
-        let var = getLeaf s
-        let nd = newSingle var newChild
-        iterDLL (pusharg nd) (getSingleParents s)
-      | UplinkRel.LCHILD ->
-        let b = mkBranch (getNode parUplk)
-        let cc = getCache b
-        if isNil cc then
-          let nd = newBranch newChild (getRChild b)
-          setCache b (mkBranch nd)
-          iterDLL (pusharg nd) (getBranchParents b)
-        else
-          setLChild cc newChild
-      | UplinkRel.RCHILD ->
-        let b = mkBranch (getNode parUplk)
-        let cc = getCache b
-        if isNil cc then
-          let nd = newBranch (getLChild b) newChild
-          setCache b (mkBranch nd)
-          iterDLL (pusharg nd) (getBranchParents b)
-        else
-          setRChild cc newChild
 
-  let private singleStack = System.Collections.Generic.Stack<Single> (pown 2 12)
+  let inline private newBranch func argm =
+    let b = allocBranch ()
+    setLChild b func
+    setRChild b argm
+    mkNode b
+  
+  let private upcopy () =
+    while upcopyArgs.Count > 0 do
+      let struct (newChild, parUplks) = upcopyArgs.Pop ()
+      iterDLL
+        (fun parUplk ->
+          match getRelation parUplk with
+          | UplinkRel.CHILD ->
+            let s = mkSingle (getNode parUplk)
+            let var = getLeaf s
+            let nd = newSingle var newChild
+            pushArg nd (getSingleParents s)
+          | UplinkRel.LCHILD ->
+            let b = mkBranch (getNode parUplk)
+            let cc = getCache b
+            if isNil cc then
+              let nd = newBranch newChild (getRChild b)
+              setCache b (mkBranch nd)
+              pushArg nd (getBranchParents b)
+            else
+              setLChild cc newChild
+          | UplinkRel.RCHILD ->
+            let b = mkBranch (getNode parUplk)
+            let cc = getCache b
+            if isNil cc then
+              let nd = newBranch (getLChild b) newChild
+              setCache b (mkBranch nd)
+              pushArg nd (getBranchParents b)
+            else
+              setRChild cc newChild)
+        parUplks
+
+  let private singleStack = Stack<Single> (pown 2 12)
 
   let private reduce (redex : Branch) =
     let func = mkSingle (getLChild redex)
@@ -167,25 +169,24 @@ module Upcopy =
       replaceChild argm varpars
       let answer = getChild func
       replaceChild answer (getBranchParents redex)
-      delpar argm (getRChildUplink redex)
-      delpar (mkNode func) (getLChildUplink redex)
+      delPar argm (getRChildUplink redex)
+      delPar (mkNode func) (getLChildUplink redex)
       deallocBranch redex
-      delpar (getChild func) (getChildUplink func)
+      delPar (getChild func) (getChildUplink func)
       deallocSingle func
       answer
 
     else
 
       let scandown (nd : Node) =
-        let helper (nd : Node) (knd : NodeKind) =
+        let inline helper (nd : Node) (knd : NodeKind) =
           if knd = NodeKind.LEAF then
             struct (argm, mkBranch -1)
           else // NodeKind.BRANCH
             let b = mkBranch nd
             let b' = newBranch (getLChild b) (getRChild b) 
             setCache b (mkBranch b')
-            iterDLL (pusharg argm) varpars
-            upcopy ()
+            pushArg argm varpars
             struct (b', b)
         let mutable struct (deepChild, topapp) =
           match getNodeKind nd with
@@ -206,11 +207,13 @@ module Upcopy =
           deepChild <- newSingle (getLeaf g) deepChild
         struct (deepChild, topapp)
         
-      let struct (ans, topappOpt) = scandown body
+      let struct (ans, topapp) = scandown body
+
+      upcopy () // Where the action is.
 
       let answer =
-        if isNil topappOpt then ans
-        else clearCaches func topappOpt; ans
+        if isNil topapp then ans
+        else clearCaches func topapp; ans
 
       replaceChild answer (getBranchParents redex)
       freeNode (mkNode redex)

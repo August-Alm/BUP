@@ -207,5 +207,5 @@ module Program =
   let main _ =
     Check.All<Tests> (Config.Quick.WithMaxTest 1)
     BenchmarkRunner.Run<Benchmarks> () |> ignore
-    //BenchmarkRunner.Run<Hoas.Benchmarks> () |> ignore
+    BenchmarkRunner.Run<Hoas.Benchmarks> () |> ignore
     1
