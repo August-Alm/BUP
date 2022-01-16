@@ -164,6 +164,16 @@ module Program =
        @ n1M = ((mul n10k) n100); 
        n1M"
     
+    // 3^(2^4) - 3^(2^4)
+    let strArithm =
+     "@ n2 = λs.λz.(s (s z));
+      @ n3 = λs.λz.(s (s (s z)));
+      @ n4 = λs.λz.(s (s (s (s z))));
+      @ big = ((n4 n2) n3);
+      @ pred = λn.λs.λz.(((n λg.λh.(h (g s))) λu.z) λu.u);
+      @ sub = λm.λn.((n pred) m);
+      ((sub big) big)"
+     
     let strPearls100 =
       let sb = System.Text.StringBuilder 2000
       sb.Append "@ p0 = λx.x;\n" |> ignore
@@ -199,6 +209,11 @@ module Program =
       let mutable nodePearls100 = Parser(InputOfString strPearls100).ReadNode ()
       normalise &nodePearls100
 
+    //[<Benchmark>]
+    //member _.ParseAndNormaliseArithmetic () =
+    //  let mutable nodeArithm = Parser(InputOfString strArithm).ReadNode ()
+    //  normalise &nodeArithm
+
     [<IterationCleanup>]
     member _.Cleanup () = Memory.clearHeap ()
 
@@ -207,5 +222,5 @@ module Program =
   let main _ =
     Check.All<Tests> (Config.Quick.WithMaxTest 1)
     BenchmarkRunner.Run<Benchmarks> () |> ignore
-    BenchmarkRunner.Run<Hoas.Benchmarks> () |> ignore
+    //BenchmarkRunner.Run<Hoas.Benchmarks> () |> ignore
     1

@@ -220,7 +220,7 @@ module Upcopy =
       answer
   
   let inline private isRedex (nd : Node) : Branch =
-    if isNil nd || getNodeKind nd <> NodeKind.BRANCH then
+    if getNodeKind nd <> NodeKind.BRANCH then
       mkBranch -1
     else
       let b = mkBranch nd
@@ -233,18 +233,22 @@ module Upcopy =
       nd <- reduce b
       b <- isRedex nd
 
-  let rec normalise (nd : Node byref) =
-    match getNodeKind nd with
-    | NodeKind.LEAF -> ()
-    | NodeKind.SINGLE ->
-      let s = mkSingle nd
-      let mutable ch = getChild s
-      normalise &ch
-    | NodeKind.BRANCH ->
-      let b = mkBranch nd
-      let mutable lch = getLChild b
-      let mutable rch = getRChild b
-      normalise &lch
-      match getNodeKind lch with
-      | NodeKind.SINGLE -> nd <- reduce b; normalise &nd
-      | _ -> normalise &rch
+  let normalise (nd : Node byref) =
+    let rec loop (root : Node) (nd : Node) =
+      match getNodeKind nd with
+      | NodeKind.LEAF -> root
+      | NodeKind.SINGLE ->
+        let ch = getChild (mkSingle nd)
+        loop root ch 
+      | NodeKind.BRANCH ->
+        let lch = getLChild (mkBranch nd)
+        let lch' = loop lch lch
+        match getNodeKind lch' with
+        | NodeKind.SINGLE ->
+          let red = reduce (mkBranch nd)
+          if nd = root then loop red red
+          else loop root red
+        | _ ->
+          let rch = getRChild (mkBranch nd)
+          loop root rch
+    nd <- loop nd nd

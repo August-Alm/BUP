@@ -10,7 +10,7 @@ AMD Ryzen 7 PRO 4750G with Radeon Graphics, 1 CPU, 16 logical and 8 physical cor
 ```
 |         Method |           Mean |         Error |        StdDev |
 |--------------- |---------------:|--------------:|--------------:|
-|        Hoas50k | 8,373,439.9 ns | 152,106.75 ns | 142,280.75 ns |
-| HoasNoQuote50k |       178.9 ns |       1.30 ns |       1.21 ns |
-|     HoasTree15 | 6,330,610.4 ns |  65,518.45 ns |  58,080.40 ns |
-|      HoasFact8 | 7,912,557.2 ns |  33,689.02 ns |  28,131.86 ns |
+|        Hoas50k | 8,081,650.2 ns |  23,665.61 ns |  19,761.85 ns |
+| HoasNoQuote50k |       176.7 ns |       0.50 ns |       0.42 ns |
+|     HoasTree15 | 6,648,604.4 ns | 130,866.88 ns | 248,987.84 ns |
+|      HoasFact8 | 8,024,277.5 ns | 107,810.44 ns | 100,845.95 ns |
