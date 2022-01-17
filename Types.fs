@@ -3,6 +3,23 @@
 [<AutoOpen>]
 module Types =
 
+  type FixedStack<'a> (capacity : int) =
+    let mutable count = 0
+    let storage = Array.zeroCreate<'a> capacity
+
+    member _.Count with get () = count
+
+    member _.Push (x : 'a) = storage[count] <- x; count <- count + 1
+
+    member _.Pop () = count <- count - 1; storage[count]
+
+    member _.TryPop (x : 'a byref) =
+      if count = 0 then false
+      else
+        count <- count - 1
+        x <- storage[count]
+        true
+  
   let inline toEnum<'a when 'a : enum<int>> (x) : 'a =
     LanguagePrimitives.EnumOfValue x
   

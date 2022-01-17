@@ -4,21 +4,21 @@
     <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
     <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
     <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
-    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">/Users/jalm/.nuget/packages/</NuGetPackageRoot>
-    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">/Users/jalm/.nuget/packages/</NuGetPackageFolders>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">/root/.nuget/packages/</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">/root/.nuget/packages/</NuGetPackageFolders>
     <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
     <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.0.0</NuGetToolVersion>
   </PropertyGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <SourceRoot Include="/Users/jalm/.nuget/packages/" />
+    <SourceRoot Include="/root/.nuget/packages/" />
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)microsoft.diagnostics.tracing.traceevent/2.0.61/build/Microsoft.Diagnostics.Tracing.TraceEvent.props" Condition="Exists('$(NuGetPackageRoot)microsoft.diagnostics.tracing.traceevent/2.0.61/build/Microsoft.Diagnostics.Tracing.TraceEvent.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgMicrosoft_CodeAnalysis_Analyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_Analyzers)' == '' ">/Users/jalm/.nuget/packages/microsoft.codeanalysis.analyzers/2.6.1</PkgMicrosoft_CodeAnalysis_Analyzers>
-    <PkgFSharp_Core Condition=" '$(PkgFSharp_Core)' == '' ">/Users/jalm/.nuget/packages/fsharp.core/6.0.1</PkgFSharp_Core>
-    <PkgFsCheck_Xunit Condition=" '$(PkgFsCheck_Xunit)' == '' ">/Users/jalm/.nuget/packages/fscheck.xunit/3.0.0-beta1</PkgFsCheck_Xunit>
-    <PkgBenchmarkDotNet Condition=" '$(PkgBenchmarkDotNet)' == '' ">/Users/jalm/.nuget/packages/benchmarkdotnet/0.13.1</PkgBenchmarkDotNet>
+    <PkgMicrosoft_CodeAnalysis_Analyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_Analyzers)' == '' ">/root/.nuget/packages/microsoft.codeanalysis.analyzers/2.6.1</PkgMicrosoft_CodeAnalysis_Analyzers>
+    <PkgFSharp_Core Condition=" '$(PkgFSharp_Core)' == '' ">/root/.nuget/packages/fsharp.core/6.0.1</PkgFSharp_Core>
+    <PkgFsCheck_Xunit Condition=" '$(PkgFsCheck_Xunit)' == '' ">/root/.nuget/packages/fscheck.xunit/3.0.0-beta1</PkgFsCheck_Xunit>
+    <PkgBenchmarkDotNet Condition=" '$(PkgBenchmarkDotNet)' == '' ">/root/.nuget/packages/benchmarkdotnet/0.13.1</PkgBenchmarkDotNet>
   </PropertyGroup>
 </Project>

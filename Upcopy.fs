@@ -6,7 +6,7 @@ module Upcopy =
   open Library
   open System.Collections.Generic
 
-  let cleanupStack = Stack<UplinkDLL> (pown 2 12)
+  let cleanupStack = FixedStack<UplinkDLL> (pown 2 15)
 
   let private cleanup () =
     while cleanupStack.Count > 0 do
@@ -55,7 +55,7 @@ module Upcopy =
       if h = lk then setHead lks (getNext h)
       unlink lk
 
-  let freeStack = Stack<Node> (pown 2 12)
+  let freeStack = FixedStack<Node> (pown 2 15)
   
   let private freeNode (nd : Node) =
     freeStack.Push nd
@@ -99,7 +99,7 @@ module Upcopy =
       setHead newpars (getHead oldpars)
       initializeDLL oldpars
   
-  let private upcopyArgs = Stack<struct (Node * UplinkDLL)> (pown 2 12)
+  let private upcopyArgs = FixedStack<struct (Node * UplinkDLL)> (pown 2 15)
 
   let inline private pushArg x = fun lks -> upcopyArgs.Push (struct (x, lks))
 
@@ -150,7 +150,7 @@ module Upcopy =
               setRChild cc newChild)
         parUplks
 
-  let private singleStack = Stack<Single> (pown 2 12)
+  let private singleStack = FixedStack<Single> (pown 2 15)
 
   let private reduce (redex : Branch) =
     let func = mkSingle (getLChild redex)
@@ -235,13 +235,12 @@ module Upcopy =
 
   type private NormState = (struct (bool * Node * Node))
 
-  let private normStates = Stack<NormState> (pown 2 12)
+  let private normStates = FixedStack<NormState> (pown 2 26)
 
-  let normalise (node : Node byref) =
+  let normaliseIter (node : Node byref) =
     normStates.Push (struct (false, node, node))
-    let mutable var = struct (false, node, node)
-    while normStates.TryPop &var do
-      let struct (isLCh, root, nd) = var
+    while normStates.Count > 0 do
+      let struct (isLCh, root, nd) = normStates.Pop ()
       if not isLCh then
         match getNodeKind nd with
         | NodeKind.LEAF -> node <- root
@@ -264,22 +263,23 @@ module Upcopy =
           let rch = getRChild (mkBranch nd)
           normStates.Push (struct (false, root, rch))
 
-//  let normalise (nd : Node byref) =
-//    let rec loop (root : Node) (nd : Node) =
-//      match getNodeKind nd with
-//      | NodeKind.LEAF -> root
-//      | NodeKind.SINGLE ->
-//        let ch = getChild (mkSingle nd)
-//        loop root ch 
-//      | NodeKind.BRANCH ->
-//        let lch = getLChild (mkBranch nd)
-//        let lch' = loop lch lch
-//        match getNodeKind lch' with
-//        | NodeKind.SINGLE ->
-//          let red = reduce (mkBranch nd)
-//          if nd = root then loop red red
-//          else loop root red
-//        | _ ->
-//          let rch = getRChild (mkBranch nd)
-//          loop root rch
-//    nd <- loop nd nd
+  // This is faster! But can cause stack overflow.
+  let rec normaliseRec (nd : Node byref) =
+    match getNodeKind nd with
+    | NodeKind.LEAF -> ()
+    | NodeKind.SINGLE ->
+      let mutable ch = getChild (mkSingle nd)
+      normaliseRec &ch 
+    | NodeKind.BRANCH ->
+      let b = mkBranch nd
+      let mutable lch = getLChild b
+      normaliseRec &lch
+      match getNodeKind lch with
+      | NodeKind.SINGLE ->
+        nd <- reduce b
+        normaliseRec &nd
+      | _ ->
+        let mutable rch = getRChild b
+        normaliseRec &rch
+  
+  let inline normalise (nd : Node byref) = normaliseIter &nd

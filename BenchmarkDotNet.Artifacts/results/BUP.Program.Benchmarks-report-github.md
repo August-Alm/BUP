@@ -1,19 +1,19 @@
 ``` ini
 
-BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.1 (21C52) [Darwin 21.2.0]
-Apple M1, 1 CPU, 8 logical and 8 physical cores
-.NET SDK=6.0.100
-  [Host]     : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT DEBUG
-  Job-FRHHCA : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+BenchmarkDotNet=v0.13.1, OS=pop 21.10
+AMD Ryzen 7 PRO 4750G with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK=6.0.101
+  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT DEBUG
+  Job-BMGZJS : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
 
 InvocationCount=1  UnrollFactor=1  
 
 ```
-|                     Method |            Mean |         Error |        StdDev |
-|--------------------------- |----------------:|--------------:|--------------:|
-|       ParseAndNormalise50k |  5,747,639.6 ns |  53,624.96 ns |  86,594.31 ns |
-|               Normalise50k |        121.7 ns |      30.53 ns |      85.11 ns |
-|    ParseAndNormaliseTree15 |  9,934,238.1 ns | 151,998.87 ns | 142,179.84 ns |
-|     ParseAndNormaliseFact8 |  4,122,365.5 ns |  62,182.95 ns | 140,357.29 ns |
-|        ParseAndNormalise1M | 69,879,752.6 ns | 392,783.56 ns | 348,192.39 ns |
-| ParseAndNormalisePearls100 |    106,565.9 ns |     618.35 ns |     482.77 ns |
+|                     Method |            Mean |         Error |       StdDev |          Median |
+|--------------------------- |----------------:|--------------:|-------------:|----------------:|
+|       ParseAndNormalise50k |  9,329,633.4 ns |  86,960.90 ns |  81,343.3 ns |  9,320,191.0 ns |
+|               Normalise50k |        264.4 ns |      54.85 ns |     154.7 ns |        234.5 ns |
+|    ParseAndNormaliseTree15 | 16,558,506.0 ns | 208,299.90 ns | 194,843.9 ns | 16,529,922.5 ns |
+|     ParseAndNormaliseFact8 |  6,198,053.1 ns |  92,478.48 ns |  81,979.8 ns |  6,165,139.5 ns |
+|        ParseAndNormalise1M | 92,305,414.7 ns | 231,664.64 ns | 205,364.7 ns | 92,380,346.5 ns |
+| ParseAndNormalisePearls100 |    135,495.4 ns |   2,380.87 ns |   6,060.1 ns |    132,917.0 ns |
