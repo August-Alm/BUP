@@ -233,22 +233,53 @@ module Upcopy =
       nd <- reduce b
       b <- isRedex nd
 
-  let normalise (nd : Node byref) =
-    let rec loop (root : Node) (nd : Node) =
-      match getNodeKind nd with
-      | NodeKind.LEAF -> root
-      | NodeKind.SINGLE ->
-        let ch = getChild (mkSingle nd)
-        loop root ch 
-      | NodeKind.BRANCH ->
-        let lch = getLChild (mkBranch nd)
-        let lch' = loop lch lch
-        match getNodeKind lch' with
+  type private NormState = (struct (bool * Node * Node))
+
+  let private normStates = Stack<NormState> (pown 2 12)
+
+  let normalise (node : Node byref) =
+    normStates.Push (struct (false, node, node))
+    let mutable var = struct (false, node, node)
+    while normStates.TryPop &var do
+      let struct (isLCh, root, nd) = var
+      if not isLCh then
+        match getNodeKind nd with
+        | NodeKind.LEAF -> node <- root
+        | NodeKind.SINGLE ->
+          let ch = getChild (mkSingle nd)
+          normStates.Push (struct (false, root, ch))
+        | NodeKind.BRANCH ->
+          let lch = getLChild (mkBranch nd)
+          normStates.Push (struct (true, root, nd))
+          normStates.Push (struct (false, lch, lch))
+      else
+        match getNodeKind node with
         | NodeKind.SINGLE ->
           let red = reduce (mkBranch nd)
-          if nd = root then loop red red
-          else loop root red
+          if nd = root then
+            normStates.Push (struct (false, red, red))
+          else
+            normStates.Push (struct (false, root, red))
         | _ ->
           let rch = getRChild (mkBranch nd)
-          loop root rch
-    nd <- loop nd nd
+          normStates.Push (struct (false, root, rch))
+
+//  let normalise (nd : Node byref) =
+//    let rec loop (root : Node) (nd : Node) =
+//      match getNodeKind nd with
+//      | NodeKind.LEAF -> root
+//      | NodeKind.SINGLE ->
+//        let ch = getChild (mkSingle nd)
+//        loop root ch 
+//      | NodeKind.BRANCH ->
+//        let lch = getLChild (mkBranch nd)
+//        let lch' = loop lch lch
+//        match getNodeKind lch' with
+//        | NodeKind.SINGLE ->
+//          let red = reduce (mkBranch nd)
+//          if nd = root then loop red red
+//          else loop root red
+//        | _ ->
+//          let rch = getRChild (mkBranch nd)
+//          loop root rch
+//    nd <- loop nd nd

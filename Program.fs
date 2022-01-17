@@ -169,7 +169,7 @@ module Program =
      "@ n2 = λs.λz.(s (s z));
       @ n3 = λs.λz.(s (s (s z)));
       @ n4 = λs.λz.(s (s (s (s z))));
-      @ big = ((n4 n2) n3);
+      @ big = ((n2 n2) n2);
       @ pred = λn.λs.λz.(((n λg.λh.(h (g s))) λu.z) λu.u);
       @ sub = λm.λn.((n pred) m);
       ((sub big) big)"

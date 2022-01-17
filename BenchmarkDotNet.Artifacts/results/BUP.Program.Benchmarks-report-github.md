@@ -4,16 +4,16 @@ BenchmarkDotNet=v0.13.1, OS=pop 21.10
 AMD Ryzen 7 PRO 4750G with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
 .NET SDK=6.0.101
   [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT DEBUG
-  Job-FFWWGT : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
+  Job-XVMFQM : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
 
 InvocationCount=1  UnrollFactor=1  
 
 ```
-|                     Method |            Mean |         Error |        StdDev |
-|--------------------------- |----------------:|--------------:|--------------:|
-|       ParseAndNormalise50k |  5,521,152.5 ns |  58,442.41 ns |  54,667.07 ns |
-|               Normalise50k |        183.8 ns |      22.48 ns |      60.39 ns |
-|    ParseAndNormaliseTree15 | 15,565,138.4 ns | 299,757.43 ns | 294,401.88 ns |
-|     ParseAndNormaliseFact8 |  2,625,039.2 ns |  50,853.08 ns |  47,568.01 ns |
-|        ParseAndNormalise1M | 42,340,875.9 ns |  66,862.36 ns |  55,833.10 ns |
-| ParseAndNormalisePearls100 |    131,464.8 ns |   1,827.40 ns |   2,376.14 ns |
+|                     Method |             Mean |         Error |        StdDev |
+|--------------------------- |-----------------:|--------------:|--------------:|
+|       ParseAndNormalise50k |   9,556,429.0 ns |  21,279.88 ns |  39,443.62 ns |
+|               Normalise50k |         219.4 ns |      32.03 ns |      86.05 ns |
+|    ParseAndNormaliseTree15 |  18,425,357.7 ns | 358,323.20 ns | 465,921.38 ns |
+|     ParseAndNormaliseFact8 |   8,781,467.8 ns |  42,829.05 ns |  40,062.32 ns |
+|        ParseAndNormalise1M | 123,256,751.0 ns | 167,666.53 ns | 156,835.37 ns |
+| ParseAndNormalisePearls100 |     163,791.1 ns |   7,291.60 ns |  20,446.44 ns |
