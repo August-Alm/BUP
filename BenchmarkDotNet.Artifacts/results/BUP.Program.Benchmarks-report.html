@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>BUP.Program.Benchmarks-20220117-162641</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.1 (21C52) [Darwin 21.2.0]
+Apple M1, 1 CPU, 8 logical and 8 physical cores
+.NET SDK=6.0.100
+  [Host]     : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT DEBUG
+  Job-FRHHCA : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
+</code></pre>
+<pre><code>InvocationCount=1  UnrollFactor=1  
+</code></pre>
+
+<table>
+<thead><tr><th>              Method</th><th>     Mean</th><th>  Error</th><th> StdDev</th>
+</tr>
+</thead><tbody><tr><td>ParseAndNormalise50k</td><td>5,747,639.6 ns</td><td>53,624.96 ns</td><td>86,594.31 ns</td>
+</tr><tr><td>Normalise50k</td><td>121.7 ns</td><td>30.53 ns</td><td>85.11 ns</td>
+</tr><tr><td>ParseAndNormaliseTree15</td><td>9,934,238.1 ns</td><td>151,998.87 ns</td><td>142,179.84 ns</td>
+</tr><tr><td>ParseAndNormaliseFact8</td><td>4,122,365.5 ns</td><td>62,182.95 ns</td><td>140,357.29 ns</td>
+</tr><tr><td>ParseAndNormalise1M</td><td>69,879,752.6 ns</td><td>392,783.56 ns</td><td>348,192.39 ns</td>
+</tr><tr><td>ParseAndNormalisePearls100</td><td>106,565.9 ns</td><td>618.35 ns</td><td>482.77 ns</td>
+</tr></tbody></table>
+</body>
+</html>
