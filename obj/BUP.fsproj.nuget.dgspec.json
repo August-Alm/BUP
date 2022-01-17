@@ -10,11 +10,11 @@
         "projectUniqueName": "/home/bashka/Programming/FSharp/BUP/BUP.fsproj",
         "projectName": "BUP",
         "projectPath": "/home/bashka/Programming/FSharp/BUP/BUP.fsproj",
-        "packagesPath": "/root/.nuget/packages/",
+        "packagesPath": "/home/bashka/.nuget/packages/",
         "outputPath": "/home/bashka/Programming/FSharp/BUP/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/root/.nuget/NuGet/NuGet.Config"
+          "/home/bashka/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
