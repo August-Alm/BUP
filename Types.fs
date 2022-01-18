@@ -19,6 +19,8 @@ module Types =
         count <- count - 1
         x <- storage[count]
         true
+    
+    member _.Clear () = count <- 0
   
   let inline toEnum<'a when 'a : enum<int>> (x) : 'a =
     LanguagePrimitives.EnumOfValue x

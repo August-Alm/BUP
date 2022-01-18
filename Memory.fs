@@ -44,9 +44,9 @@ module internal Memory =
   let internal heap = Array.zeroCreate<int> capacity
   let mutable address = 0
 
-  let private freedSingles = Stack<Single> (pown 2 16)
+  let private freedSingles = FixedStack<Single> (pown 2 16)
 
-  let private freedBranches = Stack<Branch> (pown 2 16)
+  let private freedBranches = FixedStack<Branch> (pown 2 16)
 
   let internal clearHeap () =
     Array.fill heap 0 address 0

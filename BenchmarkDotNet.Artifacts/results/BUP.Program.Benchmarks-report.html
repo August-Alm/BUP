@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>BUP.Program.Benchmarks-20220117-213519</title>
+<title>BUP.Program.Benchmarks-20220118-010347</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -17,20 +17,20 @@ BenchmarkDotNet=v0.13.1, OS=pop 21.10
 AMD Ryzen 7 PRO 4750G with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
 .NET SDK=6.0.101
   [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT DEBUG
-  Job-BMGZJS : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
+  Job-UWRYID : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
 </code></pre>
 <pre><code>InvocationCount=1  UnrollFactor=1  
 </code></pre>
 
 <table>
-<thead><tr><th>              Method</th><th>     Mean</th><th>  Error</th><th>StdDev</th><th>   Median</th>
+<thead><tr><th>              Method</th><th>     Mean</th><th>  Error</th><th> StdDev</th><th>   Median</th>
 </tr>
-</thead><tbody><tr><td>ParseAndNormalise50k</td><td>9,329,633.4 ns</td><td>86,960.90 ns</td><td>81,343.3 ns</td><td>9,320,191.0 ns</td>
-</tr><tr><td>Normalise50k</td><td>264.4 ns</td><td>54.85 ns</td><td>154.7 ns</td><td>234.5 ns</td>
-</tr><tr><td>ParseAndNormaliseTree15</td><td>16,558,506.0 ns</td><td>208,299.90 ns</td><td>194,843.9 ns</td><td>16,529,922.5 ns</td>
-</tr><tr><td>ParseAndNormaliseFact8</td><td>6,198,053.1 ns</td><td>92,478.48 ns</td><td>81,979.8 ns</td><td>6,165,139.5 ns</td>
-</tr><tr><td>ParseAndNormalise1M</td><td>92,305,414.7 ns</td><td>231,664.64 ns</td><td>205,364.7 ns</td><td>92,380,346.5 ns</td>
-</tr><tr><td>ParseAndNormalisePearls100</td><td>135,495.4 ns</td><td>2,380.87 ns</td><td>6,060.1 ns</td><td>132,917.0 ns</td>
+</thead><tbody><tr><td>ParseAndNormalise50k</td><td>9,318,633.7 ns</td><td>169,259.56 ns</td><td>158,325.50 ns</td><td>9,307,377.0 ns</td>
+</tr><tr><td>Normalise50k</td><td>120.6 ns</td><td>21.50 ns</td><td>56.26 ns</td><td>116.0 ns</td>
+</tr><tr><td>ParseAndNormaliseTree15</td><td>16,570,589.5 ns</td><td>320,772.32 ns</td><td>300,050.63 ns</td><td>16,608,327.0 ns</td>
+</tr><tr><td>ParseAndNormaliseFact8</td><td>6,110,336.6 ns</td><td>24,691.59 ns</td><td>20,618.59 ns</td><td>6,113,390.0 ns</td>
+</tr><tr><td>ParseAndNormalise1M</td><td>89,752,072.4 ns</td><td>110,664.41 ns</td><td>103,515.56 ns</td><td>89,734,888.5 ns</td>
+</tr><tr><td>ParseAndNormalisePearls100</td><td>167,809.7 ns</td><td>9,607.30 ns</td><td>26,781.31 ns</td><td>159,881.0 ns</td>
 </tr></tbody></table>
 </body>
 </html>
