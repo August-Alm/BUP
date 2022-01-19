@@ -54,8 +54,8 @@ module Types =
 
   type UplinkRel =
     | CHILD = 0
-    | RCHILD = 1
-    | LCHILD = 2
+    | LCHILD = 1
+    | RCHILD = 2
   
   type Uplink = int<uplinkPtr>
 

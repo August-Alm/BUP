@@ -160,7 +160,7 @@ module Upcopy =
     let lampars = getSingleParents func
     let varpars = getLeafParents var
 
-    if isNil varpars then
+    if isEmpty varpars then
       replaceChild body (getBranchParents redex)
       freeNode (mkNode redex)
       body
