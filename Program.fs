@@ -217,9 +217,12 @@ module Program =
     [<IterationCleanup>]
     member _.Cleanup () = Memory.clearHeap ()
 
-
   [<EntryPoint>]
   let main _ =
+    let str = "@ two = λf.λx.(f (f x)); (two two)"
+    let mutable nd = Parser(InputOfString str).ReadNode ()
+    Memory.mytest ()
+    Memory.clearHeap ()
     Check.All<Tests> (Config.Quick.WithMaxTest 1)
     BenchmarkRunner.Run<Benchmarks> () |> ignore
     //BenchmarkRunner.Run<Hoas.Benchmarks> () |> ignore
