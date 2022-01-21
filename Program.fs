@@ -19,24 +19,22 @@ module Program =
         else failwith "Not a Church nat."
       | NodeKind.BRANCH ->
         let lch = getLChild (mkBranch nd)
-        match getNodeKind lch with
-        | NodeKind.LEAF ->
-          if getLeafId (mkLeaf lch) = sId then
-            loop sId zId (acc + 1) (getRChild (mkBranch nd))
-          else failwith "Not a Church nat."
-        | _ -> failwith "Not a Church nat."
+        if
+          (getNodeKind lch = NodeKind.LEAF) &&
+          (getLeafId (mkLeaf lch) = sId)
+        then
+          loop sId zId (acc + 1) (getRChild (mkBranch nd))
+        else failwith "Not a Church nat."
       | _ -> failwith "Not a Church nat."
 
-    match getNodeKind nd with
-    | NodeKind.SINGLE ->
+    if getNodeKind nd = NodeKind.SINGLE then
       let sId = getLeafId (getLeaf (mkSingle nd))
       let ch = getChild (mkSingle nd)
-      match getNodeKind ch with
-      | NodeKind.SINGLE ->
+      if getNodeKind ch = NodeKind.SINGLE then
         let zId = getLeafId (getLeaf (mkSingle ch))
         loop sId zId 0 (getChild (mkSingle ch))
-      | _ -> failwith "Not a Church nat."
-    | _ -> failwith "Not a Church nat."
+      else failwith "Not a Church nat."
+    else failwith "Not a Church nat."
 
 
   type Tests =
@@ -219,9 +217,6 @@ module Program =
 
   [<EntryPoint>]
   let main _ =
-    let str = "@ two = λf.λx.(f (f x)); (two two)"
-    let mutable nd = Parser(InputOfString str).ReadNode ()
-    Memory.mytest ()
     Memory.clearHeap ()
     Check.All<Tests> (Config.Quick.WithMaxTest 1)
     BenchmarkRunner.Run<Benchmarks> () |> ignore

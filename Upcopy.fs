@@ -178,7 +178,7 @@ module Upcopy =
 
     else
 
-      let scandown (nd : Node) =
+      let inline scandown (nd : Node) =
         let inline helper (nd : Node) (knd : NodeKind) =
           if knd = NodeKind.LEAF then
             struct (argm, mkBranch -1)
@@ -207,13 +207,11 @@ module Upcopy =
           deepChild <- newSingle (getLeaf g) deepChild
         struct (deepChild, topapp)
         
-      let struct (ans, topapp) = scandown body
+      let struct (answer, topapp) = scandown body
 
       upcopy () // Where the action is.
 
-      let answer =
-        if isNil topapp then ans
-        else clearCaches func topapp; ans
+      if not (isNil topapp) then clearCaches func topapp
 
       replaceChild answer (getBranchParents redex)
       freeNode (mkNode redex)

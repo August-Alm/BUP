@@ -76,9 +76,6 @@ module internal Memory =
   
   let deallocBranch b = freedBranches.Push b
 
-  let mytest () =
-    for i in 0 .. 39 do
-      printfn "heap[%i] = %i" i heap[i]
 
   (* ***** ***** *)
 
