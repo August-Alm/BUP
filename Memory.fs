@@ -1,80 +1,133 @@
 namespace BUP
 
+#nowarn "9"
+
 module internal Memory =
 
+  open System.Collections.Generic
+  open System.Runtime.InteropServices
+  open System
+  open System.Buffers
+  open Microsoft.FSharp.NativeInterop
   open System.Collections.Generic
   
   let private singleBlock =
     [|
-      int NodeKind.SINGLE;
+      IntPtr (int NodeKind.SINGLE);
         
-      int NodeKind.LEAF; // leaf
-      -1; // leaf parents
+      IntPtr (int NodeKind.LEAF); // leaf
+      IntPtr.Zero; // leaf parents
         
-      -1; // child node
+      IntPtr.Zero; // child node
       
       int UplinkRel.CHILD;
-      -1; // uplink next
-      -1; // uplink previous
+      IntPtr.Zero; // uplink next
+      IntPtr.Zero; // uplink previous
       
-      -1; // single parents
+      IntPtr.Zero; // single parents
     |]
   
   let private branchBlock = 
     [|
-      int NodeKind.BRANCH;
+      IntPtr (int NodeKind.BRANCH);
 
-      -1; // left child
-      -1; // right child
+      IntPtr.Zero; // left child
+      IntPtr.Zero; // right child
 
       int UplinkRel.LCHILD;
-      -1; // next
-      -1; // previous
+      IntPtr.Zero; // next
+      IntPtr.Zero; // previous
 
       int UplinkRel.RCHILD;
-      -1;
-      -1;
+      IntPtr.Zero;
+      IntPtr.Zero;
 
-      -1; // parents
-      -1; // cache 
+      IntPtr.Zero; // parents
+      IntPtr.Zero; // cache 
     |]
 
-  let private capacity = pown 2 30
 
-  let internal heap = Array.zeroCreate<int> capacity
-  let mutable address = 0
+  let inline addOffset a (i : int) =
+      NativePtr.add (NativePtr.ofNativeInt<IntPtr> (withoutMeasure a)) i
+      |> NativePtr.toNativeInt
 
-  let private freedSingles = FixedStack<Single> (pown 2 16)
 
-  let private freedBranches = FixedStack<Branch> (pown 2 16)
+  type Heap (pool : ArrayPool<IntPtr>) =
+    let gcHandles = Dictionary<IntPtr, GCHandle> ()
+    let mutable disposed = false
 
-  let internal clearHeap () =
-    Array.fill heap 0 address 0
-    address <- 0
-    freedSingles.Clear ()
-    freedBranches.Clear ()
+    new () = new Heap(ArrayPool.Shared)
 
-  let internal allocSingle () =
-    if freedSingles.Count > 0 then
-      freedSingles.Pop ()
-    else
-      let addr = address
-      singleBlock.CopyTo (heap, addr)
-      address <- address + singleBlock.Length
+  with
+    member inline private _.UnsafeFree (handle : GCHandle) =
+      pool.Return (handle.Target :?> IntPtr[])
+      handle.Free ()
+    
+    member private this.DisposeWhen disposing =
+      if not disposed then
+        disposed <- true
+        Seq.iter this.UnsafeFree gcHandles.Values
+        if disposing then gcHandles.Clear ()
+
+    override this.Finalize () = this.DisposeWhen false
+
+    interface IDisposable with
+      member this.Dispose () =
+        this.DisposeWhen true; GC.SuppressFinalize this
+
+    member _.Alloc size =
+      let arr = pool.Rent size
+      let handle = GCHandle.Alloc (arr, GCHandleType.Pinned)
+      let addr = handle.AddrOfPinnedObject ()
+      gcHandles.Add (addr, handle)
+      addr
+    
+    member _.AllocSingle () =
+      let arr = pool.Rent 8
+      singleBlock.CopyTo (arr, 0)
+      let handle = GCHandle.Alloc (arr, GCHandleType.Pinned)
+      let addr = handle.AddrOfPinnedObject ()
+      gcHandles.Add (addr, handle)
       mkSingle addr
-  
-  let internal deallocSingle s = freedSingles.Push s
 
-  let internal allocBranch () =
-    if freedBranches.Count > 0 then
-      freedBranches.Pop ()
-    else
-      let addr = address
-      branchBlock.CopyTo (heap, addr)
-      address <- address + branchBlock.Length
+    member _.AllocBranch () =
+      let arr = pool.Rent 11
+      branchBlock.CopyTo (arr, 0)
+      let handle = GCHandle.Alloc (arr, GCHandleType.Pinned)
+      let addr = handle.AddrOfPinnedObject ()
+      gcHandles.Add (addr, handle)
       mkBranch addr
+
+    member this.Clear () =
+      Seq.iter this.UnsafeFree gcHandles.Values
+      gcHandles.Clear ()
+
+    member this.Free addr =
+      let mutable h = GCHandle ()
+      if gcHandles.Remove (addr, &h) then this.UnsafeFree h
+      else failwith "address not owned by this heap!"
+
+    /// Highly unsafe!
+    member _.Item
+      //with get addr = Marshal.ReadIntPtr addr
+      //and set addr p = Marshal.WriteIntPtr (addr, p)
+      with inline get addr =
+        NativePtr.read<IntPtr> (NativePtr.ofNativeInt addr)
+      and inline set addr p =
+        NativePtr.write<IntPtr> (NativePtr.ofNativeInt addr) p
+
+
+  let internal heap = new Heap ()
+
+  let internal clearHeap () = heap.Clear ()
+
+  let internal allocSingle () = heap.AllocSingle ()
   
-  let deallocBranch b = freedBranches.Push b
+  let internal deallocSingle (s : Types.Single) = heap.Free (withoutMeasure s)
+
+  let internal allocBranch () = heap.AllocBranch ()
+  
+  let internal deallocBranch (b : Types.Branch) = heap.Free (withoutMeasure b)
 
 
   (* ***** ***** *)

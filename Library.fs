@@ -8,18 +8,18 @@ module internal Library =
   (* ***** ***** *)
 
   let inline getRelation (lk : Uplink) =
-    toEnum<UplinkRel> heap[int lk]
+    toEnum<UplinkRel> (int heap[withoutMeasure lk])
     
-  let inline getNext (lk : Uplink) = mkUplink (heap[int lk + 1])
+  let inline getNext (lk : Uplink) = mkUplink (heap[addOffset lk 1])
   let inline setNext (lk : Uplink) (nxt : Uplink) =
-    heap[int lk + 1] <- int nxt
+    heap[addOffset lk 1] <- withoutMeasure nxt
   
-  let inline getPrevious (lk : Uplink) = mkUplink (heap[int lk + 2])
+  let inline getPrevious (lk : Uplink) = mkUplink (heap[addOffset lk 2])
   let inline setPrevious (lk : Uplink) (prv : Uplink) =
-    heap[int lk + 2] <- int prv
+    heap[addOffset lk 2] <- withoutMeasure prv
   
   let inline reinitializeUplink (lk : Uplink) =
-    setNext lk (mkUplink -1); setPrevious lk (mkUplink -1)
+    setNext lk (mkUplink System.IntPtr.Zero); setPrevious lk (mkUplink System.IntPtr.Zero)
 
   let inline link (lk1 : Uplink) (lk2 : Uplink) =
     setNext lk1 lk2; setPrevious lk2 lk1
@@ -30,12 +30,12 @@ module internal Library =
     if isNil prv then
       if isNil nxt then ()
       else
-        setPrevious nxt (mkUplink -1)
-        setNext lk (mkUplink -1)
+        setPrevious nxt (mkUplink System.IntPtr.Zero)
+        setNext lk (mkUplink System.IntPtr.Zero)
     else
       if isNil nxt then
-        setNext prv (mkUplink -1)
-        setPrevious lk (mkUplink -1)
+        setNext prv (mkUplink System.IntPtr.Zero)
+        setPrevious lk (mkUplink System.IntPtr.Zero)
       else
         setPrevious nxt prv
         setNext prv nxt
@@ -43,17 +43,17 @@ module internal Library =
 
   let inline getNode (lk : Uplink) =
     match getRelation lk with
-    | UplinkRel.CHILD -> mkNode (int lk - 4)
-    | UplinkRel.LCHILD -> mkNode (int lk - 3)
-    | UplinkRel.RCHILD -> mkNode (int lk - 6)
+    | UplinkRel.CHILD -> mkNode (addOffset lk -4)
+    | UplinkRel.LCHILD -> mkNode (addOffset lk -3)
+    | UplinkRel.RCHILD -> mkNode (addOffset lk -6)
     
 
   (* ***** ***** *)
 
-  let inline getHead (lks : UplinkDLL) = mkUplink heap[int lks]
-  let inline setHead (lks : UplinkDLL) (h : Uplink) = heap[int lks] <- int h
+  let inline getHead (lks : UplinkDLL) = mkUplink heap[withoutMeasure lks]
+  let inline setHead (lks : UplinkDLL) (h : Uplink) = heap[withoutMeasure lks] <- withoutMeasure h
   
-  let inline initializeDLL (lks : UplinkDLL) = setHead lks (mkUplink -1)
+  let inline initializeDLL (lks : UplinkDLL) = setHead lks (mkUplink System.IntPtr.Zero)
 
   let inline isEmpty (lks : UplinkDLL) = isNil (getHead lks)
   
@@ -78,37 +78,37 @@ module internal Library =
 
   (* ***** ***** *)
   
-  let inline getLeafId (l : Leaf) = heap[int l] &&& 3
+  let inline getLeafId (l : Leaf) = (int heap[withoutMeasure l]) &&& 3
 
-  let inline getLeafNameId (l : Leaf) = heap[int l] >>> 2
+  let inline getLeafNameId (l : Leaf) = (int heap[withoutMeasure l]) >>> 2
   let inline setLeafNameId l nameId =
-    heap[int l] <- ((nameId <<< 2) ||| int NodeKind.LEAF)
+    heap[withoutMeasure l] <- System.IntPtr ((nameId <<< 2) ||| int NodeKind.LEAF)
 
   let inline getLeafName (l : Leaf) = getName (getLeafNameId l)
   let inline setLeafName (l : Leaf) (name : string) =
     setLeafNameId l (addName name)
 
-  let inline getLeafParents (l : Leaf) = mkUplinkDLL (int l + 1)
+  let inline getLeafParents (l : Leaf) = mkUplinkDLL (addOffset l 1)
   let inline setLeafParents (l : Leaf) (lks : UplinkDLL) =
-    heap[int l + 1] <- int (getHead lks)
+    heap[addOffset l 1] <- withoutMeasure (getHead lks)
   
 
   (* ***** ***** *)
   
-  let inline getSingleId (s : Single) = heap[int s]
+  let inline getSingleId (s : Single) = int heap[withoutMeasure s]
     
-  let inline getLeaf (s : Single) = mkLeaf (int s + 1) 
+  let inline getLeaf (s : Single) = mkLeaf (addOffset s 1) 
   let inline setLeaf (s : Single) (l : Leaf) =
-    let l' = mkLeaf (int s + 1) in setLeafParents l' (getLeafParents l)
+    let l' = mkLeaf (addOffset s 1) in setLeafParents l' (getLeafParents l)
     
-  let inline getChild (s : Single) = mkNode (heap[int s + 3])
-  let inline setChild (s : Single) (ch : Node) = heap[int s + 3] <- int ch
+  let inline getChild (s : Single) = mkNode (heap[addOffset s 3])
+  let inline setChild (s : Single) (ch : Node) = heap[addOffset s 3] <- withoutMeasure ch
     
-  let inline getChildUplink (s : Single) = mkUplink (int s + 4)
+  let inline getChildUplink (s : Single) = mkUplink (addOffset s 4)
   
-  let inline getSingleParents (s : Single) = mkUplinkDLL (int s + 7)
+  let inline getSingleParents (s : Single) = mkUplinkDLL (addOffset s 7)
   let inline setSingleParents (s : Single) (lks : UplinkDLL) =
-    heap[int s + 7] <- int (getHead lks)
+    heap[addOffset s 7] <- withoutMeasure (getHead lks)
     
   let inline initializeSingle (s : Single) (nameId : int) =
     setLeafNameId (getLeaf s) nameId
@@ -116,31 +116,31 @@ module internal Library =
 
   (* ***** ***** *)
 
-  let inline getBranchId (b : Branch) = heap[int b]
+  let inline getBranchId (b : Branch) = heap[withoutMeasure b]
     
-  let inline getLChild (b : Branch) = mkNode heap[int b + 1]
-  let inline setLChild (b : Branch) (lch : Node) = heap[int b + 1] <- int lch
+  let inline getLChild (b : Branch) = mkNode heap[addOffset b 1]
+  let inline setLChild (b : Branch) (lch : Node) = heap[addOffset b 1] <- withoutMeasure lch
   
-  let inline getRChild (b : Branch) = mkNode heap[int b + 2]
-  let inline setRChild (b : Branch) (rch : Node) = heap[int b + 2] <- int rch
+  let inline getRChild (b : Branch) = mkNode heap[addOffset b 2]
+  let inline setRChild (b : Branch) (rch : Node) = heap[addOffset b 2] <- withoutMeasure rch
   
-  let inline getLChildUplink (b : Branch) = mkUplink (int b + 3)
+  let inline getLChildUplink (b : Branch) = mkUplink (addOffset b 3)
   
-  let inline getRChildUplink (b : Branch) = mkUplink (int b + 6)
+  let inline getRChildUplink (b : Branch) = mkUplink (addOffset b 6)
   
-  let inline getBranchParents (b : Branch) = mkUplinkDLL (int b + 9)
+  let inline getBranchParents (b : Branch) = mkUplinkDLL (addOffset b 9)
   let inline setBranchParents (b : Branch) (lks : UplinkDLL) =
-    heap[int b + 9] <- int (getHead lks)
+    heap[addOffset b 9] <- withoutMeasure (getHead lks)
   
-  let inline getCache (b : Branch) = mkBranch (heap[int b + 10])
-  let inline setCache (b : Branch) (cc : Branch) = heap[int b + 10] <- int cc
+  let inline getCache (b : Branch) = mkBranch (heap[addOffset b 10])
+  let inline setCache (b : Branch) (cc : Branch) = heap[addOffset b 10] <- withoutMeasure cc
 
-  let inline clearCache (b : Branch) = setCache b (mkBranch -1)
+  let inline clearCache (b : Branch) = setCache b (mkBranch System.IntPtr.Zero)
   
 
   (* ***** ***** *)
 
-  let inline getNodeKind (nd : Node) = toEnum<NodeKind> (heap[int nd] &&& 3)
+  let inline getNodeKind (nd : Node) = toEnum<NodeKind> ((int heap[withoutMeasure nd]) &&& 3)
 
   let getParents (nd : Node) : UplinkDLL =
     match getNodeKind nd with

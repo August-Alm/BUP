@@ -3,6 +3,8 @@
 [<AutoOpen>]
 module Types =
 
+  open System
+
   type FixedStack<'a> (capacity : int) =
     let mutable count = 0
     let storage = Array.zeroCreate<'a> capacity
@@ -22,13 +24,16 @@ module Types =
     
     member _.Clear () = count <- 0
   
-  let inline toEnum<'a when 'a : enum<int>> (x) : 'a =
-    LanguagePrimitives.EnumOfValue x
-  
-  let inline withMeasure<[<Measure>]'m> (x) : int<'m> =
-    LanguagePrimitives.Int32WithMeasure x
 
-  let inline isNil x = (int x = -1)
+  let inline toEnum<'a when 'a : enum<int>> (x) : 'a =
+    LanguagePrimitives.EnumOfValue (int x)
+  
+  let inline withMeasure<[<Measure>]'m> (x) =
+    LanguagePrimitives.IntPtrWithMeasure<'m> x
+  
+  let inline withoutMeasure<'a> (p : 'a) = (# "" p : IntPtr #)
+
+  let inline isNil x = (withoutMeasure x = IntPtr.Zero)
 
   [<Measure>] type nodePtr
   [<Measure>] type uplinkPtr
@@ -45,9 +50,9 @@ module Types =
     | SINGLE = 1
     | BRANCH = 2
   
-  type Node = int<nodePtr>
+  type Node = nativeint<nodePtr>
 
-  let inline mkNode x = withMeasure<nodePtr> (int x)
+  let inline mkNode x = withMeasure<nodePtr> (withoutMeasure x)
 
 
   (* ***** ***** *)
@@ -57,34 +62,34 @@ module Types =
     | LCHILD = 1
     | RCHILD = 2
   
-  type Uplink = int<uplinkPtr>
+  type Uplink = nativeint<uplinkPtr>
 
-  let inline mkUplink x = withMeasure<uplinkPtr> (int x)
+  let inline mkUplink (x) : Uplink = withMeasure<uplinkPtr> x
 
 
   (* ***** ***** *)
 
-  type UplinkDLL = int<uplinkPtrPtr>
+  type UplinkDLL = nativeint<uplinkPtrPtr>
 
-  let inline mkUplinkDLL x = withMeasure<uplinkPtrPtr> (int x)
+  let inline mkUplinkDLL (x) = withMeasure<uplinkPtrPtr> x
   
 
   (* ***** ***** *)
   
-  type Leaf = int<leafPtr>
+  type Leaf = nativeint<leafPtr>
 
-  let inline mkLeaf x = withMeasure<leafPtr> (int x)
+  let inline mkLeaf (x) = withMeasure<leafPtr> (withoutMeasure x)
 
 
   (* ***** ***** *)
   
-  type Single = int<singlePtr>
+  type Single = nativeint<singlePtr>
 
-  let inline mkSingle x = withMeasure<singlePtr> (int x)
+  let inline mkSingle x = withMeasure<singlePtr> (withoutMeasure x)
 
 
   (* ***** ***** *)
 
-  type Branch = int<branchPtr>
+  type Branch = nativeint<branchPtr>
 
-  let inline mkBranch x = withMeasure<branchPtr> (int x)
+  let inline mkBranch x = withMeasure<branchPtr> (withoutMeasure x)

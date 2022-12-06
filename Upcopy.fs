@@ -4,7 +4,6 @@ module Upcopy =
 
   open Memory
   open Library
-  open System.Collections.Generic
 
   let cleanupStack = FixedStack<UplinkDLL> (pown 2 15)
 
@@ -181,7 +180,7 @@ module Upcopy =
       let inline scandown (nd : Node) =
         let inline helper (nd : Node) (knd : NodeKind) =
           if knd = NodeKind.LEAF then
-            struct (argm, mkBranch -1)
+            struct (argm, mkBranch System.IntPtr.Zero)
           else // NodeKind.BRANCH
             let b = mkBranch nd
             let b' = newBranch (getLChild b) (getRChild b) 
@@ -202,7 +201,7 @@ module Upcopy =
               singleStack.Push s
             helper ch k
           | knd -> helper nd knd
-        let mutable g = mkSingle -1
+        let mutable g = mkSingle System.IntPtr.Zero
         while singleStack.TryPop &g do
           deepChild <- newSingle (getLeaf g) deepChild
         struct (deepChild, topapp)
@@ -219,11 +218,11 @@ module Upcopy =
   
   let inline private isRedex (nd : Node) : Branch =
     if getNodeKind nd <> NodeKind.BRANCH then
-      mkBranch -1
+      mkBranch System.IntPtr.Zero
     else
       let b = mkBranch nd
       if getNodeKind (getLChild b) = NodeKind.SINGLE then b
-      else mkBranch -1
+      else mkBranch System.IntPtr.Zero
 
   let normaliseWeakHead (nd : Node byref) =
     let mutable b = isRedex nd
