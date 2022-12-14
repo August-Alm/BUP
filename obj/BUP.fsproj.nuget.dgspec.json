@@ -1,25 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "/home/bashka/Programming/FSharp/BUP/BUP.fsproj": {}
+    "/Users/jalm/Documents/Programming/FSharp/BUP/BUP.fsproj": {}
   },
   "projects": {
-    "/home/bashka/Programming/FSharp/BUP/BUP.fsproj": {
+    "/Users/jalm/Documents/Programming/FSharp/BUP/BUP.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/bashka/Programming/FSharp/BUP/BUP.fsproj",
+        "projectUniqueName": "/Users/jalm/Documents/Programming/FSharp/BUP/BUP.fsproj",
         "projectName": "BUP",
-        "projectPath": "/home/bashka/Programming/FSharp/BUP/BUP.fsproj",
-        "packagesPath": "/root/.nuget/packages/",
-        "outputPath": "/home/bashka/Programming/FSharp/BUP/obj/",
+        "projectPath": "/Users/jalm/Documents/Programming/FSharp/BUP/BUP.fsproj",
+        "packagesPath": "/Users/jalm/.nuget/packages/",
+        "outputPath": "/Users/jalm/Documents/Programming/FSharp/BUP/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/root/.nuget/NuGet/NuGet.Config"
+          "/Users/jalm/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "/usr/local/share/dotnet/sdk/6.0.400/FSharp/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -41,7 +42,7 @@
             "FSharp.Core": {
               "include": "Runtime, Compile, Build, Native, Analyzers, BuildTransitive",
               "target": "Package",
-              "version": "[6.0.1, )",
+              "version": "[6.0.5, )",
               "generatePathProperty": true
             },
             "FsCheck.Xunit": {
@@ -56,7 +57,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -65,7 +67,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.101/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
         }
       }
     }

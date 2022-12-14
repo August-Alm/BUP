@@ -168,3 +168,4 @@
 /home/bashka/Programming/FSharp/BUP/obj/Release/net6.0/BUP.dll
 /home/bashka/Programming/FSharp/BUP/obj/Release/net6.0/BUP.pdb
 /home/bashka/Programming/FSharp/BUP/obj/Release/net6.0/BUP.genruntimeconfig.cache
+/Users/jalm/Documents/Programming/FSharp/BUP/obj/Release/net6.0/BUP.fsproj.CoreCompileInputs.cache

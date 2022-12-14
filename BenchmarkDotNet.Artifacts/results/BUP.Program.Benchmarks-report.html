@@ -2,15 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<<<<<<< HEAD
-<title>BUP.Program.Benchmarks-20220121-013014</title>
-=======
-<<<<<<< HEAD
-<title>BUP.Program.Benchmarks-20220119-085124</title>
-=======
-<title>BUP.Program.Benchmarks-20220119-212017</title>
->>>>>>> c39a304c54ca00e5669e865d4234485b39fd7651
->>>>>>> d9da95f608d8ff315e27546f72aae233c729109e
+<title>BUP.Program.Benchmarks-20221214-133135</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -21,58 +13,24 @@
 </head>
 <body>
 <pre><code>
-<<<<<<< HEAD
-BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.1 (21C52) [Darwin 21.2.0]
+BenchmarkDotNet=v0.13.1, OS=macOS 13.0.1 (22A400) [Darwin 22.1.0]
 Apple M1, 1 CPU, 8 logical and 8 physical cores
-.NET SDK=6.0.100
-  [Host]     : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT DEBUG
-  Job-NGZFER : .NET 6.0.0 (6.0.21.52210), Arm64 RyuJIT
-=======
-BenchmarkDotNet=v0.13.1, OS=pop 21.10
-AMD Ryzen 7 PRO 4750G with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
-.NET SDK=6.0.101
-  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT DEBUG
-<<<<<<< HEAD
-  Job-IXEILU : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
-=======
-  Job-IJUNSM : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
->>>>>>> c39a304c54ca00e5669e865d4234485b39fd7651
->>>>>>> d9da95f608d8ff315e27546f72aae233c729109e
+.NET SDK=6.0.400
+  [Host]     : .NET 6.0.8 (6.0.822.36306), Arm64 RyuJIT DEBUG
+  Job-FEQAST : .NET 6.0.8 (6.0.822.36306), Arm64 RyuJIT
 </code></pre>
 <pre><code>InvocationCount=1  UnrollFactor=1  
 </code></pre>
 
 <table>
-<<<<<<< HEAD
-<thead><tr><th>              Method</th><th>     Mean</th><th>  Error</th><th>StdDev</th><th>   Median</th>
+<thead><tr><th>              Method</th><th>     Mean</th><th>    Error</th><th>  StdDev</th><th>    Median</th>
 </tr>
-</thead><tbody><tr><td>ParseAndNormalise50k</td><td>9,492,494.1 ns</td><td>112,713.46 ns</td><td>99,917.5 ns</td><td>9,481,286.5 ns</td>
-</tr><tr><td>Normalise50k</td><td>197.5 ns</td><td>66.40 ns</td><td>192.6 ns</td><td>126.0 ns</td>
-</tr><tr><td>ParseAndNormaliseTree15</td><td>16,219,842.7 ns</td><td>309,906.01 ns</td><td>289,886.3 ns</td><td>16,353,607.0 ns</td>
-</tr><tr><td>ParseAndNormaliseFact8</td><td>6,232,910.3 ns</td><td>30,510.19 ns</td><td>25,477.4 ns</td><td>6,229,818.5 ns</td>
-</tr><tr><td>ParseAndNormalise1M</td><td>91,526,342.1 ns</td><td>144,082.02 ns</td><td>134,774.4 ns</td><td>91,541,197.0 ns</td>
-</tr><tr><td>ParseAndNormalisePearls100</td><td>140,522.6 ns</td><td>3,612.79 ns</td><td>10,189.9 ns</td><td>137,761.0 ns</td>
-=======
-<<<<<<< HEAD
-<thead><tr><th>              Method</th><th>      Mean</th><th>  Error</th><th> StdDev</th>
-</tr>
-</thead><tbody><tr><td>ParseAndNormalise50k</td><td>7,085,041.73 ns</td><td>78,461.64 ns</td><td>73,393.06 ns</td>
-</tr><tr><td>Normalise50k</td><td>76.39 ns</td><td>18.46 ns</td><td>53.84 ns</td>
-</tr><tr><td>ParseAndNormaliseTree15</td><td>9,698,911.53 ns</td><td>166,546.56 ns</td><td>155,787.75 ns</td>
-</tr><tr><td>ParseAndNormaliseFact8</td><td>4,808,723.29 ns</td><td>59,581.37 ns</td><td>52,817.33 ns</td>
-</tr><tr><td>ParseAndNormalise1M</td><td>56,890,899.33 ns</td><td>334,600.82 ns</td><td>261,234.31 ns</td>
-</tr><tr><td>ParseAndNormalisePearls100</td><td>104,708.57 ns</td><td>1,643.87 ns</td><td>1,457.25 ns</td>
-=======
-<thead><tr><th>              Method</th><th>     Mean</th><th>    Error</th><th>  StdDev</th><th>   Median</th>
-</tr>
-</thead><tbody><tr><td>ParseAndNormalise50k</td><td>9,188,787.0 ns</td><td>94,879.26 ns</td><td>79,228.5 ns</td><td>9,181,757.0 ns</td>
-</tr><tr><td>Normalise50k</td><td>202.1 ns</td><td>47.05 ns</td><td>131.9 ns</td><td>161.0 ns</td>
-</tr><tr><td>ParseAndNormaliseTree15</td><td>16,334,512.4 ns</td><td>289,240.27 ns</td><td>270,555.5 ns</td><td>16,323,355.5 ns</td>
-</tr><tr><td>ParseAndNormaliseFact8</td><td>6,141,230.6 ns</td><td>58,571.17 ns</td><td>54,787.5 ns</td><td>6,130,286.0 ns</td>
-</tr><tr><td>ParseAndNormalise1M</td><td>92,056,779.1 ns</td><td>1,806,701.99 ns</td><td>1,774,422.9 ns</td><td>91,520,021.5 ns</td>
-</tr><tr><td>ParseAndNormalisePearls100</td><td>142,985.0 ns</td><td>3,755.71 ns</td><td>10,531.4 ns</td><td>138,802.0 ns</td>
->>>>>>> c39a304c54ca00e5669e865d4234485b39fd7651
->>>>>>> d9da95f608d8ff315e27546f72aae233c729109e
+</thead><tbody><tr><td>ParseAndNormalise50k</td><td>7,670,791.1 ns</td><td>9,782.18 ns</td><td>8,671.6 ns</td><td>7,670,145.00 ns</td>
+</tr><tr><td>Normalise50k</td><td>149.4 ns</td><td>98.99 ns</td><td>272.6 ns</td><td>21.50 ns</td>
+</tr><tr><td>ParseAndNormaliseTree15</td><td>16,657,657.3 ns</td><td>1,067,459.96 ns</td><td>3,130,675.3 ns</td><td>15,090,980.00 ns</td>
+</tr><tr><td>ParseAndNormaliseFact8</td><td>4,903,641.7 ns</td><td>151,554.32 ns</td><td>393,909.8 ns</td><td>4,829,917.00 ns</td>
+</tr><tr><td>ParseAndNormalise1M</td><td>89,485,991.0 ns</td><td>1,773,036.96 ns</td><td>3,965,651.2 ns</td><td>89,304,688.00 ns</td>
+</tr><tr><td>ParseAndNormalisePearls100</td><td>121,225.1 ns</td><td>5,036.32 ns</td><td>13,000.4 ns</td><td>116,520.50 ns</td>
 </tr></tbody></table>
 </body>
 </html>

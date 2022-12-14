@@ -72,9 +72,9 @@ module internal Library =
     let mutable lk = getHead lks
     if isNil lk then ()
     else
-      let mutable nxt = getNext lk
+      let mutable nxt = mkUplink -1
       while not (isNil lk) do
-        a lk; lk <- nxt; nxt <- getNext lk
+        a lk; nxt <- getNext lk; lk <- nxt
 
   (* ***** ***** *)
   
