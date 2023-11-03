@@ -1,3 +1,6 @@
 BenchmarkDotNet.Artifacts/
 bin/
 obj/
+.ionide/
+.vscode/
+.DS_Store/
