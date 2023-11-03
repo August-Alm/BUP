@@ -219,6 +219,6 @@ module Program =
   let main _ =
     Memory.clearHeap ()
     Check.All<Tests> (Config.Quick.WithMaxTest 1)
-    //BenchmarkRunner.Run<Benchmarks> () |> ignore
+    BenchmarkRunner.Run<Benchmarks> () |> ignore
     //BenchmarkRunner.Run<Hoas.Benchmarks> () |> ignore
     0
